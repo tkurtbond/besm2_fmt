@@ -379,6 +379,29 @@ miss.
 
 - **`mecha?` semantics** (§6): port the existence-check quirk faithfully,
   or fix it to check the actual boolean value?
+- **`process-skill-hmm`'s over-wide `emphasizing` scope** (§8 build-order
+  step 5): almost certainly an unintentional bug in `besm2-rst.scm`
+  itself, not a deliberate design choice. `process-attribute-hmm` and
+  `process-defect-hmm` both close their `emphasizing` call right after
+  name+level, leaving `" (" + details + points + ")"` outside it
+  (unemphasized) — matching every one of `process-*-terse`'s formatters,
+  `process-skill-terse` included. `process-skill-hmm` alone keeps
+  `emphasizing`'s parens open through the *entire* rest of the line,
+  `" SP)"` included, so `-b`/`--bold` produces
+  `**Interrogation 1 (2 SP)**` instead of the
+  `**Interrogation 1** (2 SP)` every sibling formatter (including
+  skill's own terse counterpart) produces. No comment in the source
+  suggests this is intentional, and the shape of the discrepancy — a
+  missing closing paren right where skill's tail diverges from
+  attribute's — is exactly what an accidental copy-paste/edit slip
+  looks like. Currently ported faithfully (`BESM2_Fmt.Format_Hmm.
+  Format_Skill` reproduces the over-wide bolding exactly) for
+  byte-for-byte parity with the real tool, same rationale as `mecha?`
+  above. Options if this is ever revisited: keep porting it faithfully
+  (status quo), diverge to match the narrower attribute/defect/
+  terse-skill scope (behavior change, `besm2_fmt`-only), or fix
+  `besm2-rst.scm` upstream and re-sync. No action taken yet — flagging
+  the decision rather than making it unilaterally.
 - **Shared library with a future besm4 port.** `besm4-rst.scm` is ~80%
   structurally identical to `besm2-rst.scm` (same helpers, same
   row/sep functions, same customizer logic; it only lacks the `h-m-m`

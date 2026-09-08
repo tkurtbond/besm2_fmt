@@ -54,7 +54,8 @@ isn't needed for this port.
 ```
 besm2_fmt/
   src/
-    besm2_fmt-config.ads             -- CLI-settable globals (was the *star* specials)
+    besm2_fmt.ads                    -- empty root package, anchors the BESM2_Fmt.* children
+    besm2_fmt-config.ads             -- CLI-settable globals (was the *star* specials) [done]
     besm2_fmt-text_layout.ads/.adb   -- pad/wrap/columnar-row rendering; bold/italics/emphasis
     besm2_fmt-entities.ads/.adb      -- domain types: Stat, Derived, Attribute, Defect, Skill,
                                          Entity, built by walking Nodes once per entity
@@ -63,8 +64,8 @@ besm2_fmt/
     besm2_fmt-format_terse.adb       -- process-entity-terse
     besm2_fmt-format_hmm.adb         -- process-entity-hmm
     besm2_fmt-format_raw_ms.adb      -- process-entity-raw-ms
-    besm2_fmt-cli.ads/.adb           -- argument parsing (the args:make-option table), via arg_parser
-    besm2_fmt.adb                    -- main: parse args, open input(s), dispatch, write output
+    besm2_fmt-cli.ads/.adb           -- argument parsing (the args:make-option table), via arg_parser [done]
+    besm2_fmt_main.adb               -- main: parse args, open input(s), dispatch, write output
   besm2_fmt.gpr
 ```
 
@@ -74,6 +75,17 @@ and repo names stay lowercase `besm2_fmt` per Unix/GNAT convention,
 same as `alibfyaml` uses `Libfyaml_Ada` as its package/project
 identifier alongside lowercase file names), executable and project
 file `besm2_fmt`/`besm2_fmt.gpr`.
+
+Two naming wrinkles found while actually implementing this (not
+apparent from the plan alone): a child package hierarchy's parent
+(`BESM2_Fmt`) must itself be a real library unit, so an otherwise-empty
+`besm2_fmt.ads` exists purely to anchor `BESM2_Fmt.Config`/
+`BESM2_Fmt.Cli`; and the executable entry point can't be a procedure
+literally named `BESM2_Fmt` (Ada identifiers are case-insensitive, so
+casing it differently doesn't help either) since that collides with
+the children's parent package name — it's `BESM2_Fmt_Main`
+(`besm2_fmt_main.adb`) instead, with `besm2_fmt.gpr`'s `Builder.Executable`
+renaming just the *produced binary* back to `besm2_fmt`.
 
 `BESM2_Fmt.Entities` is a deliberate addition with no Scheme counterpart:
 the Scheme code re-walks the raw alist on every access (`must-exist

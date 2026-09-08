@@ -1,0 +1,24 @@
+with "arg_parser.gpr";
+
+project BESM2_Fmt is
+
+   for Languages use ("Ada");
+   for Source_Dirs use ("src");
+   for Object_Dir use "obj";
+   for Exec_Dir use ".";
+   for Main use ("besm2_fmt_main.adb");
+
+   package Compiler is
+      for Default_Switches ("Ada") use ("-gnat2012", "-gnatwa", "-g");
+   end Compiler;
+
+   package Builder is
+      --  The Ada procedure can't be named BESM2_Fmt: that's the name
+      --  of the BESM2_Fmt.Config/BESM2_Fmt.Cli packages' parent, and a
+      --  library unit can't be both a package (for its children) and
+      --  a procedure. Rename just the produced executable back to the
+      --  program's actual name.
+      for Executable ("besm2_fmt_main.adb") use "besm2_fmt";
+   end Builder;
+
+end BESM2_Fmt;

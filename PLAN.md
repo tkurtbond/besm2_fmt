@@ -449,6 +449,19 @@ permanent regression test in `test/test_text_layout.adb` (§8 item 1),
 checked against the exact U+2212 UTF-8 bytes rather than just
 eyeballed.
 
+`COMPARISON.md` documents a performance comparison against
+`besm2-rst`, reproducible via `tools/benchmark.sh`/`make benchmark`
+(env vars: `BESM2_RST`, `BENCH_N`, `BENCH_ENTITIES`, `BENCH_SOURCE` —
+see the script's header comment). Measures both per-invocation
+overhead (many runs of a tiny real fixture) and throughput (one run
+on a generated large fixture), in two distinct shapes: one big
+multi-entity document, and a genuinely multi-document file (which
+also happens to be a good way to observe `besm2-rst.scm`'s
+multi-document-collapsing bug and `Document_Stream`'s streaming
+memory behavior side by side, on purpose rather than by accident).
+Linux/GNU-coreutils-specific (GNU `time` for RSS, GNU `date` for
+sub-second timing) — not portable to macOS/BSD as written.
+
 ## Open questions
 
 - ~~**`mecha?` semantics**~~ (§6): Resolved: confirmed a bug (same

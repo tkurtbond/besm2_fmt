@@ -38,7 +38,7 @@ TEST_LETTEROUTPUT=\
 	$(foreach f,$(notdir $(TEST_DATA)),build/$(addsuffix -unicode-minus.ms.pdf,$(basename $(f)))) \
 	$(foreach f,$(notdir $(TEST_DATA)),build/$(addsuffix -tbl-unicode-minus.ms.pdf,$(basename $(f))))
 
-.PHONY: all rst pdf test clean testclean
+.PHONY: all rst pdf test benchmark clean testclean
 
 all: $(PROGRAM)
 
@@ -53,6 +53,14 @@ pdf: rst $(TEST_LETTEROUTPUT)
 
 test:
 	cd test && gprbuild -p -P test.gpr && ./test_text_layout
+
+# Reproduces COMPARISON.md's besm2_fmt-vs-besm2-rst performance
+# numbers -- see tools/benchmark.sh's header comment for the
+# BESM2_RST/BENCH_N/BENCH_ENTITIES/BENCH_SOURCE environment variables
+# it accepts. Prints its Markdown report to stdout; redirect it
+# yourself (e.g. `make benchmark > /tmp/report.md`) to capture one.
+benchmark: $(PROGRAM)
+	./tools/benchmark.sh
 
 build/%.gen.rst : test-data/%.yaml $(PROGRAM)
 	./$(PROGRAM) -s $< >$@
@@ -77,7 +85,7 @@ clean: testclean
 	-rm -f $(PROGRAM)
 
 testclean:
-	-rm -v build/*.gen.rst build/*.ms.pdf
+	-rm -v build/*.gen.rst build/*.ms.pdf build/bench-*.yaml
 
 .PRECIOUS: \
 	build/%.gen.rst build/%-terse.gen.rst build/%-tbl.gen.rst \

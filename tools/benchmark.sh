@@ -1,10 +1,10 @@
 #!/bin/bash
-# tools/benchmark.sh - reproduces COMPARISON.md's besm2_fmt-vs-besm2-rst
-# performance numbers.
+# tools/benchmark.sh - reproduces PERFORMANCE-COMPARISON.md's
+# besm2_fmt-vs-besm2-rst performance numbers.
 #
 # All progress/status/warning messages go to stderr; the Markdown
-# report goes to stdout only -- so `tools/benchmark.sh > COMPARISON.md`
-# (or `make benchmark > COMPARISON.md`) captures a clean report while
+# report goes to stdout only -- so `tools/benchmark.sh > PERFORMANCE-COMPARISON.md`
+# (or `make benchmark > PERFORMANCE-COMPARISON.md`) captures a clean report while
 # progress stays visible on the terminal.
 #
 # Requires (Linux/GNU-coreutils specific, not portable to macOS/BSD):
@@ -103,7 +103,7 @@ mkdir -p "$BENCH_DIR"
 # One YAML document containing a BENCH_ENTITIES-entity sequence --
 # strips every "---" marker but the first before repeating the body,
 # so this is genuinely one document, not BENCH_ENTITIES of them (see
-# the header comment/COMPARISON.md for why that distinction matters).
+# the header comment/PERFORMANCE-COMPARISON.md for why that distinction matters).
 gen_multi_entity () {
   local n="$1" out="$2" body
   body="$(mktemp)"

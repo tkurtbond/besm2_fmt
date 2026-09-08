@@ -449,7 +449,7 @@ permanent regression test in `test/test_text_layout.adb` (§8 item 1),
 checked against the exact U+2212 UTF-8 bytes rather than just
 eyeballed.
 
-`COMPARISON.md` documents a performance comparison against
+`PERFORMANCE-COMPARISON.md` documents a performance comparison against
 `besm2-rst`, reproducible via `tools/benchmark.sh`/`make benchmark`
 (env vars: `BESM2_RST`, `BENCH_N`, `BENCH_ENTITIES`, `BENCH_SOURCE` —
 see the script's header comment). Measures both per-invocation
@@ -551,7 +551,7 @@ sub-second timing) — not portable to macOS/BSD as written.
   (already set) — `with "arg_parser.gpr";` needs no path or Alire
   dependency.
 - Performance vs. `besm2-rst`: benchmarked and documented in
-  `COMPARISON.md`, reproducible via `tools/benchmark.sh`/
+  `PERFORMANCE-COMPARISON.md`, reproducible via `tools/benchmark.sh`/
   `make benchmark`. `besm2_fmt` is substantially faster (~6-9x per
   invocation on a tiny real fixture; ~25-37x throughput on a
   2000-entity file), at the cost of higher peak RSS on a single very

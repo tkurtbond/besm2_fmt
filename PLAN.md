@@ -494,14 +494,11 @@ sub-second timing) — not portable to macOS/BSD as written.
   a shared library now rather than duplicated later (typed data access
   no longer needs factoring out for this purpose — it's shared for free
   via `alibfyaml` once that lands). Not needed for `besm2_fmt` alone.
-- ~~**Dependency mechanism for `alibfyaml`.**~~ Resolved pragmatically,
-  for now: a relative `with "../../alibfyaml/libfyaml_ada.gpr";` in
-  `besm2_fmt.gpr` (unlike `arg_parser`, `alibfyaml` isn't installed
-  under `/usr/local/sw/versions/ada/` or registered on
-  `GPR_PROJECT_PATH`, so this assumes the sibling checkout layout used
-  throughout this session — `~/Repos/Ada/alibfyaml` next to
-  `~/Repos/Ada/RPG/besm2_fmt`). Revisit if `alibfyaml` ever gets a
-  proper install/Alire release.
+- ~~**Dependency mechanism for `alibfyaml`.**~~ Resolved: `alibfyaml`
+  is now installed under `/usr/local/sw/versions/ada/` and registered
+  on `GPR_PROJECT_PATH`, same as `arg_parser`, so `besm2_fmt.gpr` just
+  does `with "libfyaml_ada.gpr";` — no relative path, no dependency on
+  a sibling checkout or on `besm2_fmt`'s own directory location.
 - ~~**Timing relative to the `alibfyaml` typed-accessors work.**~~
   Resolved: that work has landed (`Integer_Value`/`Long_Integer_Value`/
   `Long_Long_Integer_Value`/`Float_Value`/`Long_Float_Value`/
@@ -536,8 +533,8 @@ sub-second timing) — not portable to macOS/BSD as written.
 ## Decisions already made
 
 - Program name: **besm2_fmt** (was `besmfmt`, was `besm2-rst`).
-- Project directory: **`~/Repos/Ada/RPG/besm2_fmt`** (was
-  `BESM2-formatter`), pushed to
+- Project directory: **`~/Repos/RPG/Tools/besm2_fmt`** (was
+  `~/Repos/Ada/RPG/besm2_fmt`, was `BESM2-formatter`), pushed to
   [`github.com/tkurtbond/besm2_fmt`](https://github.com/tkurtbond/besm2_fmt).
 - Ada root package: **`BESM2_Fmt`** — BESM2 is an abbreviation (Big
   Eyes, Small Mouth, 2nd edition), so it's kept upper-case rather than

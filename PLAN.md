@@ -56,7 +56,7 @@ besm2_fmt/
   src/
     besm2_fmt.ads                    -- empty root package, anchors the BESM2_Fmt.* children
     besm2_fmt-config.ads             -- CLI-settable globals (was the *star* specials) [done]
-    besm2_fmt-text_layout.ads/.adb   -- pad/wrap/columnar-row rendering; bold/italics/emphasis
+    besm2_fmt-text_layout.ads/.adb   -- pad/wrap/columnar-row rendering; bold/italics/emphasis [done]
     besm2_fmt-entities.ads/.adb      -- domain types: Stat, Derived, Attribute, Defect, Skill,
                                          Entity, built by walking Nodes once per entity;
                                          format-customizers/make-attribute-details live here
@@ -255,7 +255,28 @@ miss.
 
 ## 8. Suggested build order
 
-1. `Text_Layout` in isolation (unit-testable without any YAML at all).
+1. [done] `Text_Layout` in isolation (unit-testable without any YAML
+   at all) — `test/test_text_layout.adb` (`test/test.gpr`, a small
+   sibling project mirroring `alibfyaml`'s own `test/test.gpr`
+   pattern), 26 checks, all passing. `Put_Row`/`Separator_Line` are
+   checked against the real golden STAT-table fragment from
+   `enyon-boase-2e.gen.rst` byte-for-byte (captured via
+   `Ada.Text_IO.Set_Output` to a temp file and read back), not just
+   eyeballed. One real design issue surfaced here, not apparent from
+   the plan alone: besm2-rst.scm's test data contains multi-byte UTF-8
+   text (curly quotes, an em dash, the multiplication sign — see
+   `test-data`'s "Shots ×2"), and Chicken Scheme's `string-length` is
+   Unicode-codepoint-aware, which is what every `*num-width*`/
+   `*table-width*` column computation is built on. A naive Ada port
+   using `String'Length` would count UTF-8 continuation bytes as extra
+   columns and come out narrower than the real output wherever
+   non-ASCII text appears. Fixed with a `Display_Length` function
+   (counts bytes outside the `16#80#..16#BF#` continuation-byte range)
+   used everywhere `Pad`/`Word_Wrap` measure width, instead of
+   `'Length`. Verified directly: `Word_Wrap` of the real
+   "Weapon: Rocket Pod ... Shots ×2 [3 shots], Stoppable)" attribute
+   text at width 36 reproduces the golden output's exact three-line
+   break.
 2. [done] `Entities` against `alibfyaml` (using its typed accessors
    directly — see §4).
 3. [done] **Terse backend first** — it does zero column layout, so it

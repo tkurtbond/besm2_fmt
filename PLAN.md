@@ -66,7 +66,7 @@ besm2_fmt/
     besm2_fmt-format_grid.ads/.adb   -- process-entity (reST grid table) [done]
     besm2_fmt-format_terse.ads/.adb  -- process-entity-terse [done]
     besm2_fmt-format_hmm.ads/.adb    -- process-entity-hmm [done]
-    besm2_fmt-format_raw_ms.adb      -- process-entity-raw-ms
+    besm2_fmt-format_raw_ms.ads/.adb -- process-entity-raw-ms [done]
     besm2_fmt-cli.ads/.adb           -- argument parsing (the args:make-option table), via arg_parser [done]
     besm2_fmt_main.adb               -- main: parse args, open input(s), dispatch, write output
   besm2_fmt.gpr
@@ -373,9 +373,40 @@ miss.
    Attributes/Defects/Skills' subtotals don't — an actual
    inconsistency in `besm2-rst.scm` itself, ported as-is like the
    `mecha?` existence-check quirk below.
-6. raw-`ms`/`tbl` backend (structurally close to Grid — same
-   row/table shape, groff `tbl` markup instead of reST grid syntax —
-   so cheap now that `Text_Layout` and Grid are both solid).
+6. [done] raw-`ms`/`tbl` backend (`Format_Raw_Ms`,
+   `process-entity-raw-ms`'s process-stat-raw-ms/process-derived-raw-ms/
+   process-attribute-raw-ms/process-defect-raw-ms/process-skill-raw-ms)
+   — a single `.TS`/`.TE` groff `tbl` table per entity wrapped in one
+   `.. raw:: ms` reST block, `tbold`/`T{...T}` markup instead of reST
+   grid syntax. Needed no `Text_Layout` column-layout code at all
+   beyond `Bold`/`Italics` for the plain-reST portion before the
+   table (name/tagline/size) — `tbl`'s own `x` (expand) column
+   modifier and `T{...T}` text blocks handle column widths and
+   wrapping at *render* time, so there's nothing for a fixed-width
+   renderer to precompute, unlike Grid. Two bookkeeping variables
+   (`Paragraph_Seen`, `First_Section_Seen`) replace the Scheme's
+   `set!`-mutated locals directly, one-for-one. Verified byte-for-byte
+   against besm-tools' real `build/*-2e-tbl.gen.rst` golden output on
+   both 2E test-data files (file argument, stdin, `-o`/`--output`),
+   plus fresh output from the real `besm2-rst` binary with `-s`/`-1`,
+   the Mecha entity, and the multi-entity composite fixture. No new
+   findings this time — the two real quirks this backend shares with
+   Grid/Hmm (`derived-abbreviations` expansion, `mecha?`'s
+   existence-check) were already known from those two backends, and
+   its own two format-specific asymmetries (the grand TOTAL row only
+   printing when positive, `> 0` — unlike Grid's unconditional one —
+   and Stats never needing the `First_Section_Seen` check that
+   Derived/Attributes/Defects/Skills do, since Stats is always first
+   in entity field order when present at all) were caught by reading
+   the source structurally before writing any code, not found via a
+   diff mismatch. `titalics` (besm2-rst.scm's troff-italics
+   counterpart to `tbold`) is defined right next to `tbold` in the
+   Scheme but never actually called anywhere in the file — confirmed
+   dead code in the original, so not ported.
+
+All four output formats (`Format_Grid`, `Format_Terse`, `Format_Hmm`,
+`Format_Raw_Ms`) are now implemented and wired into `BESM2_Fmt_Main`;
+`besm2_fmt` has full functional parity with `besm2-rst.scm`.
 
 ## Open questions
 

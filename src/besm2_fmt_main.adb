@@ -1,10 +1,8 @@
 --  besm2_fmt - convert a YAML BESM 2E character/template/item file
 --  into reStructuredText. Ada port of besm2-rst.scm.
 --
---  Grid (the default), terse (-t/--terse), and h-m-m (-H/--hmm)
---  output are implemented. raw-ms (-m/--raw-ms-tables) is not yet --
---  selecting it reports "not yet implemented" and exits, rather than
---  silently falling back to grid.
+--  All four output formats are implemented: grid (the default), terse
+--  (-t/--terse), h-m-m (-H/--hmm), and raw-ms (-m/--raw-ms-tables).
 
 with Ada.Command_Line;
 with Ada.Exceptions;
@@ -20,6 +18,7 @@ with BESM2_Fmt.Config;
 with BESM2_Fmt.Entities;
 with BESM2_Fmt.Format_Grid;
 with BESM2_Fmt.Format_Hmm;
+with BESM2_Fmt.Format_Raw_Ms;
 with BESM2_Fmt.Format_Terse;
 
 procedure BESM2_Fmt_Main is
@@ -60,7 +59,7 @@ procedure BESM2_Fmt_Main is
             when Config.Terse   => BESM2_Fmt.Format_Terse.Process_Entity (E, Count);
             when Config.Grid    => BESM2_Fmt.Format_Grid.Process_Entity (E, Count);
             when Config.Hmm     => BESM2_Fmt.Format_Hmm.Process_Entity (E, Count);
-            when Config.Raw_Ms  => null;  -- unreachable; see the guard in the main body
+            when Config.Raw_Ms  => BESM2_Fmt.Format_Raw_Ms.Process_Entity (E, Count);
          end case;
       end Visit;
    begin
@@ -111,15 +110,6 @@ procedure BESM2_Fmt_Main is
 
 begin
    BESM2_Fmt.Cli.Parse;
-
-   if Config.Format = Config.Raw_Ms then
-      Ada.Text_IO.Put_Line
-        (Ada.Text_IO.Standard_Error,
-         "besm2_fmt: only grid (default), terse (-t/--terse), and h-m-m " &
-         "(-H/--hmm) output are implemented so far");
-      Ada.Command_Line.Set_Exit_Status (1);
-      return;
-   end if;
 
    --  besm2-rst.scm's `main`: "(when (and *hmm-output* *hmm-root*) (show
    --  #t (indent) *hmm-root* nl))", run once per program invocation (not

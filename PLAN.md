@@ -53,7 +53,6 @@ besm2_fmt/
   src/
     besm2_fmt-config.ads             -- CLI-settable globals (was the *star* specials)
     besm2_fmt-text_layout.ads/.adb   -- pad/wrap/columnar-row rendering; bold/italics/emphasis
-    besm2_fmt-yaml_access.ads/.adb   -- Must_Exist/May_Exist analogs, typed scalar getters
     besm2_fmt-entities.ads/.adb      -- domain types: Stat, Derived, Attribute, Defect, Skill,
                                          Entity, built by walking Nodes once per entity
     besm2_fmt-customizers.adb        -- the format-customizers port (enhancement/limiter shapes)
@@ -102,20 +101,34 @@ compensation) ports as-is — it's arithmetic, not `show`-specific.
 
 ## 4. Numeric/type-conversion layer
 
-`Besm2_Fmt.Yaml_Access` wraps every field access used in the Scheme:
+This was originally planned as a `Besm2_Fmt.Yaml_Access` package
+implementing `Must_Exist`/`May_Exist`/`Must_Integer`/`May_Integer`
+etc. from scratch, wrapping `Scalar_Value` + `Integer'Value` by hand.
+On reflection that layer is generically useful to any `alibfyaml`
+consumer, not specific to this tool, so it's being built into
+`alibfyaml` itself instead — see `alibfyaml`'s `PLAN.md` ("Typed
+scalar accessors, timestamps, and document resolution"). That plan
+adds exactly this shape directly to `Libfyaml.Nodes`: required and
+optional-with-default forms of `Integer_Value`, `Long_Integer_Value`,
+`Long_Long_Integer_Value`, `Float_Value`, `Long_Float_Value`,
+`Boolean_Value`, and `String_Value` on a `(Map, Key)` pair, raising
+`Libfyaml.Missing_Key` (absent required key) or `Libfyaml.Data_Error`
+(present but malformed) — the same missing-vs-malformed distinction
+this section originally called for.
 
-```ada
-function Must_Exist   (N : Node; Key : String) return Node;    -- raises Missing_Field
-function May_Exist    (N : Node; Key : String) return Node;    -- Null_Node if absent
-function Must_Integer (N : Node; Key : String) return Integer;
-function May_Integer  (N : Node; Key : String) return Integer'Base with ... -- or an Option type
-function Must_String  (N : Node; Key : String) return String;
-function May_String   (N : Node; Key : String) return String;
-```
-
-`Missing_Field` is raised with the same information `die 2 "Unable to
-find ..."` printed, and `main` catches it at the top, prints to stderr,
-and exits with status 2 — matching current behavior.
+**Consequence for this project:** `besm2_fmt` doesn't need its own
+`Yaml_Access` package for generic typed access at all once that
+`alibfyaml` work lands — call `Libfyaml.Nodes`'s accessors directly
+(e.g. `Attribute.Integer_Value ("points")`). What's left as
+`besm2_fmt`-specific is just: (a) catching `Missing_Key`/`Data_Error`
+at the top of `main` and turning them into the `die 2 "..."` exit-code-2
+stderr behavior the Scheme version has, and (b) the domain-specific
+`format-customizers` dispatch below, which isn't a generic
+typed-access problem and stays here. This is a **build-order
+dependency**, not just a design note: the `alibfyaml` typed-accessors
+work needs to land (at least the Integer/Float/Boolean/String pieces)
+before step 2 of the build order below can be done the intended way,
+rather than as a throwaway local shim.
 
 `format-customizers`' `match` becomes explicit dispatch on the
 enhancement/limiter list-item node: scalar → string case; sequence of
@@ -164,8 +177,8 @@ miss.
 ## 8. Suggested build order
 
 1. `Text_Layout` in isolation (unit-testable without any YAML at all).
-2. `Yaml_Access` + `Entities` against `alibfyaml`, validated by loading a
-   test file and dumping field values.
+2. `Entities` against `alibfyaml` (using its typed accessors directly —
+   see §4), validated by loading a test file and dumping field values.
 3. **Terse backend first** — it does zero column layout, so it validates
    CLI + data access + domain formatting before touching the harder
    `Text_Layout` row renderer.
@@ -182,12 +195,18 @@ miss.
   structurally identical to `besm2-rst.scm` (same helpers, same
   row/sep functions, same customizer logic; it only lacks the `h-m-m`
   backend and has a few extra entity fields). If a besm4 port is wanted
-  later, `Text_Layout`/`Yaml_Access`/customizer logic should probably be
-  factored into a shared library now rather than duplicated later. Not
-  needed for `besm2_fmt` alone.
+  later, `Text_Layout`/customizer logic should probably be factored into
+  a shared library now rather than duplicated later (typed data access
+  no longer needs factoring out for this purpose — it's shared for free
+  via `alibfyaml` once that lands). Not needed for `besm2_fmt` alone.
 - **Dependency mechanism for `alibfyaml`.** Plain relative/absolute `with
   "..."` in the `.gpr`, or an Alire path/git dependency — not yet
   decided.
+- **Timing relative to the `alibfyaml` typed-accessors work.** §4 above
+  is now a real dependency on that plan landing first (at least its
+  Integer/Float/Boolean/String pieces); decide whether to wait for it,
+  or start `besm2_fmt` with a throwaway local shim and switch over once
+  `alibfyaml` has it.
 
 ## Decisions already made
 

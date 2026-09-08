@@ -43,9 +43,9 @@ in the last table rather than showing up by accident in the others.
 Generated: 2026-09-08 21:56:06 UTC by `tools/benchmark.sh`.
 
 - Machine: 13th Gen Intel(R) Core(TM) i9-13900HX, 32 threads, Linux 7.1.10-200.fc44.x86_64 x86_64
-- `besm2_fmt`: `/home/tkb/Repos/Ada/RPG/besm2_fmt/besm2_fmt`
+- `besm2_fmt`: `./besm2_fmt`
 - `besm2-rst`: `/home/tkb/current/RPG/Tools/BESM/build/besm2-rst`
-- `BENCH_N`=200, `BENCH_ENTITIES`=2000, `BENCH_SOURCE`=/home/tkb/Repos/Ada/RPG/besm2_fmt/test-data/enyon-boase-2e.yaml
+- `BENCH_N`=200, `BENCH_ENTITIES`=2000, `BENCH_SOURCE`=./test-data/enyon-boase-2e.yaml
 
 ## Per-invocation overhead (N=200 runs, `enyon-boase-2e.yaml`)
 

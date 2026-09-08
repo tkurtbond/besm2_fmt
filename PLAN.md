@@ -462,6 +462,19 @@ memory behavior side by side, on purpose rather than by accident).
 Linux/GNU-coreutils-specific (GNU `time` for RSS, GNU `date` for
 sub-second timing) — not portable to macOS/BSD as written.
 
+The report header's `besm2_fmt`/`BENCH_SOURCE` lines show a
+repo-relative path (`./besm2_fmt`, `./test-data/enyon-boase-2e.yaml`)
+rather than this checkout's absolute path, via a `relpath()` helper in
+`tools/benchmark.sh` (GNU `realpath -m`, relativized against `$ROOT`
+when the resolved path is actually inside the repo, printed absolute
+otherwise) — both are things `besm2_fmt` builds/ships as part of this
+repo, so hard-coding one checkout's absolute location in a committed
+report was never meaningful, and it also broke when the repo moved
+(§"Decisions already made"). `besm2-rst` still prints as an absolute
+path, since it's always external to this repo. `BESM2_FMT`/
+`BENCH_SOURCE` env-var overrides pointing elsewhere print as absolute
+too — only the default, in-repo case gets relativized.
+
 ## Open questions
 
 - ~~**`mecha?` semantics**~~ (§6): Resolved: confirmed a bug (same

@@ -11,7 +11,17 @@
 #   - GNU time (/usr/bin/time, for the `-f "%e %M"` format -- bash's
 #     builtin `time` and BSD/macOS `time` don't support this)
 #   - GNU date (for `date +%s.%N` sub-second precision)
+#   - GNU realpath (for the report header's `-m`/`--relative-to`-style
+#     path display)
 #   - gprbuild, awk (standard on this project's dev machine already)
+#
+# The report header shows `besm2_fmt`/`BENCH_SOURCE` as a repo-relative
+# path (e.g. `./besm2_fmt`, `./test-data/enyon-boase-2e.yaml`) when
+# they resolve to something inside this checkout -- true by default,
+# since besm2_fmt and test-data/ are both built/shipped as part of
+# this repo -- and falls back to the absolute path otherwise (an
+# env-var override pointing elsewhere). `besm2-rst` is always shown as
+# an absolute path, since it's never part of this repo.
 #
 # Environment variables (all optional):
 #   BESM2_FMT      Path to the besm2_fmt binary. Default: ./besm2_fmt
@@ -53,6 +63,23 @@ BENCH_DIR="$ROOT/build"
 
 log () { echo "benchmark.sh: $*" >&2; }
 die () { echo "benchmark.sh: error: $*" >&2; exit 1; }
+
+# Prints $1 relative to $ROOT (as "./..." ) when it names something
+# inside this repo -- e.g. the default $ROOT/besm2_fmt or
+# $ROOT/test-data/... -- so the report doesn't hard-code this
+# checkout's absolute path for things the repo itself builds/ships.
+# Anything outside $ROOT (an env-var override pointing elsewhere, or
+# besm2-rst, which is always external) prints as the absolute path it
+# resolves to.
+relpath () {
+  local abs
+  abs="$(realpath -m "$1" 2>/dev/null)" || { echo "$1"; return; }
+  case "$abs" in
+    "$ROOT"/*) echo "./${abs#"$ROOT"/}" ;;
+    "$ROOT") echo "." ;;
+    *) echo "$abs" ;;
+  esac
+}
 
 # ---------------------------------------------------------------
 # Preflight
@@ -184,13 +211,13 @@ echo
 echo "Generated: $(date -u +'%Y-%m-%d %H:%M:%S UTC') by \`tools/benchmark.sh\`."
 echo
 echo "- Machine: ${CPU_MODEL:-unknown CPU}, $NPROC threads, $KERNEL"
-echo "- \`besm2_fmt\`: \`$BESM2_FMT\`"
+echo "- \`besm2_fmt\`: \`$(relpath "$BESM2_FMT")\`"
 if [ "$HAVE_RST" -eq 1 ]; then
   echo "- \`besm2-rst\`: \`$BESM2_RST\`"
 else
   echo "- \`besm2-rst\`: not found -- besm2_fmt-only report, no comparison"
 fi
-echo "- \`BENCH_N\`=$BENCH_N, \`BENCH_ENTITIES\`=$BENCH_ENTITIES, \`BENCH_SOURCE\`=$BENCH_SOURCE"
+echo "- \`BENCH_N\`=$BENCH_N, \`BENCH_ENTITIES\`=$BENCH_ENTITIES, \`BENCH_SOURCE\`=$(relpath "$BENCH_SOURCE")"
 echo
 
 echo "## Per-invocation overhead (N=$BENCH_N runs, \`$(basename "$BENCH_SOURCE")\`)"

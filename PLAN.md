@@ -239,8 +239,20 @@ whenever the key **exists**, regardless of its YAML value. So `mecha:
 false` would still turn mecha-mode on, same as `mecha: true`. This is
 almost certainly an unintentional latent quirk in the Scheme rather than
 a deliberate design choice (nothing in the design-decision comments at
-the top of the file mentions it). Default plan: port it as "key
-presence" faithfully, but this is an open question — see below.
+the top of the file mentions it).
+
+**Resolved:** confirmed a bug, fixed upstream in besm-tools commit
+`8da3e95` (`besm2-rst.scm`'s `mecha?` now parameterized off the
+existing `may-exist` helper — used everywhere else in the file for
+"optional field, `#f` if absent" — instead of the raw `assoc` result).
+`BESM2_Fmt.Entities.Load_Entity` (`besm2_fmt-entities.adb`) updated to
+match: `N.Boolean_Value ("mecha", Default => False)` instead of
+`N.Has_Key ("mecha")`. Verified against the rebuilt `besm2-rst`
+binary with a synthetic `mecha: true`/`false`/absent fixture across
+all four output formats (byte-for-byte match in all three cases), and
+confirmed no regression on the real 2E golden fixtures (none of which
+use `mecha: false` — `FV2021-Coleopteran-2e.yaml`'s `mecha: true` is
+unaffected either way).
 
 ## 7. Testing strategy
 
@@ -439,8 +451,11 @@ eyeballed.
 
 ## Open questions
 
-- **`mecha?` semantics** (§6): port the existence-check quirk faithfully,
-  or fix it to check the actual boolean value?
+- ~~**`mecha?` semantics**~~ (§6): Resolved: confirmed a bug (same
+  shape as the `process-skill-hmm` one below — a latent quirk, not a
+  documented design decision), fixed upstream in besm-tools commit
+  `8da3e95` and ported to `BESM2_Fmt.Entities.Load_Entity`. See §6 for
+  detail.
 - ~~**`process-skill-hmm`'s over-wide `emphasizing` scope**~~ Resolved:
   confirmed an unintentional bug in `besm2-rst.scm` itself (not a
   deliberate design choice — `process-attribute-hmm`/`process-defect-hmm`

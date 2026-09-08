@@ -358,7 +358,16 @@ package body BESM2_Fmt.Entities is
          Result.Size := To_Unbounded_String (N.String_Value ("size"));
       end if;
 
-      Result.Mecha := N.Has_Key ("mecha");
+      Result.Mecha := N.Boolean_Value ("mecha", Default => False);
+      --  Not N.Has_Key ("mecha"): that's true whenever the key is
+      --  merely present, regardless of its value, so "mecha: false"
+      --  would turn mecha mode ON same as "mecha: true" -- fixed
+      --  upstream in besm-tools commit 8da3e95 (besm2-rst.scm's
+      --  mecha? was parameterized straight off `(assoc "mecha"
+      --  entity)`, a pair and hence truthy either way; switched to
+      --  its own may-exist helper, which unwraps to the real
+      --  #t/#f/absent value). Boolean_Value's optional-with-default
+      --  form is the direct Ada equivalent.
 
       Load_Stats_Field;
       Load_Derived_Field;

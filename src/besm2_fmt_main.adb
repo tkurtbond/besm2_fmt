@@ -1,9 +1,9 @@
 --  besm2_fmt - convert a YAML BESM 2E character/template/item file
 --  into reStructuredText. Ada port of besm2-rst.scm.
 --
---  Grid (the default) and terse (-t/--terse) output are implemented.
---  h-m-m (-H/--hmm) and raw-ms (-m/--raw-ms-tables) are not yet --
---  selecting them reports "not yet implemented" and exits, rather than
+--  Grid (the default), terse (-t/--terse), and h-m-m (-H/--hmm)
+--  output are implemented. raw-ms (-m/--raw-ms-tables) is not yet --
+--  selecting it reports "not yet implemented" and exits, rather than
 --  silently falling back to grid.
 
 with Ada.Command_Line;
@@ -19,6 +19,7 @@ with BESM2_Fmt.Cli;
 with BESM2_Fmt.Config;
 with BESM2_Fmt.Entities;
 with BESM2_Fmt.Format_Grid;
+with BESM2_Fmt.Format_Hmm;
 with BESM2_Fmt.Format_Terse;
 
 procedure BESM2_Fmt_Main is
@@ -56,9 +57,10 @@ procedure BESM2_Fmt_Main is
       begin
          Count := Count + 1;
          case Config.Format is
-            when Config.Terse => BESM2_Fmt.Format_Terse.Process_Entity (E, Count);
-            when Config.Grid  => BESM2_Fmt.Format_Grid.Process_Entity (E, Count);
-            when Config.Hmm | Config.Raw_Ms => null;  -- unreachable; see the guard in the main body
+            when Config.Terse   => BESM2_Fmt.Format_Terse.Process_Entity (E, Count);
+            when Config.Grid    => BESM2_Fmt.Format_Grid.Process_Entity (E, Count);
+            when Config.Hmm     => BESM2_Fmt.Format_Hmm.Process_Entity (E, Count);
+            when Config.Raw_Ms  => null;  -- unreachable; see the guard in the main body
          end case;
       end Visit;
    begin
@@ -110,13 +112,26 @@ procedure BESM2_Fmt_Main is
 begin
    BESM2_Fmt.Cli.Parse;
 
-   if Config.Format = Config.Hmm or else Config.Format = Config.Raw_Ms then
+   if Config.Format = Config.Raw_Ms then
       Ada.Text_IO.Put_Line
         (Ada.Text_IO.Standard_Error,
-         "besm2_fmt: only grid (default) and terse (-t/--terse) output " &
-         "are implemented so far");
+         "besm2_fmt: only grid (default), terse (-t/--terse), and h-m-m " &
+         "(-H/--hmm) output are implemented so far");
       Ada.Command_Line.Set_Exit_Status (1);
       return;
+   end if;
+
+   --  besm2-rst.scm's `main`: "(when (and *hmm-output* *hmm-root*) (show
+   --  #t (indent) *hmm-root* nl))", run once per program invocation (not
+   --  once per entity -- BESM2_Fmt.Format_Hmm.Process_Entity never sees
+   --  this), and -- because it runs before the -o/--output redirection
+   --  below, exactly like the Scheme's own ordering -- always to
+   --  standard output, even when -o sends everything else to a file.
+   --  Confirmed against the real besm2-rst binary: this is faithfully
+   --  ported as-is, not a bug to route around.
+   if Config.Hmm_Output and then Config.Hmm_Root /= null then
+      Ada.Text_IO.Put_Line
+        (String'(1 .. Config.Hmm_Depth => ASCII.HT) & Config.Hmm_Root.all);
    end if;
 
    if Config.Output_File /= null then

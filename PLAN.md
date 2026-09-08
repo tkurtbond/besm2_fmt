@@ -65,7 +65,7 @@ besm2_fmt/
                                          to justify splitting them out [done]
     besm2_fmt-format_grid.ads/.adb   -- process-entity (reST grid table) [done]
     besm2_fmt-format_terse.ads/.adb  -- process-entity-terse [done]
-    besm2_fmt-format_hmm.adb         -- process-entity-hmm
+    besm2_fmt-format_hmm.ads/.adb    -- process-entity-hmm [done]
     besm2_fmt-format_raw_ms.adb      -- process-entity-raw-ms
     besm2_fmt-cli.ads/.adb           -- argument parsing (the args:make-option table), via arg_parser [done]
     besm2_fmt_main.adb               -- main: parse args, open input(s), dispatch, write output
@@ -326,8 +326,54 @@ miss.
    Defects"/label-points (`CP`/`BP`/`MP`/`MBP`) machinery, which
    `process-entity` (grid) never uses at all, unlike
    `process-entity-terse`/`-hmm`.
-5. `h-m-m` and raw-`ms`/`tbl` backends (structurally close to
-   terse/grid respectively, so cheap once the first two are solid).
+5. [done] `h-m-m` backend (`Format_Hmm`, `process-entity-hmm`'s
+   process-stat-hmm/process-derived-hmm/process-attribute-hmm/
+   process-defect-hmm/process-skill-hmm) — a tab-indented outline, one
+   node per line, structurally closest to Terse's per-item formatting
+   (Stat/Derived/Skill text assembly is byte-identical to Terse's;
+   Attribute/Defect differ only in wrapping `details` with
+   `All_One_Line`) but with Grid-like Mecha-label/subtotal machinery
+   per section. `besm2-rst.scm`'s `*hmm-depth*` SRFI-39 parameter and
+   nested `depth+`/`parameterize` become a plain `Natural` computed
+   once per `Process_Entity` call from `Config.Hmm_Depth` (the `-L`
+   baseline) — `depth+`'s `parameterize` never actually accumulates
+   *across* entities (its dynamic extent ends before the next one), so
+   there's nothing to thread between calls. No golden `build/*.hmm`
+   file existed to diff against (unlike Grid/Terse's `GNUmakefile`
+   targets), so golden output was generated directly from
+   besm-tools' real compiled `besm2-rst` binary
+   (`build/besm2-rst`) across several flag combinations
+   (`-s`, `-S`, `-b`, `-i`, `-l`, `-M`, `-R`/`-L`, the Mecha entity,
+   and the multi-entity composite fixture) and diffed byte-for-byte;
+   all pass. (Note: `entity-styles.hmm` in the besm-tools checkout
+   looks like a hand-edited/stale sample, not a mechanically generated
+   one — e.g. it has an unmatched `**` around "Defects" — so it wasn't
+   used as a reference.) Two real findings from the golden diffs, both
+   confirmed against the actual Scheme source rather than assumed:
+   - `process-skill-hmm`'s `emphasizing` call wraps the *entire* rest
+     of the line, "`(N SP)`" included — unlike
+     `process-attribute-hmm`/`process-defect-hmm` (which close
+     `emphasizing` right after name+level, matching Terse's skill
+     formatting too). Confirmed with `-b`: `**Interrogation 1 (2
+     SP)**`, not `**Interrogation 1** (2 SP)`.
+   - The `-R`/`--hmm-root` root-node line
+     (`besm2-rst.scm`'s `main`: `(when (and *hmm-output* *hmm-root*)
+     ...)`) prints once per program run, before the `-o`/`--output`
+     file redirection is set up — so it always goes to standard
+     output, even when `-o` sends everything else to a file.
+     Confirmed against the real binary and ported faithfully (in
+     `BESM2_Fmt_Main`, not `Format_Hmm`, since it's a once-per-run
+     concern, not once-per-entity) rather than treated as a bug to
+     route around.
+   Also confirmed, matching an existing asymmetry already visible by
+   reading the source: the Statistics section's subtotal has a
+   trailing space before its newline (`" (...) "`) that
+   Attributes/Defects/Skills' subtotals don't — an actual
+   inconsistency in `besm2-rst.scm` itself, ported as-is like the
+   `mecha?` existence-check quirk below.
+6. raw-`ms`/`tbl` backend (structurally close to Grid — same
+   row/table shape, groff `tbl` markup instead of reST grid syntax —
+   so cheap now that `Text_Layout` and Grid are both solid).
 
 ## Open questions
 

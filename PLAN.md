@@ -302,6 +302,22 @@ miss.
   `Boolean_Value`/`String_Value`, required and optional-with-default
   forms, plus `0b`-binary and `_`-separator extensions), so §4 can be
   implemented directly against current `alibfyaml`, no shim needed.
+- **Multi-document YAML files aren't handled.** Tested by hand: a
+  single BESM 2E entity per file (or several entities as one YAML
+  *sequence* in one document — that case works fine and is what
+  §6/entity-numbering already assume) is the only shape that actually
+  works today. A file containing more than one `---`-separated YAML
+  *document* silently processes only the first; later documents/entities
+  just don't appear, no error. Root cause is in `alibfyaml`, not here
+  (see its `PLAN.md`, "Multi-document YAML streams" — `Parse_String`/
+  `Parse_File` only ever build the first document of a stream; libfyaml
+  itself handles multi-document streams fine via a lower-level API
+  `alibfyaml` doesn't bind yet). Nothing to do on the `besm2_fmt` side
+  until that lands — worth a `README`/usage note in the meantime so
+  "put several character files together" isn't a silent trap, and
+  worth deciding then whether `besm2_fmt` should support multi-document
+  files at all, versus just documenting "one document per file,
+  multiple entities via a YAML sequence" as the supported shape.
 
 ## Decisions already made
 

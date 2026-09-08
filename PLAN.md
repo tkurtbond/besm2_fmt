@@ -302,22 +302,30 @@ miss.
   `Boolean_Value`/`String_Value`, required and optional-with-default
   forms, plus `0b`-binary and `_`-separator extensions), so §4 can be
   implemented directly against current `alibfyaml`, no shim needed.
-- **Multi-document YAML files aren't handled.** Tested by hand: a
-  single BESM 2E entity per file (or several entities as one YAML
-  *sequence* in one document — that case works fine and is what
-  §6/entity-numbering already assume) is the only shape that actually
-  works today. A file containing more than one `---`-separated YAML
-  *document* silently processes only the first; later documents/entities
-  just don't appear, no error. Root cause is in `alibfyaml`, not here
-  (see its `PLAN.md`, "Multi-document YAML streams" — `Parse_String`/
-  `Parse_File` only ever build the first document of a stream; libfyaml
-  itself handles multi-document streams fine via a lower-level API
-  `alibfyaml` doesn't bind yet). Nothing to do on the `besm2_fmt` side
-  until that lands — worth a `README`/usage note in the meantime so
-  "put several character files together" isn't a silent trap, and
-  worth deciding then whether `besm2_fmt` should support multi-document
-  files at all, versus just documenting "one document per file,
-  multiple entities via a YAML sequence" as the supported shape.
+- ~~**Multi-document YAML files aren't handled.**~~ Resolved:
+  `alibfyaml` landed `Libfyaml.Documents.Streams.Document_Stream`
+  (`Open_String`/`Open_File` + `Has_Next`/`Next`, see its `PLAN.md`,
+  "Multi-document YAML streams"), and `besm2_fmt_main.adb`'s
+  `Process_One` now reads a file through that instead of
+  `Doc.Parse_String`/`Parse_File`, looping `Has_Next`/`Next` over every
+  `---`-separated document. `Process_Entities`' entity counter was
+  pulled out into a `Count : in out Natural` threaded across the whole
+  loop, so numbering stays continuous per *file* regardless of how many
+  documents it's split into (matches the pre-existing "`Entity_No` is 1
+  for the first entity in a file, 2 for the second" contract in
+  `Format_Terse`'s spec). Note the original `besm2-rst.scm` didn't
+  actually handle this correctly either — Chicken's `yaml-load`
+  collapses each `document-end` event to `(car seed)`, silently
+  discarding every prior document and keeping only the *last* one — so
+  there was no faithful legacy behavior to preserve; this is a case
+  where the Ada port does it properly rather than porting a bug.
+  Verified: existing single-document goldens
+  (`enyon-boase-2e.yaml`/`FV2021-Coleopteran-2e.yaml`, file arg/stdin/
+  `-o`, diffed against besm-tools' real `*-terse.gen.rst` output)
+  still byte-for-byte match after the switch, and
+  `composite-multi-doc-2e.yaml` (two documents, one entity each) now
+  produces output byte-identical to `composite-2e.yaml` (one document,
+  a two-entity sequence) — both via file argument and via stdin.
 
 ## Decisions already made
 

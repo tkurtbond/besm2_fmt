@@ -14,6 +14,7 @@ with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with Arg_Parser;
 with Libfyaml;
 with Libfyaml.Documents;
+with Libfyaml.Documents.Streams;
 with Libfyaml.Nodes;
 with BESM2_Fmt.Cli;
 with BESM2_Fmt.Config;
@@ -24,6 +25,7 @@ procedure BESM2_Fmt_Main is
 
    package Config renames BESM2_Fmt.Config;
    package Doc renames Libfyaml.Documents;
+   package Streams renames Libfyaml.Documents.Streams;
    package Nod renames Libfyaml.Nodes;
 
    use type Arg_Parser.String_Reference;
@@ -39,9 +41,14 @@ procedure BESM2_Fmt_Main is
       return To_String (Buffer);
    end Read_All_Standard_Input;
 
-   procedure Process_Entities (D : Doc.Document; Source : String) is
-      Root  : constant Nod.Node := D.Root;
-      Count : Natural := 0;
+   --  Count is threaded across every document in the file (not reset
+   --  per document): Entity_No is 1 for the first entity in a *file*,
+   --  2 for the second, etc., regardless of how many "---"-separated
+   --  YAML documents that file is split into.
+   procedure Process_Entities
+     (D : Doc.Document; Source : String; Count : in out Natural)
+   is
+      Root : constant Nod.Node := D.Root;
 
       procedure Visit (Item : Nod.Node) is
          E : constant BESM2_Fmt.Entities.Entity :=
@@ -58,19 +65,23 @@ procedure BESM2_Fmt_Main is
       Root.Iterate (Visit'Access);
    end Process_Entities;
 
-   --  It is a file of possibly multiple entities. Matches
+   --  It is a file of possibly multiple entities, possibly spread
+   --  across multiple "---"-separated YAML documents. Matches
    --  besm2-rst.scm's process-file: on error, report it and move on
    --  to the next file rather than aborting the whole run.
    procedure Process_One (Filename : String; Use_Stdin : Boolean) is
       Source : constant String := (if Use_Stdin then "(stdin)" else Filename);
+      Count  : Natural := 0;
    begin
       declare
-         D : constant Doc.Document :=
+         Stream : Streams.Document_Stream :=
            (if Use_Stdin
-            then Doc.Parse_String (Read_All_Standard_Input)
-            else Doc.Parse_File (Filename));
+            then Streams.Open_String (Read_All_Standard_Input)
+            else Streams.Open_File (Filename));
       begin
-         Process_Entities (D, Source);
+         while Streams.Has_Next (Stream) loop
+            Process_Entities (Streams.Next (Stream), Source, Count);
+         end loop;
       end;
    exception
       when E : Libfyaml.Parse_Error | Libfyaml.Missing_Key | Libfyaml.Data_Error |

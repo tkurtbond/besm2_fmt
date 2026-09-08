@@ -68,10 +68,14 @@ besm2_fmt/
   besm2_fmt.gpr
 ```
 
-Root package `Besm2_Fmt.*`, executable and project file
-`besm2_fmt`/`besm2_fmt.gpr`.
+Root package `BESM2_Fmt.*` (BESM2 kept upper-case as the abbreviation
+it is — Big Eyes, Small Mouth, 2nd edition; file, executable, project,
+and repo names stay lowercase `besm2_fmt` per Unix/GNAT convention,
+same as `alibfyaml` uses `Libfyaml_Ada` as its package/project
+identifier alongside lowercase file names), executable and project
+file `besm2_fmt`/`besm2_fmt.gpr`.
 
-`Besm2_Fmt.Entities` is a deliberate addition with no Scheme counterpart:
+`BESM2_Fmt.Entities` is a deliberate addition with no Scheme counterpart:
 the Scheme code re-walks the raw alist on every access (`must-exist
 "name" attribute` scattered across each `process-*` and
 `process-*-terse`/`-hmm`/`-raw-ms` variant — the same attribute gets
@@ -104,7 +108,7 @@ compensation) ports as-is — it's arithmetic, not `show`-specific.
 
 ## 4. Numeric/type-conversion layer
 
-This was originally planned as a `Besm2_Fmt.Yaml_Access` package
+This was originally planned as a `BESM2_Fmt.Yaml_Access` package
 implementing `Must_Exist`/`May_Exist`/`Must_Integer`/`May_Integer`
 etc. from scratch, wrapping `Scalar_Value` + `Integer'Value` by hand.
 On reflection that layer is generically useful to any `alibfyaml`
@@ -217,6 +221,9 @@ miss.
 - Project directory: **`~/Repos/Ada/RPG/besm2_fmt`** (was
   `BESM2-formatter`), pushed to
   [`github.com/tkurtbond/besm2_fmt`](https://github.com/tkurtbond/besm2_fmt).
-- Ada root package: **`Besm2_Fmt`**.
+- Ada root package: **`BESM2_Fmt`** — BESM2 is an abbreviation (Big
+  Eyes, Small Mouth, 2nd edition), so it's kept upper-case rather than
+  title-cased like an ordinary word; file/executable/project/repo
+  names stay lowercase `besm2_fmt` regardless (Unix/GNAT convention).
 - Scope: **besm2 only** — no `-2`/`-4` mode-switching; a besm4 port, if
   wanted, would be a separate `besm4_fmt` sharing code via a library.

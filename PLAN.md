@@ -258,7 +258,9 @@ miss.
 1. [done] `Text_Layout` in isolation (unit-testable without any YAML
    at all) — `test/test_text_layout.adb` (`test/test.gpr`, a small
    sibling project mirroring `alibfyaml`'s own `test/test.gpr`
-   pattern), 26 checks, all passing. `Put_Row`/`Separator_Line` are
+   pattern), 30 checks, all passing (includes `Minus_Glyph`'s two
+   states, added alongside the `-n`/`--unicode-minus` port -- see
+   below). `Put_Row`/`Separator_Line` are
    checked against the real golden STAT-table fragment from
    `enyon-boase-2e.gen.rst` byte-for-byte (captured via
    `Ada.Text_IO.Set_Output` to a temp file and read back), not just
@@ -429,7 +431,11 @@ need no changes at all — their own defect-point rendering is
 byte-for-byte against besm-tools' real `besm2-rst` binary across all
 four formats, with and without `-n`, including the enhancement/limiter
 path (a synthetic fixture, since no committed 2E test-data file has
-them).
+them). `Minus_Glyph`'s two states (default ASCII hyphen-minus; Unicode
+MINUS SIGN once `Config.Unicode_Minus` is set) are covered by a
+permanent regression test in `test/test_text_layout.adb` (§8 item 1),
+checked against the exact U+2212 UTF-8 bytes rather than just
+eyeballed.
 
 ## Open questions
 

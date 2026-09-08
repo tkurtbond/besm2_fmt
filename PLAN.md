@@ -550,3 +550,14 @@ sub-second timing) — not portable to macOS/BSD as written.
   `/usr/local/sw/versions/ada/`, resolved via `GPR_PROJECT_PATH`
   (already set) — `with "arg_parser.gpr";` needs no path or Alire
   dependency.
+- Performance vs. `besm2-rst`: benchmarked and documented in
+  `COMPARISON.md`, reproducible via `tools/benchmark.sh`/
+  `make benchmark`. `besm2_fmt` is substantially faster (~6-9x per
+  invocation on a tiny real fixture; ~25-37x throughput on a
+  2000-entity file), at the cost of higher peak RSS on a single very
+  large document (libfyaml holds the whole parsed node tree in memory
+  at once) — though notably *not* on a genuinely multi-document file,
+  where `Document_Stream`'s per-document streaming keeps `besm2_fmt`'s
+  RSS lower than `besm2-rst`'s. Not a decision that changes anything
+  about the port (no performance requirement drove it — parity with
+  `besm2-rst.scm`'s behavior did), just a recorded data point.

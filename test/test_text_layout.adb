@@ -148,6 +148,19 @@ begin
    BESM2_Fmt.Config.Bold_Head := True;
 
    -----------------------------------------------------------------
+   --  Minus_Glyph -- besm2-rst.scm's minus-glyph: ASCII hyphen-minus
+   --  by default, or Unicode MINUS SIGN (U+2212, UTF-8 E2 88 92) once
+   --  -n/--unicode-minus (Config.Unicode_Minus) is set.
+   -----------------------------------------------------------------
+   Check ("Minus_Glyph is ASCII hyphen-minus by default (-n not given)",
+          not BESM2_Fmt.Config.Unicode_Minus and then TL.Minus_Glyph = "-");
+   BESM2_Fmt.Config.Unicode_Minus := True;
+   Check ("Minus_Glyph is Unicode MINUS SIGN (U+2212) once -n/--unicode-minus is set",
+          TL.Minus_Glyph =
+          Character'Val (16#E2#) & Character'Val (16#88#) & Character'Val (16#92#));
+   BESM2_Fmt.Config.Unicode_Minus := False;
+
+   -----------------------------------------------------------------
    --  Put_Row / Separator_Line, against the real golden grid-table
    --  fragment (enyon-boase-2e.gen.rst's STAT table, table-width 60,
    --  num-width 10):

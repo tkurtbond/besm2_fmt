@@ -1,13 +1,16 @@
 # besm2_fmt: porting `besm2-rst.scm` to Ada
 
-**Source being ported:** `~/current/RPG/Tools/BESM/besm2-rst.scm` (Chicken Scheme,
-1219 lines), part of the BESM Tools suite (`README.rst` in that directory).
-It converts a YAML BESM 2E character/template/item file into
-reStructuredText, in one of four output formats selected by CLI flag.
+**Source being ported:**
+[`besm2-rst.scm`](https://github.com/tkurtbond/besm-tools/blob/main/besm2-rst.scm)
+(Chicken Scheme, 1219 lines), part of the
+[BESM Tools](https://github.com/tkurtbond/besm-tools) suite
+(`README.rst` in that repo). It converts a YAML BESM 2E
+character/template/item file into reStructuredText, in one of four
+output formats selected by CLI flag.
 
 **Target:** an Ada program, `besm2_fmt`, built on
-[`alibfyaml`](https://github.com/) (`~/Repos/Ada/alibfyaml`), the Ada
-binding to libfyaml's core parser/document/emitter API.
+[`alibfyaml`](https://github.com/tkurtbond/alibfyaml), the Ada binding
+to libfyaml's core parser/document/emitter API.
 
 ## 1. Why this is a real port, not a transliteration
 
@@ -165,10 +168,10 @@ presence" faithfully, but this is an open question — see below.
 
 ## 7. Testing strategy
 
-`test-data/*.yaml` (11 files, in
-`~/current/RPG/Tools/BESM/test-data/`) plus the `GNUmakefile`'s existing
-invocation patterns (`-s`, `-t`, `-m` combinations feeding `pandoc`) give
-ready-made golden inputs. Plan: run the existing Chicken binary on each
+[`test-data/*.yaml`](https://github.com/tkurtbond/besm-tools/tree/main/test-data)
+(11 files) plus the `GNUmakefile`'s existing invocation patterns
+(`-s`, `-t`, `-m` combinations feeding `pandoc`) give ready-made
+golden inputs. Plan: run the existing Chicken binary on each
 test file in each mode, save output, then diff the Ada port's output
 byte-for-byte against it as the acceptance test — much stronger than
 eyeballing, and catches whitespace/wrapping regressions the eye would
@@ -212,7 +215,8 @@ miss.
 
 - Program name: **besm2_fmt** (was `besmfmt`, was `besm2-rst`).
 - Project directory: **`~/Repos/Ada/RPG/besm2_fmt`** (was
-  `BESM2-formatter`).
+  `BESM2-formatter`), pushed to
+  [`github.com/tkurtbond/besm2_fmt`](https://github.com/tkurtbond/besm2_fmt).
 - Ada root package: **`Besm2_Fmt`**.
 - Scope: **besm2 only** — no `-2`/`-4` mode-switching; a besm4 port, if
   wanted, would be a separate `besm4_fmt` sharing code via a library.

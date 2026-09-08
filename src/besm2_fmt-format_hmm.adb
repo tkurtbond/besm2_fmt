@@ -101,18 +101,20 @@ package body BESM2_Fmt.Format_Hmm is
         (if not S.Specialisations.Is_Empty
          then Entities.Join (S.Specialisations, ", ") & ".  "
          else "");
+      Emphasized : constant String :=
+        Emphasize (To_String (S.Name) & Sep & Level_Prefix & To_String (S.Level));
+      --  Matches Format_Attribute/Format_Defect above (and
+      --  Format_Terse's own Format_Skill): only name+level is
+      --  emphasized, "(...SP)" stays plain. besm2-rst.scm's
+      --  process-skill-hmm originally emphasized the whole rest of the
+      --  line too -- an upstream bug (process-attribute-hmm/
+      --  process-defect-hmm, and this function's own terse
+      --  counterpart, all close `emphasizing` right after name+level;
+      --  process-skill-hmm was the only one that didn't) -- fixed
+      --  upstream in besm-tools commit b04abb5 and ported here to
+      --  match. See PLAN.md's former open question on this.
    begin
-      --  Unlike Format_Attribute/Format_Defect above (and unlike
-      --  Format_Terse's own Format_Skill), besm2-rst.scm's
-      --  process-skill-hmm's `emphasizing` call doesn't close after
-      --  name+level -- it wraps the whole rest of the line, "(...SP)"
-      --  included: "(show #t (emphasizing name ... level " (" ...
-      --  points " SP)"))" is all one argument list to emphasizing.
-      --  Confirmed against the real besm2-rst binary's -b output.
-      return
-        Emphasize
-          (To_String (S.Name) & Sep & Level_Prefix & To_String (S.Level) &
-           " (" & Spec_Part & Points_Image (S.Points) & " SP)");
+      return Emphasized & " (" & Spec_Part & Points_Image (S.Points) & " SP)";
    end Format_Skill;
 
    -----------------------------------------------------------------

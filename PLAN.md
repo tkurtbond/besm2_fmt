@@ -63,7 +63,7 @@ besm2_fmt/
                                          too (private to the body), not a separate file as
                                          originally sketched -- there was no other consumer
                                          to justify splitting them out [done]
-    besm2_fmt-format_grid.adb        -- process-entity (reST grid table)
+    besm2_fmt-format_grid.ads/.adb   -- process-entity (reST grid table) [done]
     besm2_fmt-format_terse.ads/.adb  -- process-entity-terse [done]
     besm2_fmt-format_hmm.adb         -- process-entity-hmm
     besm2_fmt-format_raw_ms.adb      -- process-entity-raw-ms
@@ -292,8 +292,40 @@ miss.
    Scheme's `string-trim-both` strips general whitespace, so that
    newline was staying embedded mid-sentence in the Ada output until
    fixed with an explicit whitespace `Character_Set`.
-4. Grid-table backend (exercises `Text_Layout` fully) — diff against
-   golden output.
+4. [done] Grid-table backend (`Format_Grid`, `process-entity`'s
+   process-stat/process-derived/process-attribute/process-defect/
+   process-skill) — exercises `Text_Layout` fully, and is now
+   besm2_fmt's default output (no flag needed, matching
+   `*output-formatter*`'s Scheme default). `row2`/`row3`/`sep2`/`sep3`/
+   `headsep2`/`headsep3` are ported as same-named thin local wrappers
+   over `Text_Layout.Put_Row`/`Separator_Line`, so `Format_Grid`'s body
+   reads next to `besm2-rst.scm`'s `process-entity` with minimal
+   translation. Verified byte-for-byte against besm-tools' real
+   `build/*-2e.gen.rst` golden output on both 2E test-data files, via
+   file argument, stdin, and `-o`/`--output`, plus the
+   `composite-2e.yaml`/`composite-multi-doc-2e.yaml` multi-document
+   equivalence check. One real bug found this way, distinct from
+   Terse's: `Text_Layout.Word_Wrap` only split words on ASCII space, so
+   a `details: |` YAML literal block scalar's *embedded* newline (not
+   the trailing one Terse's fix already covered — see below) got
+   carried through as literal word content instead of being treated as
+   a word break. Confirmed against `FV2021-Coleopteran-2e.yaml`'s
+   "Weapon: Rocket Pod" attribute, whose two-line `details: |` block
+   re-fills as one continuous phrase in the real golden output; the
+   unfixed Ada version instead printed the embedded `\n` raw, splitting
+   a table row's `|...|` borders across two malformed physical lines.
+   Fixed by making `Word_Wrap` treat any of space/LF/CR/HT as a word
+   boundary, not just `' '` — a permanent regression test for this
+   exact case (the two-line block scalar, not just a pre-joined
+   single-line string) is in `test/test_text_layout.adb`. Two
+   grid-specific things intentionally live only in `Format_Grid`, not
+   `Entities`, because Terse's golden output proves they're
+   format-specific rather than domain data: `derived-abbreviations`
+   (`ACV` → `Attack Combat Value` etc. — Terse's golden output keeps
+   the raw abbreviation) and the "Mecha Sub-Attributes"/"Mecha
+   Defects"/label-points (`CP`/`BP`/`MP`/`MBP`) machinery, which
+   `process-entity` (grid) never uses at all, unlike
+   `process-entity-terse`/`-hmm`.
 5. `h-m-m` and raw-`ms`/`tbl` backends (structurally close to
    terse/grid respectively, so cheap once the first two are solid).
 

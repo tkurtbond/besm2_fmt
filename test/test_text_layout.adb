@@ -95,6 +95,21 @@ begin
       "Auto-fire, Area Effect, Limited" & ASCII.LF &
       "Shots " & Character'Val (16#C3#) & Character'Val (16#97#) &
       "2 [3 shots], Stoppable)");
+   Check
+     ("Word_Wrap treats an embedded newline (from a ""details: |"" YAML " &
+      "block scalar) as a word break, not literal content -- a real bug " &
+      "found against FV2021-Coleopteran-2e.yaml's ""Weapon: Rocket Pod"" " &
+      "attribute, whose details field is a two-line block scalar that " &
+      "re-fills as one continuous phrase in the golden grid-table output",
+      Joined (TL.Word_Wrap
+                ("Weapon: Rocket Pod (Damage 45, Auto-fire, Area Effect, " &
+                 "Limited Shots " & Character'Val (16#C3#) & Character'Val (16#97#) &
+                 "2 [3 shots]," & ASCII.LF & "Stoppable)", 36),
+              Sep => "" & ASCII.LF) =
+      "Weapon: Rocket Pod (Damage 45," & ASCII.LF &
+      "Auto-fire, Area Effect, Limited" & ASCII.LF &
+      "Shots " & Character'Val (16#C3#) & Character'Val (16#97#) &
+      "2 [3 shots], Stoppable)");
    Check ("Word_Wrap never breaks a single word longer than Width",
           Joined (TL.Word_Wrap ("Supercalifragilisticexpialidocious", 5)) =
           "Supercalifragilisticexpialidocious");

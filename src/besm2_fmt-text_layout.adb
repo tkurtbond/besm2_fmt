@@ -48,6 +48,21 @@ package body BESM2_Fmt.Text_Layout is
    --  Word_Wrap
    -----------------------------------------------------------------
 
+   function Is_Word_Break (C : Character) return Boolean is
+     (C = ' ' or else C = ASCII.LF or else C = ASCII.CR or else C = ASCII.HT);
+   --  Word_Wrap's input can be a YAML literal block scalar ("details:
+   --  |") re-embedded mid-sentence in a larger description string,
+   --  carrying an internal newline where the block's original line
+   --  break was -- e.g. FV2021-Coleopteran-2e.yaml's "Weapon: Rocket
+   --  Pod" attribute details, "...[3 shots],\nStoppable". The golden
+   --  grid-table output re-fills that as ordinary text ("...[3
+   --  shots], Stoppable)" on one line, not as a forced break at the
+   --  embedded "\n" -- so every whitespace character is a word
+   --  boundary here, the same as an ordinary text-fill/wrap algorithm,
+   --  not just ' '. Treating '\n' as ordinary word content instead
+   --  (matching only ' ') would print it as a literal embedded newline
+   --  and corrupt the row's "|...|" borders.
+
    function Word_Wrap (S : String; Width : Positive) return Line_Vectors.Vector is
       Result  : Line_Vectors.Vector;
       Current : Unbounded_String := Null_Unbounded_String;
@@ -62,7 +77,7 @@ package body BESM2_Fmt.Text_Layout is
          declare
             Word_Start : constant Natural := I;
          begin
-            while I <= S'Last and then S (I) /= ' ' loop
+            while I <= S'Last and then not Is_Word_Break (S (I)) loop
                I := I + 1;
             end loop;
             declare
@@ -80,7 +95,7 @@ package body BESM2_Fmt.Text_Layout is
                end if;
             end;
          end;
-         while I <= S'Last and then S (I) = ' ' loop
+         while I <= S'Last and then Is_Word_Break (S (I)) loop
             I := I + 1;
          end loop;
       end loop;

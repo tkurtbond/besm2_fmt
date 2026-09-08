@@ -47,12 +47,21 @@ package BESM2_Fmt.Text_Layout is
      (Index_Type => Positive, Element_Type => Unbounded_String);
 
    function Word_Wrap (S : String; Width : Positive) return Line_Vectors.Vector;
-   --  Greedy word-wrap on runs of ASCII spaces to Width display
-   --  columns (one word per gap; multiple spaces between words
-   --  collapse to one on rewrap, as with ordinary text-fill
-   --  algorithms). A single word longer than Width is not broken --
-   --  it is emitted alone on its own line, overrunning Width; this
-   --  never comes up in the real BESM data at the default
+   --  Greedy word-wrap on runs of whitespace (space, LF, CR, HT) to
+   --  Width display columns (one word per gap; multiple whitespace
+   --  characters between words collapse to one on rewrap, as with
+   --  ordinary text-fill algorithms). Whitespace here deliberately
+   --  includes newlines, not just ' ': a "details: |" YAML literal
+   --  block scalar carries its own embedded line breaks, and those get
+   --  re-filled as ordinary text by the real besm2-rst.scm output
+   --  (confirmed against FV2021-Coleopteran-2e.yaml's "Weapon: Rocket
+   --  Pod" attribute, whose details field is a two-line block scalar
+   --  but wraps as one continuous phrase in the golden grid-table
+   --  output) rather than forcing a break at the embedded "\n" -- and
+   --  printing that embedded "\n" literally would corrupt the "|...|"
+   --  row borders besides. A single word longer than Width is not
+   --  broken -- it is emitted alone on its own line, overrunning
+   --  Width; this never comes up in the real BESM data at the default
    --  *table-width* of 60. An empty S yields one empty line, not zero
    --  lines -- a table row still needs a line to print even when its
    --  wrapped column is "".

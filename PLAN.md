@@ -63,7 +63,7 @@ besm2_fmt/
     besm2_fmt-format_terse.adb       -- process-entity-terse
     besm2_fmt-format_hmm.adb         -- process-entity-hmm
     besm2_fmt-format_raw_ms.adb      -- process-entity-raw-ms
-    besm2_fmt-cli.adb                -- argument parsing (the args:make-option table)
+    besm2_fmt-cli.ads/.adb           -- argument parsing (the args:make-option table), via arg_parser
     besm2_fmt.adb                    -- main: parse args, open input(s), dispatch, write output
   besm2_fmt.gpr
 ```
@@ -148,17 +148,74 @@ them yet.
 
 ## 5. CLI parsing
 
-The `args` egg's option table (`+command-line-options+`, ~20 flags:
+Uses [`arg_parser`](https://github.com/tkurtbond/arg_parser)
+(`~/Repos/Ada/arg_parser`), not `GNAT.Command_Line`. Dependency
+mechanism is already settled, unlike `alibfyaml`'s (see Open
+questions): `arg_parser` is installed under
+`/usr/local/sw/versions/ada/`, and `GPR_PROJECT_PATH` already includes
+`/usr/local/sw/versions/ada/share/gpr`, so a plain `with "arg_parser.gpr";`
+in `besm2_fmt.gpr` resolves it with no path or Alire dependency needed.
+
+(One correction from how this requirement was first described: the
+relevant env var is `GPR_PROJECT_PATH`, not `GPR_INCLUDE_PATH` — the
+latter isn't a `gprbuild` variable. Confirmed set in this environment
+already, pointing at `/usr/local/sw/versions/ada/share/gpr`, which is
+exactly where `arg_parser.gpr` and its compiled `.ali`/library live.)
+
+`arg_parser` intermingles option/argument processing in declaration
+order (see its README) rather than parsing all options up front, and
+represents each option as a value of its `Option` type built by one of
+several `Make_*_Option` constructors — a `Handler` function called on
+the option's argument, or a `Variable` set directly, depending on the
+constructor. The Scheme's `+command-line-options+` table (~20 flags:
 `-1/--one`, `-B`, `-b`, `-D`, `-d`, `-H`, `-L`, `-R`, `-S`, `-h`, `-i`,
 `-l`, `-M`, `-m`, `-o`, `-p`, `-s`, `-t`, `-U`, `-u`, `-w`) maps onto
-`GNAT.Command_Line`'s `Getopt`, or a small hand-rolled parser if
-`Getopt`'s long-option support is inconvenient — needs checking once
-actually implementing this. Each flag sets one field of a `Config`
-record instead of a top-level `set!` special, which also removes the
-`parameterize`/dynamic-scoping pattern (`mecha?`, `*hmm-depth*`) in
-favor of passing `Config` (and, for `mecha?`/`hmm-depth`, explicit
-parameters or a small mutable "render state" record threaded through the
-four format backends).
+these fairly directly, in four groups:
+
+- **Plain boolean flags** (`-B`/`--no-bold-head`, `-b`/`--bold`,
+  `-D`/`--omit-description`, `-d`/`--debug`, `-S`/`--hmm-separate`,
+  `-i`/`--italics`, `-l`/`--level`, `-M`/`--em-dash`,
+  `-p`/`--page`, `-s`/`--subtotals`): `Make_Set_Boolean_True_Option`
+  (or `_False_` for `-B`, which is the one flag that turns a
+  default-on setting off), each with `Variable` pointing at an
+  `aliased Boolean` field of a `Config` record.
+- **Output-format selection** (`-t`/`--terse`, `-H`/`--hmm`,
+  `-m`/`--raw-ms-tables`, and no flag for the reST-grid default): the
+  Scheme's `(set! *output-formatter* process-entity-X)` — "whichever
+  was named last wins" — maps onto a single `Output_Format` enum
+  variable (`Grid | Terse | Hmm | Raw_Ms`) rather than onto a set of
+  independent booleans. `-t`/`-H`/`-m` each become a `Make_Option`
+  (no-argument) whose `Handler` sets that one variable and returns
+  `True` — `-H` additionally needs to set `*hmm-output*` too (a
+  "set two things from one flag" case; the handler just does both).
+- **Required-argument options**: `-L`/`--hmm-depth` and `-w`/`--width`
+  are `Make_Set_Natural_Option`/`Make_Set_Positive_Option` (numeric,
+  so `arg_parser` validates and converts for free — no
+  `string->number` equivalent to hand-write); `-R`/`--hmm-root` and
+  `-o`/`--output` are `Make_Set_String_Option` (`Variable` is a
+  `String_Reference`, i.e. `access all String` — see `arg_parser`'s
+  README on why: you can't point at an unconstrained `String`
+  directly). `-U`/`--subunderliner` and `-u`/`--underliner` take a
+  single character (the Scheme does `(string-ref arg 0)`); no
+  dedicated `Character` option kind exists, so these use
+  `Make_String_Option` with a `Handler` that validates
+  `Arg'Length = 1` and extracts `Arg (Arg'First)`.
+- **`-h`/`--help`**: `Make_Option` with a `Handler` that calls `Usage`
+  on the parser and then unwinds — `arg_parser`'s own
+  `examples/src/simple2_args.adb` (`Do_Help`) does exactly this
+  (raise a local `End_Program` exception after printing usage), so
+  `besm2_fmt` follows the same pattern rather than inventing one.
+
+Following `arg_parser`'s own recommended non-`'Unrestricted_Access`
+style (`examples/src/simple2_args.ads`/`.adb`, not `simple.adb`'s
+single-file version): `Config`'s fields are `aliased` package-level
+state in `BESM2_Fmt.Config`, and `BESM2_Fmt.Cli` holds the `Handler`
+functions, the `Options : aliased Option_Array`, and the `Parser`
+value built by `Make_Parser`, referencing `Config`'s fields via
+`'Access`. This also removes the Scheme's `parameterize`/dynamic-scoping
+pattern (`mecha?`, `*hmm-depth*`) — `Config` (and, for
+`mecha?`/`hmm-depth`, explicit parameters or a small mutable "render
+state" record) is threaded through the four format backends instead.
 
 ## 6. A behavior worth flagging before porting it faithfully
 
@@ -209,11 +266,12 @@ miss.
 - **Dependency mechanism for `alibfyaml`.** Plain relative/absolute `with
   "..."` in the `.gpr`, or an Alire path/git dependency — not yet
   decided.
-- **Timing relative to the `alibfyaml` typed-accessors work.** §4 above
-  is now a real dependency on that plan landing first (at least its
-  Integer/Float/Boolean/String pieces); decide whether to wait for it,
-  or start `besm2_fmt` with a throwaway local shim and switch over once
-  `alibfyaml` has it.
+- ~~**Timing relative to the `alibfyaml` typed-accessors work.**~~
+  Resolved: that work has landed (`Integer_Value`/`Long_Integer_Value`/
+  `Long_Long_Integer_Value`/`Float_Value`/`Long_Float_Value`/
+  `Boolean_Value`/`String_Value`, required and optional-with-default
+  forms, plus `0b`-binary and `_`-separator extensions), so §4 can be
+  implemented directly against current `alibfyaml`, no shim needed.
 
 ## Decisions already made
 
@@ -227,3 +285,8 @@ miss.
   names stay lowercase `besm2_fmt` regardless (Unix/GNAT convention).
 - Scope: **besm2 only** — no `-2`/`-4` mode-switching; a besm4 port, if
   wanted, would be a separate `besm4_fmt` sharing code via a library.
+- CLI parsing: **[`arg_parser`](https://github.com/tkurtbond/arg_parser)**
+  (see §5), not `GNAT.Command_Line`. Installed under
+  `/usr/local/sw/versions/ada/`, resolved via `GPR_PROJECT_PATH`
+  (already set) — `with "arg_parser.gpr";` needs no path or Alire
+  dependency.

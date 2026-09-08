@@ -171,4 +171,7 @@ package body BESM2_Fmt.Text_Layout is
    function Hbolding (S : String) return String is
      (if Config.Bold_Head then Bold (S) else S);
 
+   function Minus_Glyph return String is
+     (if Config.Unicode_Minus then "−" else "-");
+
 end BESM2_Fmt.Text_Layout;

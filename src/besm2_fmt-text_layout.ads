@@ -132,4 +132,17 @@ package BESM2_Fmt.Text_Layout is
    --  -B/--no-bold-head), else return S unchanged -- besm2-rst.scm's
    --  `hbolding`, used only for grid-table header cells.
 
+   function Minus_Glyph return String;
+   --  "-" (ASCII hyphen-minus) by default, or Unicode MINUS SIGN
+   --  (U+2212) under -n/--unicode-minus (Config.Unicode_Minus) --
+   --  besm2-rst.scm's minus-glyph. Used wherever this program builds a
+   --  negative-number string itself: BESM2_Fmt.Entities.Sign_For (the
+   --  enhancement/limiter "-"/"+" signs inside an attribute's details
+   --  text -- shared by all four backends, since Details is computed
+   --  once at load time regardless of eventual output format), and
+   --  Format_Grid/Format_Raw_Ms's defect points and DEFECTS TOTAL/TOTAL
+   --  rows. Not used by Format_Terse/Format_Hmm's own defect-point
+   --  rendering, which is Label_Points' "N BP"/"N CP" suffix, not a
+   --  sign glyph, and so is unaffected by this flag either way.
+
 end BESM2_Fmt.Text_Layout;

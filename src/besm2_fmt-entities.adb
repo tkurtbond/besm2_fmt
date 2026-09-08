@@ -2,10 +2,12 @@ with Ada.Characters.Handling;
 with Ada.Strings;
 with Ada.Strings.Fixed;
 with Ada.Strings.Maps;
+with BESM2_Fmt.Text_Layout;
 
 package body BESM2_Fmt.Entities is
 
    package Nod renames Libfyaml.Nodes;
+   package TL renames BESM2_Fmt.Text_Layout;
 
    --  Ada.Strings.Fixed.Trim's 2-argument form only strips the space
    --  character, not general whitespace -- unlike Chicken's
@@ -84,8 +86,10 @@ package body BESM2_Fmt.Entities is
 
    type Customizer_Kind is (Enhancement, Limiter);
 
-   function Sign_For (Kind : Customizer_Kind) return Character is
-     (if Kind = Enhancement then '-' else '+');
+   function Sign_For (Kind : Customizer_Kind) return String is
+     (if Kind = Enhancement then TL.Minus_Glyph else "+");
+   --  Limiter's "+" is always plain ASCII -- besm2-rst.scm's -n/
+   --  --unicode-minus only swaps the negative-number glyph, never "+".
 
    function Format_Customizers
      (Items : Nod.Node; Kind : Customizer_Kind) return String_Vectors.Vector

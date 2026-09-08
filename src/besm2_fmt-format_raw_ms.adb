@@ -47,6 +47,21 @@ package body BESM2_Fmt.Format_Raw_Ms is
    function Points_Image (N : Integer) return String is
      (Ada.Strings.Fixed.Trim (Integer'Image (N), Ada.Strings.Left));
 
+   function Defect_Points_Image (N : Integer) return String is
+     (TL.Minus_Glyph & Points_Image (abs N));
+   --  Defect points are always negative; unlike Format_Grid's
+   --  Defect_Points_Image there's no reST backslash-escape needed
+   --  here (this is inside a "T{...T}" groff text block, not exposed
+   --  to reST list-marker syntax), but the sign glyph itself still
+   --  goes through TL.Minus_Glyph rather than Integer'Image's own
+   --  built-in "-", same reasoning as Format_Grid.
+
+   function Signed_Points_Image (N : Integer) return String is
+     (if N < 0 then TL.Minus_Glyph & Points_Image (abs N) else Points_Image (N));
+   --  For a total that might be positive, negative, or zero -- see
+   --  Format_Grid.Signed_Points_Image; same besm-tools commit 5cb3d92
+   --  fix, ported here.
+
    function Expand_Derived_Name (Name : String) return String is
      (if Name = "ACV" then "Attack Combat Value"
       elsif Name = "DCV" then "Defence Combat Value"
@@ -220,13 +235,13 @@ package body BESM2_Fmt.Format_Raw_Ms is
          end if;
          IO.Put_Line (Raw_Prefix & "#" & Tbold ("POINTS") & "#" & Tbold ("DEFECT"));
          for D of E.Defects loop
-            IO.Put_Line (Raw_Prefix & "#" & Points_Image (D.Points) & "#T{");
+            IO.Put_Line (Raw_Prefix & "#" & Defect_Points_Image (D.Points) & "#T{");
             IO.Put_Line (Raw_Prefix & Format_Defect_Description (D));
             IO.Put_Line (Raw_Prefix & "T}");
          end loop;
          if Config.Show_Subtotals then
             IO.Put_Line
-              (Raw_Prefix & "#" & Tbold (Points_Image (E.Defects_Total)) & "#" &
+              (Raw_Prefix & "#" & Tbold (Signed_Points_Image (E.Defects_Total)) & "#" &
                Tbold ("DEFECTS TOTAL"));
          end if;
          IO.Put_Line (Raw_Prefix);
@@ -264,7 +279,7 @@ package body BESM2_Fmt.Format_Raw_Ms is
       --  are unconditional either way.
       if E.Entity_Total > 0 then
          IO.Put_Line
-           (Raw_Prefix & "#" & Tbold (Points_Image (E.Entity_Total)) & "#" &
+           (Raw_Prefix & "#" & Tbold (Signed_Points_Image (E.Entity_Total)) & "#" &
             Tbold ("TOTAL"));
       end if;
       IO.Put_Line (Raw_Prefix & "=");

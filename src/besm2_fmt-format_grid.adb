@@ -76,14 +76,28 @@ package body BESM2_Fmt.Format_Grid is
      (Ada.Strings.Fixed.Trim (Integer'Image (N), Ada.Strings.Left));
 
    function Defect_Points_Image (N : Integer) return String is
-     ("\" & Points_Image (N));
+     ("\" & TL.Minus_Glyph & Points_Image (abs N));
    --  Defect points are always negative (a besm2-rst.scm design
    --  decision -- see its header comment); reST would otherwise read
    --  the leading "-" as starting a bullet list, so it's
    --  backslash-quoted. besm2-rst.scm's process-defect does this
    --  unconditionally (string-append "\\" ...), not just when
    --  negative, so this ports that as-is rather than special-casing
-   --  the sign.
+   --  the sign. The sign glyph itself goes through TL.Minus_Glyph
+   --  (ASCII hyphen-minus, or Unicode MINUS SIGN under
+   --  -n/--unicode-minus) rather than Integer'Image's own built-in
+   --  "-", matching besm2-rst.scm's negative-number->string.
+
+   function Signed_Points_Image (N : Integer) return String is
+     (if N < 0 then TL.Minus_Glyph & Points_Image (abs N) else Points_Image (N));
+   --  For a total that might be positive, negative, or zero --
+   --  Defects_Total (always <= 0, a sum of always-negative defect
+   --  points) and Entity_Total (can go negative if defects outweigh
+   --  stats+attributes). Stats_Total/Attributes_Total/Skills_Total
+   --  are never negative, so they keep using plain Points_Image --
+   --  matches besm2-rst.scm's points->string, added upstream in
+   --  besm-tools commit 5cb3d92 after the same bug (DEFECTS TOTAL
+   --  ignoring -n/--unicode-minus) turned up there first.
 
    function Expand_Derived_Name (Name : String) return String is
      (if Name = "ACV" then "Attack Combat Value"
@@ -215,7 +229,7 @@ package body BESM2_Fmt.Format_Grid is
          end loop;
          if Config.Show_Subtotals then
             Row3
-              ("", TL.Hbolding (Points_Image (E.Defects_Total)),
+              ("", TL.Hbolding (Signed_Points_Image (E.Defects_Total)),
                TL.Hbolding ("DEFECTS TOTAL"));
             Sep3;
          end if;
@@ -245,7 +259,7 @@ package body BESM2_Fmt.Format_Grid is
       --  process-entity with a plain trailing blank line here even
       --  under -1/--one-table.
       Sep3;
-      Row3 ("", TL.Hbolding (Points_Image (E.Entity_Total)), TL.Hbolding ("TOTAL"));
+      Row3 ("", TL.Hbolding (Signed_Points_Image (E.Entity_Total)), TL.Hbolding ("TOTAL"));
       Sep3;
       IO.New_Line;
    end Process_Entity;

@@ -41,6 +41,7 @@ package BESM2_Fmt.Config is
    Em_Dash                     : aliased Boolean := False;  -- -M/--em-dash
    Page_After_Description      : aliased Boolean := False;  -- -p/--page
    Show_Subtotals               : aliased Boolean := False;  -- -s/--subtotals
+   Unicode_Minus                : aliased Boolean := False;  -- -n/--unicode-minus
 
    -----------------------------------------------------------------
    --  Required-argument options.

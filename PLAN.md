@@ -408,6 +408,29 @@ All four output formats (`Format_Grid`, `Format_Terse`, `Format_Hmm`,
 `Format_Raw_Ms`) are now implemented and wired into `BESM2_Fmt_Main`;
 `besm2_fmt` has full functional parity with `besm2-rst.scm`.
 
+`-n`/`--unicode-minus` (`Config.Unicode_Minus`) was ported from
+besm-tools commits `5b9a72d`/`3bdc429`/`5cb3d92`: switches the glyph
+used for a negative number this program builds itself (ASCII
+hyphen-minus by default, or Unicode MINUS SIGN U+2212) between
+`BESM2_Fmt.Text_Layout.Minus_Glyph` (the single shared source of
+truth, alongside Bold/Italics/... since it's the same
+"Config-gated text choice" shape) and three call sites:
+`BESM2_Fmt.Entities.Sign_For` (enhancement/limiter signs baked into
+an attribute's `Details` at load time, so this affects all four
+backends' attribute descriptions, not just Grid/Raw_Ms — matches
+besm2-rst.scm's `make-attribute-details` being called from all four
+`process-attribute*` variants too), and `Format_Grid`/`Format_Raw_Ms`'s
+own `Defect_Points_Image`/`Signed_Points_Image` (defect points and the
+DEFECTS TOTAL/TOTAL rows — the latter needed for the same reason the
+upstream `5cb3d92` fix was needed: those totals were being built with
+plain `Integer'Image`, bypassing the glyph). `Format_Terse`/`Format_Hmm`
+need no changes at all — their own defect-point rendering is
+`Label_Points`' "N BP"/"N CP" suffix, never a sign glyph. Verified
+byte-for-byte against besm-tools' real `besm2-rst` binary across all
+four formats, with and without `-n`, including the enhancement/limiter
+path (a synthetic fixture, since no committed 2E test-data file has
+them).
+
 ## Open questions
 
 - **`mecha?` semantics** (§6): port the existence-check quirk faithfully,

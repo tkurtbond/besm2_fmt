@@ -1,4 +1,5 @@
 with "arg_parser.gpr";
+with "../../alibfyaml/libfyaml_ada.gpr";
 
 project BESM2_Fmt is
 

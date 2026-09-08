@@ -58,10 +58,13 @@ besm2_fmt/
     besm2_fmt-config.ads             -- CLI-settable globals (was the *star* specials) [done]
     besm2_fmt-text_layout.ads/.adb   -- pad/wrap/columnar-row rendering; bold/italics/emphasis
     besm2_fmt-entities.ads/.adb      -- domain types: Stat, Derived, Attribute, Defect, Skill,
-                                         Entity, built by walking Nodes once per entity
-    besm2_fmt-customizers.adb        -- the format-customizers port (enhancement/limiter shapes)
+                                         Entity, built by walking Nodes once per entity;
+                                         format-customizers/make-attribute-details live here
+                                         too (private to the body), not a separate file as
+                                         originally sketched -- there was no other consumer
+                                         to justify splitting them out [done]
     besm2_fmt-format_grid.adb        -- process-entity (reST grid table)
-    besm2_fmt-format_terse.adb       -- process-entity-terse
+    besm2_fmt-format_terse.ads/.adb  -- process-entity-terse [done]
     besm2_fmt-format_hmm.adb         -- process-entity-hmm
     besm2_fmt-format_raw_ms.adb      -- process-entity-raw-ms
     besm2_fmt-cli.ads/.adb           -- argument parsing (the args:make-option table), via arg_parser [done]
@@ -253,11 +256,21 @@ miss.
 ## 8. Suggested build order
 
 1. `Text_Layout` in isolation (unit-testable without any YAML at all).
-2. `Entities` against `alibfyaml` (using its typed accessors directly —
-   see §4), validated by loading a test file and dumping field values.
-3. **Terse backend first** — it does zero column layout, so it validates
-   CLI + data access + domain formatting before touching the harder
-   `Text_Layout` row renderer.
+2. [done] `Entities` against `alibfyaml` (using its typed accessors
+   directly — see §4).
+3. [done] **Terse backend first** — it does zero column layout, so it
+   validates CLI + data access + domain formatting before touching the
+   harder `Text_Layout` row renderer. Validated against besm-tools'
+   *actual* golden output (`build/*-2e-terse.gen.rst`, built by its
+   `GNUmakefile` from the real `besm2-rst` binary) rather than just
+   eyeballing: byte-for-byte diff, zero differences, on both 2E
+   test-data files, via a file argument, via stdin, and via
+   `-o`/--output`. One real bug found this way: `Ada.Strings.Fixed.Trim`'s
+   2-argument form only strips spaces, not the trailing newline a YAML
+   literal block scalar (`details: |`) leaves on the decoded text —
+   Scheme's `string-trim-both` strips general whitespace, so that
+   newline was staying embedded mid-sentence in the Ada output until
+   fixed with an explicit whitespace `Character_Set`.
 4. Grid-table backend (exercises `Text_Layout` fully) — diff against
    golden output.
 5. `h-m-m` and raw-`ms`/`tbl` backends (structurally close to
@@ -275,9 +288,14 @@ miss.
   a shared library now rather than duplicated later (typed data access
   no longer needs factoring out for this purpose — it's shared for free
   via `alibfyaml` once that lands). Not needed for `besm2_fmt` alone.
-- **Dependency mechanism for `alibfyaml`.** Plain relative/absolute `with
-  "..."` in the `.gpr`, or an Alire path/git dependency — not yet
-  decided.
+- ~~**Dependency mechanism for `alibfyaml`.**~~ Resolved pragmatically,
+  for now: a relative `with "../../alibfyaml/libfyaml_ada.gpr";` in
+  `besm2_fmt.gpr` (unlike `arg_parser`, `alibfyaml` isn't installed
+  under `/usr/local/sw/versions/ada/` or registered on
+  `GPR_PROJECT_PATH`, so this assumes the sibling checkout layout used
+  throughout this session — `~/Repos/Ada/alibfyaml` next to
+  `~/Repos/Ada/RPG/besm2_fmt`). Revisit if `alibfyaml` ever gets a
+  proper install/Alire release.
 - ~~**Timing relative to the `alibfyaml` typed-accessors work.**~~
   Resolved: that work has landed (`Integer_Value`/`Long_Integer_Value`/
   `Long_Long_Integer_Value`/`Float_Value`/`Long_Float_Value`/

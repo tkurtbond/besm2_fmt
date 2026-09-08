@@ -1,69 +1,121 @@
 --  besm2_fmt - convert a YAML BESM 2E character/template/item file
 --  into reStructuredText. Ada port of besm2-rst.scm.
 --
---  CLI parsing is implemented (BESM2_Fmt.Cli, on Arg_Parser); the
---  YAML-reading and format-backend pieces (PLAN.md sections 2-4) are
---  not yet, so this just reports the parsed configuration as a
---  placeholder for the real pipeline described in besm2-rst.scm's own
---  main (adjust the table-width bold-markup allowance, print
---  Config.Hmm_Root when in hmm mode, then process each of
---  BESM2_Fmt.Cli.Filenames -- or standard input if there are none --
---  through the selected BESM2_Fmt.Config.Format backend).
+--  Only terse output (-t/--terse) is implemented so far (PLAN.md's
+--  build order puts it first: it needs no column-layout code). Grid,
+--  h-m-m, and raw-ms output are not yet -- selecting them reports
+--  "not yet implemented" and exits, rather than silently falling back
+--  to terse.
 
 with Ada.Command_Line;
 with Ada.Exceptions;
 with Ada.Text_IO;
-with Ada.Strings.Unbounded;
+with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with Arg_Parser;
+with Libfyaml;
+with Libfyaml.Documents;
+with Libfyaml.Nodes;
 with BESM2_Fmt.Cli;
 with BESM2_Fmt.Config;
+with BESM2_Fmt.Entities;
+with BESM2_Fmt.Format_Terse;
 
 procedure BESM2_Fmt_Main is
 
    package Config renames BESM2_Fmt.Config;
+   package Doc renames Libfyaml.Documents;
+   package Nod renames Libfyaml.Nodes;
 
    use type Arg_Parser.String_Reference;
+   use type Config.Output_Format;
 
-   function Image (Ref : Arg_Parser.String_Reference) return String is
-     (if Ref = null then "(unset)" else '"' & Ref.all & '"');
+   function Read_All_Standard_Input return String is
+      Buffer : Unbounded_String;
+   begin
+      while not Ada.Text_IO.End_Of_File loop
+         Append (Buffer, Ada.Text_IO.Get_Line);
+         Append (Buffer, ASCII.LF);
+      end loop;
+      return To_String (Buffer);
+   end Read_All_Standard_Input;
 
-   function Image (C : Character) return String is
-     (if C = ASCII.NUL then "(unset)" else "'" & C & "'");
+   procedure Process_Entities (D : Doc.Document; Source : String) is
+      Root  : constant Nod.Node := D.Root;
+      Count : Natural := 0;
+
+      procedure Visit (Item : Nod.Node) is
+         E : constant BESM2_Fmt.Entities.Entity :=
+           BESM2_Fmt.Entities.Load_Entity (Item);
+      begin
+         Count := Count + 1;
+         BESM2_Fmt.Format_Terse.Process_Entity (E, Count);
+      end Visit;
+   begin
+      if not Root.Is_Valid or else not Root.Is_Sequence then
+         raise Program_Error with
+           "expected a top-level YAML sequence of entities in " & Source;
+      end if;
+      Root.Iterate (Visit'Access);
+   end Process_Entities;
+
+   --  It is a file of possibly multiple entities. Matches
+   --  besm2-rst.scm's process-file: on error, report it and move on
+   --  to the next file rather than aborting the whole run.
+   procedure Process_One (Filename : String; Use_Stdin : Boolean) is
+      Source : constant String := (if Use_Stdin then "(stdin)" else Filename);
+   begin
+      declare
+         D : constant Doc.Document :=
+           (if Use_Stdin
+            then Doc.Parse_String (Read_All_Standard_Input)
+            else Doc.Parse_File (Filename));
+      begin
+         Process_Entities (D, Source);
+      end;
+   exception
+      when E : Libfyaml.Parse_Error | Libfyaml.Missing_Key | Libfyaml.Data_Error |
+               Program_Error =>
+         Ada.Text_IO.Put_Line
+           (Ada.Text_IO.Standard_Error,
+            "besm2_fmt: error processing " & Source & ": " &
+            Ada.Exceptions.Exception_Message (E));
+   end Process_One;
+
+   procedure Process_All is
+   begin
+      if BESM2_Fmt.Cli.Filenames.Is_Empty then
+         Process_One ("", True);
+      else
+         for F of BESM2_Fmt.Cli.Filenames loop
+            Process_One (To_String (F), False);
+         end loop;
+      end if;
+   end Process_All;
 
 begin
    BESM2_Fmt.Cli.Parse;
 
-   Ada.Text_IO.Put_Line ("Parsed configuration:");
-   Ada.Text_IO.Put_Line ("  Format                   = " & Config.Format'Image);
-   Ada.Text_IO.Put_Line ("  One_Table                = " & Config.One_Table'Image);
-   Ada.Text_IO.Put_Line ("  Head_Sep                 = '" & Config.Head_Sep & "'");
-   Ada.Text_IO.Put_Line ("  Bold_Head                = " & Config.Bold_Head'Image);
-   Ada.Text_IO.Put_Line ("  Bolding                  = " & Config.Bolding'Image);
-   Ada.Text_IO.Put_Line ("  Italicizing              = " & Config.Italicizing'Image);
-   Ada.Text_IO.Put_Line ("  Em_Dash                  = " & Config.Em_Dash'Image);
-   Ada.Text_IO.Put_Line ("  Level                    = " & Config.Level'Image);
-   Ada.Text_IO.Put_Line ("  Omit_Entity_Description  = " &
-                         Config.Omit_Entity_Description'Image);
-   Ada.Text_IO.Put_Line ("  Page_After_Description   = " &
-                         Config.Page_After_Description'Image);
-   Ada.Text_IO.Put_Line ("  Show_Subtotals           = " & Config.Show_Subtotals'Image);
-   Ada.Text_IO.Put_Line ("  Debugging                = " & Config.Debugging'Image);
-   Ada.Text_IO.Put_Line ("  Table_Width              = " & Config.Table_Width'Image);
-   Ada.Text_IO.Put_Line ("  Underliner               = " & Image (Config.Underliner));
-   Ada.Text_IO.Put_Line ("  Subunderliner            = " & Image (Config.Subunderliner));
-   Ada.Text_IO.Put_Line ("  Hmm_Output               = " & Config.Hmm_Output'Image);
-   Ada.Text_IO.Put_Line ("  Hmm_Depth                = " & Config.Hmm_Depth'Image);
-   Ada.Text_IO.Put_Line ("  Hmm_Root                 = " & Image (Config.Hmm_Root));
-   Ada.Text_IO.Put_Line ("  Hmm_Separate             = " & Config.Hmm_Separate'Image);
-   Ada.Text_IO.Put_Line ("  Output_File              = " & Image (Config.Output_File));
+   if Config.Format /= Config.Terse then
+      Ada.Text_IO.Put_Line
+        (Ada.Text_IO.Standard_Error,
+         "besm2_fmt: only terse output (-t/--terse) is implemented so far");
+      Ada.Command_Line.Set_Exit_Status (1);
+      return;
+   end if;
 
-   if BESM2_Fmt.Cli.Filenames.Is_Empty then
-      Ada.Text_IO.Put_Line ("  Filenames                = (none -- would read stdin)");
+   if Config.Output_File /= null then
+      declare
+         Output_File : Ada.Text_IO.File_Type;
+      begin
+         Ada.Text_IO.Create
+           (Output_File, Ada.Text_IO.Out_File, Config.Output_File.all);
+         Ada.Text_IO.Set_Output (Output_File);
+         Process_All;
+         Ada.Text_IO.Set_Output (Ada.Text_IO.Standard_Output);
+         Ada.Text_IO.Close (Output_File);
+      end;
    else
-      for F of BESM2_Fmt.Cli.Filenames loop
-         Ada.Text_IO.Put_Line
-           ("  Filename                 : " & Ada.Strings.Unbounded.To_String (F));
-      end loop;
+      Process_All;
    end if;
 
 exception

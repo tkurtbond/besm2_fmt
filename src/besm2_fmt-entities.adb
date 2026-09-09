@@ -88,8 +88,8 @@ package body BESM2_Fmt.Entities is
 
    function Sign_For (Kind : Customizer_Kind) return String is
      (if Kind = Enhancement then TL.Minus_Glyph else "+");
-   --  Limiter's "+" is always plain ASCII -- besm2-rst.scm's -n/
-   --  --unicode-minus only swaps the negative-number glyph, never "+".
+   --  Limiter's "+" is always plain ASCII -- -n/--no-unicode-minus
+   --  only swaps the negative-number glyph, never "+".
 
    function Format_Customizers
      (Items : Nod.Node; Kind : Customizer_Kind) return String_Vectors.Vector

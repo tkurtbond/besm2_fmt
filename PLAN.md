@@ -449,6 +449,23 @@ permanent regression test in `test/test_text_layout.adb` (§8 item 1),
 checked against the exact U+2212 UTF-8 bytes rather than just
 eyeballed.
 
+**Default polarity later flipped (user request, this program's own
+choice — not a besm2-rst.scm behavior to match):** `Config.Unicode_Minus`
+now defaults to `True` (Unicode MINUS SIGN by default), and the flag
+is `-n`/`--no-unicode-minus` (`Make_Set_Boolean_False_Option`) to
+revert to ASCII hyphen-minus when wanted — the same "default-on,
+`-X`/`--no-X` opts out" shape `-B`/`--no-bold-head` already uses for
+`Bold_Head`. `Minus_Glyph`'s doc comment, the three call sites'
+comments (`Entities.Sign_For`, `Format_Grid`'s two `-n` references),
+and `test/test_text_layout.adb`'s regression check were all updated
+to match (the test's first `Minus_Glyph` check now asserts the
+Unicode default; the second sets `Config.Unicode_Minus := False` to
+check the ASCII fallback, reversed from the original ASCII-default
+version) — full `make test` re-run clean after the flip. Verified
+against real `test-data/enyon-boase-2e.yaml` output too: default
+`besm2_fmt` now prints `\−2`-style defect points, `-n` reverts to
+`\-2`.
+
 `PERFORMANCE-COMPARISON.md` documents a performance comparison against
 `besm2-rst`, reproducible via `tools/benchmark.sh`/`make benchmark`
 (env vars: `BESM2_RST`, `BENCH_N`, `BENCH_ENTITIES`, `BENCH_SOURCE` —

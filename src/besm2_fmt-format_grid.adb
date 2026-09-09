@@ -84,8 +84,8 @@ package body BESM2_Fmt.Format_Grid is
    --  unconditionally (string-append "\\" ...), not just when
    --  negative, so this ports that as-is rather than special-casing
    --  the sign. The sign glyph itself goes through TL.Minus_Glyph
-   --  (ASCII hyphen-minus, or Unicode MINUS SIGN under
-   --  -n/--unicode-minus) rather than Integer'Image's own built-in
+   --  (Unicode MINUS SIGN by default, or ASCII hyphen-minus under
+   --  -n/--no-unicode-minus) rather than Integer'Image's own built-in
    --  "-", matching besm2-rst.scm's negative-number->string.
 
    function Signed_Points_Image (N : Integer) return String is
@@ -97,7 +97,7 @@ package body BESM2_Fmt.Format_Grid is
    --  are never negative, so they keep using plain Points_Image --
    --  matches besm2-rst.scm's points->string, added upstream in
    --  besm-tools commit 5cb3d92 after the same bug (DEFECTS TOTAL
-   --  ignoring -n/--unicode-minus) turned up there first.
+   --  ignoring -n/--no-unicode-minus) turned up there first.
 
    function Expand_Derived_Name (Name : String) return String is
      (if Name = "ACV" then "Attack Combat Value"

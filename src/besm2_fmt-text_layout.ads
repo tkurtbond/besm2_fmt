@@ -133,9 +133,11 @@ package BESM2_Fmt.Text_Layout is
    --  `hbolding`, used only for grid-table header cells.
 
    function Minus_Glyph return String;
-   --  "-" (ASCII hyphen-minus) by default, or Unicode MINUS SIGN
-   --  (U+2212) under -n/--unicode-minus (Config.Unicode_Minus) --
-   --  besm2-rst.scm's minus-glyph. Used wherever this program builds a
+   --  Unicode MINUS SIGN (U+2212) by default, or "-" (ASCII
+   --  hyphen-minus) under -n/--no-unicode-minus (Config.Unicode_Minus
+   --  cleared) -- besm2-rst.scm's minus-glyph, with the default
+   --  polarity later flipped (this program's own choice, not
+   --  besm2-rst.scm's -- see PLAN.md). Used wherever this program builds a
    --  negative-number string itself: BESM2_Fmt.Entities.Sign_For (the
    --  enhancement/limiter "-"/"+" signs inside an attribute's details
    --  text -- shared by all four backends, since Details is computed

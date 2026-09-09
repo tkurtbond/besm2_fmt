@@ -126,11 +126,11 @@ private
          Short_Name  => 'm',
          Long_Name   => "raw-ms-tables",
          Handler     => Do_Raw_Ms'Access),
-      Arg_Parser.Make_Set_Boolean_True_Option
-        (Description => "Use Unicode MINUS SIGN (U+2212) instead of ASCII " &
-                         "hyphen-minus for negative numbers.",
+      Arg_Parser.Make_Set_Boolean_False_Option
+        (Description => "Turns OFF Unicode MINUS SIGN (U+2212) for negative " &
+                         "numbers, reverting to ASCII hyphen-minus.",
          Short_Name  => 'n',
-         Long_Name   => "unicode-minus",
+         Long_Name   => "no-unicode-minus",
          Variable    => BESM2_Fmt.Config.Unicode_Minus'Access),
       Arg_Parser.Make_Set_String_Option
         (Description => "Output file.",

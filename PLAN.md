@@ -516,6 +516,24 @@ too — only the default, in-repo case gets relativized.
   Regenerating besm-tools' non-hmm golden fixtures (`build/*.gen.rst`
   via `make`) confirmed the fix is hmm-only, as expected: nothing else
   changed.
+- **TODO: check why an Attribute's `level` is optional** (while a
+  Skill's `level` is required) in both `besm2-rst.scm` (`may-exist
+  "level" attribute` vs. `must-exist "level" skill`) and
+  `BESM2_Fmt.Entities.Load_Attribute`/`Load_Skill` (this asymmetry is
+  ported faithfully — confirmed by a field-by-field
+  must-exist/may-exist audit this session, see the ova_fmt session's
+  discussion of this file — but *why* it exists was never actually
+  investigated, just preserved). `Attribute`'s doc comment guesses
+  "some mecha sub-attributes" have no level, but that's a guess made
+  while porting, not something confirmed against BESM rules or an
+  actual test-data example — none of the committed `test-data/*.yaml`
+  fixtures actually exercise a level-less Attribute, so this has never
+  been exercised end-to-end either. Worth checking the BESM
+  rulebook(s) (or `besm-tools`' own history/issues) for what a
+  level-less Attribute actually represents, and adding a test-data
+  fixture that exercises it if the answer confirms it's a real,
+  intentional case rather than dead code inherited from a template
+  file that never got Levels filled in.
 - **Shared library with a future besm4 port.** `besm4-rst.scm` is ~80%
   structurally identical to `besm2-rst.scm` (same helpers, same
   row/sep functions, same customizer logic; it only lacks the `h-m-m`

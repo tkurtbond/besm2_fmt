@@ -43,12 +43,18 @@ TEST_LETTEROUTPUT=\
 # below) rather than its LaTeX default.
 COMPARISON_PDFS=build/PERFORMANCE-COMPARISON.ms.pdf build/SOURCE-COMPARISON.ms.pdf
 
-.PHONY: all rst pdf test benchmark pdf-comparison clean testclean
+.PHONY: all rst pdf test benchmark pdf-comparison install clean testclean
 
 all: $(PROGRAM)
 
 $(PROGRAM): $(wildcard src/*.ads src/*.adb) besm2_fmt.gpr
 	gprbuild -p -P besm2_fmt.gpr
+
+# Installs $(PROGRAM) under $HOME/local (besm2_fmt.gpr's Install
+# package Prefix) via gprinstall.
+install:
+	gprbuild $(GPROPTS) -p -P besm2_fmt.gpr
+	gprinstall --mode=usage --install-name=besm2_fmt -f $(GPROPTS) -P besm2_fmt.gpr
 
 rst: $(PROGRAM) \
 	$(TEST_OUTPUT) $(TEST_TERSEOUTPUT) $(TEST_TBLOUTPUT) \

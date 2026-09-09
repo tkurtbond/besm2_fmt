@@ -22,4 +22,8 @@ project BESM2_Fmt is
       for Executable ("besm2_fmt_main.adb") use "besm2_fmt";
    end Builder;
 
+   package Install is
+      for Prefix use External ("HOME") & "/local";
+   end Install;
+
 end BESM2_Fmt;

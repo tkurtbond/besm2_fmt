@@ -542,6 +542,37 @@ too — only the default, in-repo case gets relativized.
   a shared library now rather than duplicated later (typed data access
   no longer needs factoring out for this purpose — it's shared for free
   via `alibfyaml` once that lands). Not needed for `besm2_fmt` alone.
+
+  **Why they're so similar, per the user (confirms this isn't
+  coincidental convergent design):** `besm2-rst.scm` was literally
+  created by copying `besm4-rst.scm` and hacking it down, when the
+  user decided to run a BESM 2nd Edition game instead of 4th — not
+  written from scratch against the BESM2E rules. One visible artifact
+  of that origin is already sitting in `besm2-rst.scm` itself: its
+  `format-customizers` comment cites "the Attack Helicopter, BESM 4E
+  p. 217" as the example justifying enhancements-negative/
+  limiters-positive sign conventions — a BESM *4E* rulebook reference
+  inside a BESM *2E* tool.
+
+  **A confirmed rules difference this history should make any besm4
+  port (or any future BESM2E-vs-BESM4E correctness check) watch for:
+  Defects have no Levels at all in BESM2E/BESM Retro 2E** — they're
+  priced in flat Bonus Points (BP) with no explicit Level field
+  (matches `besm2-rst.scm`'s actual `Defect` shape: `name`/`points`/
+  `details` only, confirmed by this session's must-exist/may-exist
+  audit — no `level` anywhere). Some Defects have BP tiers (1/2 BP,
+  1/2/3/4/5 BP, 3/6 BP, per the user), but those are just point-value
+  options to pick from, not an explicit in-game "Level" stat — an
+  implicit level at most, never a real one. **BESM 4th Edition is
+  different: Defects genuinely do have Levels/ranks there** — Lesser
+  (−1 point/rank), Greater (−2 points/rank), Serious (−3 points/rank)
+  — so a `Defect` record with no `Level` field, correct for
+  `besm2_fmt`, would be *wrong* for a `besm4_fmt` and needs a real
+  field for it, not something to copy over unchanged the way
+  `Text_Layout`/customizer logic reasonably could be. Given the
+  confirmed copy-and-hack lineage, this asymmetry is exactly the kind
+  of place a straight reuse would go wrong if a besm4 port ever
+  happens — flagged here so it isn't missed.
 - ~~**Dependency mechanism for `alibfyaml`.**~~ Resolved: `alibfyaml`
   is now installed under `/usr/local/sw/versions/ada/` and registered
   on `GPR_PROJECT_PATH`, same as `arg_parser`, so `besm2_fmt.gpr` just

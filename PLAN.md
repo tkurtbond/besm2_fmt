@@ -573,6 +573,22 @@ too — only the default, in-repo case gets relativized.
   confirmed copy-and-hack lineage, this asymmetry is exactly the kind
   of place a straight reuse would go wrong if a besm4 port ever
   happens — flagged here so it isn't missed.
+
+  **Confirmed clean for `besm2_fmt` itself, on request:** audited the
+  whole Ada source for any Defect/Level coupling. `Entities.Defect`'s
+  record has only `Name`/`Points`/`Details`, no `Level` field at all;
+  `Load_Defect` never looks up `"level"` from the YAML (the `"level"`
+  key is read in exactly two places in the entire codebase —
+  `Load_Attribute`, optional, and `Load_Skill`, required — never for a
+  Defect); and none of the four format backends
+  (`Format_Grid`/`Format_Terse`/`Format_Hmm`/`Format_Raw_Ms`)
+  reference a Defect's level anywhere, since they only ever consume
+  `Entities.Defect`'s three real fields. The only other `"level"` hit
+  in `src/` is the unrelated `-l`/`--level` CLI flag
+  (`Config.Level`), which affects only Attribute/Skill terse
+  rendering. So the BESM2E rule (Defects have no Levels) is already
+  correctly reflected end-to-end, from YAML parsing through every
+  output format — nothing needed fixing.
 - ~~**Dependency mechanism for `alibfyaml`.**~~ Resolved: `alibfyaml`
   is now installed under `/usr/local/sw/versions/ada/` and registered
   on `GPR_PROJECT_PATH`, same as `arg_parser`, so `besm2_fmt.gpr` just

@@ -516,39 +516,30 @@ too — only the default, in-repo case gets relativized.
   Regenerating besm-tools' non-hmm golden fixtures (`build/*.gen.rst`
   via `make`) confirmed the fix is hmm-only, as expected: nothing else
   changed.
-- **CONFIRMED BUG (not just an open question): an Attribute's `level`
-  should be required, not optional.** The previous version of this
-  entry asked why `Attribute`'s `level` is optional while `Skill`'s is
-  required; the user has since checked BESM 2nd Edition *Revised*
+- ~~**CONFIRMED BUG: an Attribute's `level` should be required, not
+  optional.**~~ Resolved. The user checked BESM 2nd Edition *Revised*
   directly and confirmed **all Attributes, including mecha
-  Attributes, have a required Level** — `Attribute`'s doc comment
+  Attributes, have a required Level** — `Attribute`'s old doc comment
   guess ("empty if the attribute has no level, e.g. some mecha
-  sub-attributes") was wrong, not a real BESM2E/BESM2ER case. The bug
-  is upstream, not something the port introduced: every
-  `process-attribute*` variant in `besm2-rst.scm` reads Level with
-  `(may-exist "level" attribute)` rather than `(must-exist "level"
-  attribute)` (confirmed at all four call sites — lines 330, 515,
-  694, 897 — `Skill` already correctly uses `must-exist` throughout),
-  and the same pattern is present in `besm4-rst.scm` too (lines 285,
-  471, 649) — likely inherited when `besm2-rst.scm` was copied from
-  it, per the "Shared library" note below, rather than introduced
-  independently. Logged as a `TODO BUG` in `besm-tools`' `todo.org`
-  (commit `10fc228`). **Not yet fixed anywhere** — needs, in order:
-  (1) fix `besm2-rst.scm` (`may-exist` → `must-exist` at all four
-  sites) and re-generate its golden `test-data/*.yaml` output; (2)
-  decide whether to fix `besm4-rst.scm` too (BESM4E rules weren't
-  independently checked, only BESM2ER, but the shared origin makes it
-  likely the same bug); (3) port the fix to
-  `BESM2_Fmt.Entities.Load_Attribute` (`Optional_String (N, "level")`
-  → the required `String_Value` form, matching `Load_Skill`) and
-  re-verify byte-for-byte against the regenerated golden output on
-  both 2E test-data files, across all four backends; (4) since no
-  committed `test-data/*.yaml` fixture currently has a level-less
-  Attribute, this change may not visibly affect any existing golden
-  output at all (in which case it's a pure correctness/validation
-  fix — malformed input now properly rejected — not a rendering
-  change) — worth confirming that expectation once the fix is made,
-  rather than assuming it.
+  sub-attributes") was wrong, not a real BESM2E/BESM2ER case. Fixed
+  upstream in `besm-tools` (commit `6139f21`): `besm2-rst.scm`'s four
+  `process-attribute*` variants switched from `(may-exist "level"
+  attribute)` to `(must-exist "level" attribute)`, matching `Skill`'s
+  existing pattern. (`besm4-rst.scm` needed a different fix — BESM4E's
+  Item Attribute, p. 101, genuinely has no Level; see that repo's
+  `todo.org` — not relevant here since `besm2_fmt` has no besm4
+  analog.) Ported to `BESM2_Fmt.Entities.Load_Attribute`:
+  `Level_Text`'s initializer changed from `Optional_String (N,
+  "level")` to `To_Unbounded_String (N.String_Value ("level"))`,
+  matching `Load_Skill`. Verified: `make test`'s 30 checks still pass;
+  built two binaries (pre-fix and post-fix `besm2_fmt`) and diffed
+  their output byte-for-byte across every `test-data/*.yaml` file and
+  every flag combination (`-s`, `-s -t`, `-s -m`, `-s -n`, `-s -m
+  -n`) — identical in every case, confirming expectation (4) from the
+  prior version of this entry: no committed fixture has a level-less
+  Attribute, so this was a pure correctness/validation fix (malformed
+  input now properly rejected) with zero effect on existing rendered
+  output.
 - **Shared library with a future besm4 port.** `besm4-rst.scm` is ~80%
   structurally identical to `besm2-rst.scm` (same helpers, same
   row/sep functions, same customizer logic; it only lacks the `h-m-m`

@@ -205,7 +205,7 @@ package body BESM2_Fmt.Entities is
    function Load_Attribute (N : Nod.Node) return Attribute is
       Name         : constant String := N.String_Value ("name");
       Points       : constant Integer := N.Integer_Value ("points");
-      Level_Text   : Unbounded_String := Optional_String (N, "level");
+      Level_Text   : Unbounded_String := To_Unbounded_String (N.String_Value ("level"));
       Details_Text : Unbounded_String := Optional_String (N, "details");
       Effective    : constant Unbounded_String := Optional_String (N, "effective");
       Enhancements : constant Nod.Node := N.Value ("enhancements");

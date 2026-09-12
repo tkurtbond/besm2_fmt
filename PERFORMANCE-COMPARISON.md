@@ -62,6 +62,27 @@ amount `ALIBFYAML-LIVENESS-PERFORMANCE.md` already accounts for.
 unchanged in kind, just slightly narrower margins -- see "Reading it"
 for the updated ranges.
 
+## Historical note: besm-tools' tree/etree multi-document fix
+
+An earlier version of this document found `tree`/`etree` (`besm2-rst-f`/
+`besm2-rst-f-e`) reading only 1 entity from the multi-document
+throughput fixture below, same as `yaml`/`fyaml`/`entity` -- but for a
+different, confirmed-by-reading-the-source reason: `besm2-rst-f.scm`/
+`besm2-rst-f-e.scm` called `document-parse-port`, `slibfyaml`'s
+single-document parse entry point, and simply never called
+`(slibfyaml documents streams)`, `slibfyaml`'s own `Document_Stream`-
+equivalent multi-document API -- a `besm2-rst-f`/`-f-e` implementation
+gap, not a limitation of `slibfyaml`'s Node/handle-based approach
+itself (`Document_Stream` was already fully capable). Fixed upstream
+in besm-tools commit `5c25561` (`~/current/RPG/Tools/BESM`): both now
+stream via `document-stream-open-*`/`-has-next?`/`-next!`, matching
+`besm2_fmt`'s own `Document_Stream` loop, verified byte-identical to
+the prior binaries on every existing single-document fixture first.
+See the "multi-document file" section's own numbers below and its
+"Reading it" bullet for what that fix changed here -- `yaml`/`fyaml`/
+`entity` still only read 1 entity from this file, a separate,
+still-open bug unrelated to and unaffected by this fix.
+
 ## Reproducing this
 
 The report below (everything between the `----` markers) is the
@@ -104,7 +125,7 @@ in the last table rather than showing up by accident in the others.
 
 # besm2_fmt vs besm2-rst-family benchmark
 
-Generated: 2026-09-12 13:56:38 UTC by `tools/benchmark.sh`.
+Generated: 2026-09-12 14:51:12 UTC by `tools/benchmark.sh`.
 
 - Machine: 13th Gen Intel(R) Core(TM) i9-13900HX, 32 threads, Linux 7.1.10-200.fc44.x86_64 x86_64
 - `BENCH_N`=200, `BENCH_ENTITIES`=2000, `BENCH_SOURCE`=./test-data/enyon-boase-2e.yaml
@@ -124,22 +145,22 @@ Mean time per invocation
 
 | Program | grid | terse | hmm | raw-ms |
 |---|---|---|---|---|
-| yaml | 22.449 ms | 20.657 ms | 18.113 ms | 19.679 ms |
-| fyaml | 23.946 ms | 18.804 ms | 18.775 ms | 18.780 ms |
-| tree | 21.465 ms | 17.129 ms | 16.421 ms | 17.737 ms |
-| entity | 24.656 ms | 18.292 ms | 17.090 ms | 20.146 ms |
-| etree | 22.680 ms | 19.508 ms | 18.214 ms | 19.594 ms |
-| besm2_fmt | 3.531 ms | 2.950 ms | 2.320 ms | 2.941 ms |
+| yaml | 23.308 ms | 18.304 ms | 19.234 ms | 18.226 ms |
+| fyaml | 22.963 ms | 19.391 ms | 18.053 ms | 18.820 ms |
+| tree | 21.764 ms | 19.063 ms | 18.709 ms | 19.042 ms |
+| entity | 23.098 ms | 17.438 ms | 17.287 ms | 20.090 ms |
+| etree | 21.708 ms | 19.541 ms | 18.559 ms | 19.456 ms |
+| besm2_fmt | 2.853 ms | 2.806 ms | 2.890 ms | 2.112 ms |
 
 besm2_fmt's speedup over each
 
 | Program | grid | terse | hmm | raw-ms |
 |---|---|---|---|---|
-| yaml | 6.4x | 7.0x | 7.8x | 6.7x |
-| fyaml | 6.8x | 6.4x | 8.1x | 6.4x |
-| tree | 6.1x | 5.8x | 7.1x | 6.0x |
-| entity | 7.0x | 6.2x | 7.4x | 6.9x |
-| etree | 6.4x | 6.6x | 7.9x | 6.7x |
+| yaml | 8.2x | 6.5x | 6.7x | 8.6x |
+| fyaml | 8.0x | 6.9x | 6.2x | 8.9x |
+| tree | 7.6x | 6.8x | 6.5x | 9.0x |
+| entity | 8.1x | 6.2x | 6.0x | 9.5x |
+| etree | 7.6x | 7.0x | 6.4x | 9.2x |
 
 ## Throughput: multi-entity document (2000 entities, one YAML document)
 
@@ -151,12 +172,12 @@ Time
 
 | Program | grid | terse | hmm | raw-ms |
 |---|---|---|---|---|
-| yaml | 15.80 s | 4.81 s | 4.94 s | 5.71 s |
-| fyaml | 14.41 s | 3.73 s | 3.82 s | 4.53 s |
-| tree | 13.73 s | 3.22 s | 3.33 s | 4.03 s |
-| entity | 15.17 s | 4.64 s | 4.74 s | 5.53 s |
-| etree | 13.62 s | 3.08 s | 3.24 s | 3.93 s |
-| besm2_fmt | 0.44 s | 0.23 s | 0.22 s | 0.23 s |
+| yaml | 15.86 s | 4.77 s | 4.89 s | 5.64 s |
+| fyaml | 14.30 s | 3.63 s | 3.82 s | 4.56 s |
+| tree | 13.61 s | 3.17 s | 3.32 s | 4.02 s |
+| entity | 15.19 s | 4.61 s | 4.79 s | 5.58 s |
+| etree | 13.55 s | 3.00 s | 3.23 s | 3.94 s |
+| besm2_fmt | 0.44 s | 0.21 s | 0.21 s | 0.22 s |
 
 Entities processed (sanity check -- should read 2000 everywhere)
 
@@ -173,50 +194,47 @@ Peak RSS
 
 | Program | grid | terse | hmm | raw-ms |
 |---|---|---|---|---|
-| yaml | 75060 KB | 69996 KB | 69360 KB | 55076 KB |
-| fyaml | 195232 KB | 194376 KB | 192960 KB | 194148 KB |
-| tree | 177024 KB | 168332 KB | 167020 KB | 167160 KB |
-| entity | 75524 KB | 70628 KB | 71064 KB | 70772 KB |
-| etree | 172196 KB | 168336 KB | 168784 KB | 180100 KB |
-| besm2_fmt | 135728 KB | 134984 KB | 135484 KB | 135472 KB |
+| yaml | 58960 KB | 70968 KB | 69916 KB | 70736 KB |
+| fyaml | 195580 KB | 194080 KB | 179136 KB | 194476 KB |
+| tree | 157872 KB | 156708 KB | 157020 KB | 162624 KB |
+| entity | 75676 KB | 70384 KB | 56564 KB | 71120 KB |
+| etree | 170776 KB | 176924 KB | 168424 KB | 169852 KB |
+| besm2_fmt | 135684 KB | 135984 KB | 135720 KB | 136012 KB |
 
 besm2_fmt's speedup over each
 
 | Program | grid | terse | hmm | raw-ms |
 |---|---|---|---|---|
-| yaml | 35.9x | 20.9x | 22.5x | 24.8x |
-| fyaml | 32.8x | 16.2x | 17.4x | 19.7x |
-| tree | 31.2x | 14.0x | 15.1x | 17.5x |
-| entity | 34.5x | 20.2x | 21.5x | 24.0x |
-| etree | 31.0x | 13.4x | 14.7x | 17.1x |
+| yaml | 36.0x | 22.7x | 23.3x | 25.6x |
+| fyaml | 32.5x | 17.3x | 18.2x | 20.7x |
+| tree | 30.9x | 15.1x | 15.8x | 18.3x |
+| entity | 34.5x | 22.0x | 22.8x | 25.4x |
+| etree | 30.8x | 14.3x | 15.4x | 17.9x |
 
 ## Throughput: multi-document file (2000 separate documents, one entity each)
 
 2000 `---`-delimited YAML documents in one file, each a
-one-entity sequence. besm2_fmt (via `Document_Stream`) processes
-all of them; every besm2-rst-family variant reads only 1 entity
-below regardless of $BENCH_ENTITIES -- documented for `yaml`/
-`fyaml` as a `yaml-load`/`(slibfyaml scheme)` bug in besm2-rst.scm
-(not a besm2_fmt one -- see PLAN.md's former "Multi-document YAML
-files aren't handled" open question) that collapses a
-multi-document stream to a single document; `tree`/`entity`/
-`etree` measure the same way here, though besm2-rst-f/-e/-f-e
-never claimed streaming support in the first place, so this isn't
-necessarily the identical root cause, just the identical observed
-behavior on this file shape. This section measures each program's
-actual behavior here, not an apples-to-apples per-entity
-comparison -- read the entity counts alongside the timings.
+one-entity sequence.
+
+`tree`, `etree` and `besm2_fmt` read all 2000 entities
+correctly here; `yaml`, `fyaml` and `entity` did not (see the
+entity counts below, not just the timings) -- known bugs in
+specific programs, not something this script can explain in
+general; check each one's own history/issue tracker. This
+section measures each program's actual behavior on this file
+shape, not an apples-to-apples per-entity comparison where any
+program reads the wrong number of entities.
 
 Time
 
 | Program | grid | terse | hmm | raw-ms |
 |---|---|---|---|---|
-| yaml | 1.83 s | 1.79 s | 1.80 s | 1.80 s |
-| fyaml | 0.82 s | 0.82 s | 0.79 s | 0.80 s |
-| tree | 0.05 s | 0.05 s | 0.06 s | 0.04 s |
-| entity | 1.82 s | 1.83 s | 1.81 s | 1.82 s |
-| etree | 0.05 s | 0.05 s | 0.05 s | 0.05 s |
-| besm2_fmt | 0.41 s | 0.19 s | 0.19 s | 0.20 s |
+| yaml | 1.81 s | 1.83 s | 1.83 s | 1.83 s |
+| fyaml | 0.80 s | 0.81 s | 0.81 s | 0.80 s |
+| tree | 13.70 s | 3.10 s | 3.25 s | 3.98 s |
+| entity | 1.82 s | 1.81 s | 1.82 s | 1.83 s |
+| etree | 13.48 s | 3.03 s | 3.15 s | 3.91 s |
+| besm2_fmt | 0.42 s | 0.19 s | 0.19 s | 0.20 s |
 
 Entities processed
 
@@ -224,21 +242,21 @@ Entities processed
 |---|---|---|---|---|
 | yaml | 1 | 1 | 1 | 1 |
 | fyaml | 1 | 1 | 1 | 1 |
-| tree | 1 | 1 | 1 | 1 |
+| tree | 2000 | 2000 | 2000 | 2000 |
 | entity | 1 | 1 | 1 | 1 |
-| etree | 1 | 1 | 1 | 1 |
+| etree | 2000 | 2000 | 2000 | 2000 |
 | besm2_fmt | 2000 | 2000 | 2000 | 2000 |
 
 Peak RSS
 
 | Program | grid | terse | hmm | raw-ms |
 |---|---|---|---|---|
-| yaml | 33884 KB | 38428 KB | 38048 KB | 33120 KB |
-| fyaml | 46528 KB | 45672 KB | 46384 KB | 45732 KB |
-| tree | 27260 KB | 26592 KB | 26320 KB | 26556 KB |
-| entity | 33792 KB | 33304 KB | 33480 KB | 34092 KB |
-| etree | 29588 KB | 29736 KB | 29640 KB | 29852 KB |
-| besm2_fmt | 5364 KB | 5840 KB | 5640 KB | 5640 KB |
+| yaml | 34488 KB | 34928 KB | 34424 KB | 33964 KB |
+| fyaml | 47320 KB | 46168 KB | 46664 KB | 49100 KB |
+| tree | 27960 KB | 27704 KB | 28144 KB | 27040 KB |
+| entity | 38848 KB | 38312 KB | 38660 KB | 34252 KB |
+| etree | 32544 KB | 28668 KB | 27676 KB | 27720 KB |
+| besm2_fmt | 5688 KB | 5692 KB | 5904 KB | 5916 KB |
 ----
 
 ## Reading it
@@ -247,15 +265,16 @@ The tables above are generated (by `tools/benchmark.sh`) each time the
 benchmark is rerun, so the specific figures will drift between runs
 and machines; read them for shape, not for the exact numbers quoted
 here at the time this section was last written by hand. This
-particular run postdates `alibfyaml`'s Node/Document liveness
-enforcement change (see "Historical note" above) -- `besm2_fmt`'s
-margins over the `besm2-rst` family are slightly narrower than an
-earlier version of this document recorded, though the shape of every
-conclusion below is unchanged:
+particular run postdates both `alibfyaml`'s Node/Document liveness
+enforcement change and besm-tools' `tree`/`etree` multi-document fix
+(see both "Historical note" sections above) -- `besm2_fmt`'s margins
+over the `besm2-rst` family on the first two tables are about the same
+as before (within normal run-to-run noise), but the third table's
+story has fundamentally changed; see that bullet below:
 
 - **Time: `besm2_fmt` wins everywhere, against every variant, and the
-  gap widens with scale.** ~5.8-8.1x faster per invocation on a tiny
-  real fixture, ~13.4-35.9x faster processing a 2000-entity document.
+  gap widens with scale.** ~6.0-9.5x faster per invocation on a tiny
+  real fixture, ~14.3-36.0x faster processing a 2000-entity document.
   The five besm2-rst-family variants are all clustered fairly close
   together against `besm2_fmt` -- none of besm-tools' own internal
   refactors (loader choice, or the shared-record refactor `entity`/
@@ -275,7 +294,7 @@ conclusion below is unchanged:
   parser-backend lines, not language lines.** The two `yaml`-egg-based
   programs (`yaml`, `entity`) use the *least* RSS here (~55-76 MB);
   every libfyaml-backed program -- `besm2_fmt` itself (~135 MB)
-  included, and besm-tools' own `fyaml`/`tree`/`etree` (~167-195 MB) --
+  included, and besm-tools' own `fyaml`/`tree`/`etree` (~157-196 MB) --
   uses substantially more. That lines up with what both projects'
   documentation already says: a pure-Scheme parser builds exactly one
   representation (Scheme alists) of a document, while anything
@@ -287,66 +306,68 @@ conclusion below is unchanged:
   this document extends) turns out to be a libfyaml-the-C-library
   cost, not an Ada-vs-Scheme one: besm-tools' own `fyaml`/`tree`/
   `etree` pay it too, in the same language as `yaml`/`entity`.
-  `fyaml`'s RSS (~193-195 MB) sitting toward the high end of
-  `tree`/`etree`'s (~167-180 MB) is consistent with `(slibfyaml
+  `fyaml`'s RSS (~179-196 MB) sitting toward the high end of
+  `tree`/`etree`'s (~157-177 MB) is consistent with `(slibfyaml
   scheme)`'s eager
   whole-document decode building a *complete* second (Scheme alist)
   copy on top of libfyaml's tree, where `tree`/`etree`'s handle-based
   traversal decodes only the scalars each output backend actually
-  reads. `besm2_fmt`'s own RSS here (~135 MB) is essentially unchanged
+  reads. `tree`'s own RSS here (~157-163 MB) is somewhat lower than an
+  earlier version of this document recorded (~167-177 MB) -- confirmed
+  by reading `slibfyaml`'s source (not just inferred): the multi-
+  document fix above (see "Historical note") also changed *this*
+  single-document file's read path for `tree`/`etree`, from
+  `document-parse-port` (reads the whole port into a CHICKEN string via
+  `read-string`, *then* copies that string again into a malloc'd
+  buffer for `fy_document_build_from_string` -- two full copies of the
+  file's content briefly coexisting) to `document-stream-open-file`
+  (`fy_parser_set_input_file`'s lazy `fread()` straight into libfyaml's
+  own buffer, no CHICKEN-side string ever materialized). One fewer full
+  copy of the file in memory at once is a plausible, if not separately
+  torn-down-and-measured, explanation for the drop. `besm2_fmt`'s own
+  RSS here (~135-136 MB) is essentially unchanged
   from before the liveness-enforcement change (see "Historical note"
   above) -- `Owner_Liveness`'s extra allocation (one small heap cell
   per `Document`) is far too small to show up against `libfyaml`'s own
   C-side tree memory at this scale, exactly as `ALIBFYAML-LIVENESS-
   PERFORMANCE.md` found in isolation.
 
-- **The multi-document file exposes a real split *within* the
-  besm2-rst family, not just a shared bug.** All six programs process
-  exactly 1 entity from this file except `besm2_fmt` (which gets all
-  2000 -- see below), so none of the besm2-rst-family times above are
-  doing 2000x less useful work than each other -- yet they range from
-  ~0.04-0.06 s (`tree`/`etree`) to ~0.79-0.82 s (`fyaml`) to
-  ~1.79-1.83 s (`yaml`/`entity`), a >30x spread for the *same wrong
-  answer*. Confirmed by reading `besm-tools`' own source (not just
-  inferred from the numbers): `besm2-rst-f.scm`/`besm2-rst-f-e.scm`'s
-  `process-file` calls `document-parse-port`, `slibfyaml`'s
-  **single-document** parse entry point (the direct analogue of
-  `alibfyaml`'s `Parse_String`/`Parse_File`) -- it parses exactly the
-  first document and stops, roughly constant-time regardless of how
-  many more follow, which is exactly `tree`/`etree`'s fail-fast
-  behavior here. Neither file ever calls `(slibfyaml documents
-  streams)` -- `slibfyaml`'s own `Document_Stream`-equivalent
-  multi-document streaming API, functionally identical to
-  `alibfyaml`'s and fully capable of reading all 2000 documents the
-  same way `besm2_fmt` does -- despite both being built on the same
-  handle/tree API family that makes `Document_Stream` support
-  possible. **This is a `besm2-rst-f`/`besm2-rst-f-e` implementation
-  gap, not a limitation of the Node/handle-based approach itself**:
-  swapping `document-parse-port` for a `document-stream-open-*`/
-  `-has-next?`/`-next!` loop, mirroring `besm2_fmt`'s own
-  `Document_Stream` loop, would fix it. `yaml`/`entity` (the `yaml`
-  egg) and `fyaml` (`(slibfyaml scheme)`) apparently parse or scan the
-  *entire* 2000-document byte stream before collapsing down to one
-  result instead -- i.e. `tree`/`etree` fail fast on this input shape
-  for a confirmed, fixable reason, `yaml`/`fyaml`/`entity` fail slow
-  for the separately-documented `yaml-load`/`(slibfyaml scheme)`
-  collapse-to-last-document bug, paying a cost that scales with the
-  whole file even though almost all of that work is discarded --
-  large enough, consistent gaps (reproduced across all four output
-  modes) that both are worth upstream attention, for two different
-  reasons. `besm2_fmt`'s own `Document_Stream` handles this file shape
-  correctly (all 2000 entities) and is still faster than four of the
-  five besm2-rst-family variants doing 1/2000th the work (only
-  `tree`/`etree`'s fail-fast path beats it, and only because it's
-  doing so much less).
+- **The `tree`/`etree` fail-fast bug is fixed -- and `besm2_fmt` now
+  beats every besm2-rst-family variant outright, not just four of
+  five.** See "Historical note: besm-tools' tree/etree multi-document
+  fix" above for what changed and why. `tree`/`etree` now correctly
+  read all 2000 entities from this file (were stuck at 1, same as
+  `yaml`/`fyaml`/`entity`, in an earlier version of this document), and
+  their timing here (~13.5-13.7 s grid, ~3.0-3.25 s terse/hmm, ~3.9-
+  4.0 s raw-ms) lands almost exactly on their own multi-entity
+  throughput numbers above -- expected, since it's the same total
+  amount of entity-decoding/formatting work, just split across 2000
+  small documents instead of one big one. `besm2_fmt` beats them here
+  by roughly the same margin as that comparison too (~32x grid, ~16-
+  17x terse/hmm, ~20x raw-ms).
+
+  `yaml`/`fyaml`/`entity` still only read 1 entity from this file -- a
+  separate, still-open bug (the `yaml-load`/`(slibfyaml scheme)`
+  collapse-to-last-document behavior in `besm2-rst.scm`), unrelated to
+  and unaffected by the `tree`/`etree` fix. The result is a cleaner
+  story than before: `besm2_fmt`, doing all 2000 entities *correctly*,
+  is now faster in absolute wall-clock time than *every* besm2-rst-
+  family variant on this file, including the three still getting the
+  wrong (1-entity) answer -- 0.42/0.19/0.19/0.20 s vs. `yaml`/`entity`'s
+  ~1.81-1.83 s and `fyaml`'s ~0.80-0.81 s. This is no longer a case of
+  `besm2_fmt` merely beating programs doing 1/2000th the work because
+  they fail fast -- it's outright faster while also being the only one
+  (besides `tree`/`etree`, doing 2000x more work than the other three)
+  giving the right answer.
 
 - **Real-world files are tiny.** The actual `test-data/*.yaml` fixtures
   are 1-3 KB, one entity each -- at that scale this is entirely
-  dominated by the per-invocation numbers (a couple ms vs. 16-25 ms
+  dominated by the per-invocation numbers (a couple ms vs. ~17-23 ms
   across the whole besm2-rst family), and multi-thousand-entity files
   aren't a realistic BESM character-sheet workload. The
   throughput/memory tables exist purely to separate "process startup
   and small-input cost" from "cost that actually scales with input
-  size," and to give `Document_Stream`'s streaming behavior -- and,
-  now, the besm2-rst family's own multi-document fail-fast/fail-slow
-  split -- a file shape where they can show up in the numbers at all.
+  size," and to give `Document_Stream`'s streaming behavior -- and the
+  besm2-rst family's own remaining `yaml`/`fyaml`/`entity` multi-
+  document bug -- a file shape where they can show up in the numbers
+  at all.

@@ -396,19 +396,7 @@ fi
 echo "## Throughput: multi-document file ($BENCH_ENTITIES separate documents, one entity each)"
 echo
 echo "$BENCH_ENTITIES \`---\`-delimited YAML documents in one file, each a"
-echo "one-entity sequence. besm2_fmt (via \`Document_Stream\`) processes"
-echo "all of them; every besm2-rst-family variant reads only 1 entity"
-echo "below regardless of \$BENCH_ENTITIES -- documented for \`yaml\`/"
-echo "\`fyaml\` as a \`yaml-load\`/\`(slibfyaml scheme)\` bug in besm2-rst.scm"
-echo "(not a besm2_fmt one -- see PLAN.md's former \"Multi-document YAML"
-echo "files aren't handled\" open question) that collapses a"
-echo "multi-document stream to a single document; \`tree\`/\`entity\`/"
-echo "\`etree\` measure the same way here, though besm2-rst-f/-e/-f-e"
-echo "never claimed streaming support in the first place, so this isn't"
-echo "necessarily the identical root cause, just the identical observed"
-echo "behavior on this file shape. This section measures each program's"
-echo "actual behavior here, not an apples-to-apples per-entity"
-echo "comparison -- read the entity counts alongside the timings."
+echo "one-entity sequence."
 echo
 for code in "${ALL_CODES[@]}"; do
   for m in "${MODES[@]}"; do
@@ -420,6 +408,54 @@ for code in "${ALL_CODES[@]}"; do
     COUNT_DOC["$code:$mode"]="$count"
   done
 done
+
+# Which variants actually read every document, based on measured
+# entity counts (the "grid" mode's count stands in for all four --
+# confirmed in practice mode never changes how many entities a program
+# reads, only how it formats them) -- generated from the numbers
+# themselves rather than naming specific variants, so this paragraph
+# can't go stale the way a hardcoded one did once before: an earlier
+# version of this script named tree/etree as always reading only 1
+# entity, which stopped being true the moment besm-tools fixed that
+# upstream (commit 5c25561) without this script itself changing at all.
+join_and () {
+  local n=$#
+  if [ "$n" -eq 0 ]; then return; fi
+  if [ "$n" -eq 1 ]; then echo "$1"; return; fi
+  local last="${!n}" rest=("${@:1:$((n-1))}")
+  # Not "${rest[*]}" with IFS=', ' -- "*"-expansion joins with only the
+  # FIRST character of IFS, not the whole string, so that would silently
+  # drop the space (confirmed live: produced "`tree`,`etree`" with no
+  # space before this fix). Build it by hand instead.
+  local out="${rest[0]}" i
+  for ((i = 1; i < ${#rest[@]}; i++)); do
+    out+=", ${rest[$i]}"
+  done
+  echo "$out and $last"
+}
+CORRECT_CODES=() WRONG_CODES=()
+for code in "${ALL_CODES[@]}"; do
+  if [ "${COUNT_DOC[$code:grid]}" = "$BENCH_ENTITIES" ]; then
+    CORRECT_CODES+=("\`$code\`")
+  else
+    WRONG_CODES+=("\`$code\`")
+  fi
+done
+if [ "${#WRONG_CODES[@]}" -eq 0 ]; then
+  echo "Every program read all $BENCH_ENTITIES entities correctly here --"
+  echo "an apples-to-apples comparison, same as the multi-entity table"
+  echo "above."
+else
+  echo "$(join_and "${CORRECT_CODES[@]}") read all $BENCH_ENTITIES entities"
+  echo "correctly here; $(join_and "${WRONG_CODES[@]}") did not (see the"
+  echo "entity counts below, not just the timings) -- known bugs in"
+  echo "specific programs, not something this script can explain in"
+  echo "general; check each one's own history/issue tracker. This"
+  echo "section measures each program's actual behavior on this file"
+  echo "shape, not an apples-to-apples per-entity comparison where any"
+  echo "program reads the wrong number of entities."
+fi
+echo
 print_grid "Time" "${ALL_CODES[*]}" SECS_DOC
 print_grid "Entities processed" "${ALL_CODES[*]}" COUNT_DOC
 print_grid "Peak RSS" "${ALL_CODES[*]}" RSS_DOC

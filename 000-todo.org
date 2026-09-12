@@ -1,0 +1,4 @@
+* TODO Have the GNUmakefile build the .hmm files.
+* TODO What does besm2_fmt have that besm2-rst doesn't and vice versa.
+* TODO Syntax and value errors should be reported in gcc error messages.
+* TODO Hmm_Root shoudl probably be output after the Set_Output in besm2_fmt_main.adb.

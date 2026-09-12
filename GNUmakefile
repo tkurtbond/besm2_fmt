@@ -46,7 +46,7 @@ COMPARISON_PDFS=build/PERFORMANCE-COMPARISON.ms.pdf build/SOURCE-COMPARISON.ms.p
 # HTML renderings of the same two comparison docs.
 COMPARISON_HTML=build/PERFORMANCE-COMPARISON.html build/SOURCE-COMPARISON.html
 
-.PHONY: all rst pdf test benchmark pdf-comparison html-comparison install clean testclean
+.PHONY: all rst pdf test benchmark benchmark-alibfyaml-liveness pdf-comparison html-comparison install clean testclean
 
 all: $(PROGRAM)
 
@@ -77,6 +77,20 @@ test:
 # to capture one.
 benchmark: $(PROGRAM)
 	./tools/benchmark.sh
+
+# Reproduces ALIBFYAML-LIVENESS-PERFORMANCE.md's numbers -- compares
+# this build of besm2_fmt (BESM2_FMT_NEW, defaulting to $(PROGRAM),
+# built here if missing) against BESM2_FMT_OLD, a besm2_fmt binary
+# already built against a different alibfyaml commit (there's no
+# sensible default for this one -- building it requires a separate
+# alibfyaml checkout at that other commit, outside this repo; see
+# ALIBFYAML-LIVENESS-PERFORMANCE.md's "Reproducing this" section for
+# the exact recipe). See tools/benchmark-alibfyaml-liveness.sh's own
+# header comment for BENCH_N/BENCH_ENTITIES/BENCH_SOURCE too. Prints
+# its Markdown report to stdout; redirect it yourself (e.g.
+# `make benchmark-alibfyaml-liveness > /tmp/report.md`) to capture one.
+benchmark-alibfyaml-liveness: $(PROGRAM)
+	BESM2_FMT_NEW=$${BESM2_FMT_NEW:-./$(PROGRAM)} ./tools/benchmark-alibfyaml-liveness.sh
 
 pdf-comparison: $(COMPARISON_PDFS)
 

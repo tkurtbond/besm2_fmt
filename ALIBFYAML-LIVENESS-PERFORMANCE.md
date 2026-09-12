@@ -25,14 +25,17 @@ to report timing numbers at all if they ever disagree.
 
 ## Reproducing this
 
-`tools/benchmark-alibfyaml-liveness.sh` needs two already-built
-`besm2_fmt` binaries (`BESM2_FMT_OLD`/`BESM2_FMT_NEW`), one linked
-against each `alibfyaml` commit. Building the `old` one requires a
-separate `alibfyaml` checkout at the pre-liveness commit, since the
-normal build picks up whatever `libfyaml_ada.gpr` is installed
-system-wide (`/usr/local/sw/versions/ada` on this machine, an install
-convention specific to this machine's owner, not part of either
-project):
+`make benchmark-alibfyaml-liveness` wraps `tools/benchmark-
+alibfyaml-liveness.sh` (see the `GNUmakefile` target's own comment).
+It needs `BESM2_FMT_OLD` set to an already-built `besm2_fmt` linked
+against a different `alibfyaml` commit -- there's no sensible default
+for that one, since building it requires a separate `alibfyaml`
+checkout at that other commit, outside this repo. `BESM2_FMT_NEW`
+defaults to `$(PROGRAM)` (built by the target if missing), i.e. this
+repo's own normal build against whatever `alibfyaml` is currently
+installed system-wide (`/usr/local/sw/versions/ada` on this machine,
+an install convention specific to this machine's owner, not part of
+either project):
 
 ```sh
 cd ~/Repos/Ada/alibfyaml
@@ -44,13 +47,9 @@ gprclean -P besm2_fmt.gpr -r
 GPR_PROJECT_PATH="/tmp/alibfyaml-old:$GPR_PROJECT_PATH" \
   gprbuild -p -P besm2_fmt.gpr -largs $(pkg-config --libs libfyaml)
 cp besm2_fmt /tmp/besm2_fmt-old
+gprclean -P besm2_fmt.gpr -r   # so the next `make` rebuilds against the installed (new) alibfyaml
 
-gprclean -P besm2_fmt.gpr -r
-gprbuild -p -P besm2_fmt.gpr   # normal build: picks up the installed (new) alibfyaml
-cp besm2_fmt /tmp/besm2_fmt-new
-
-BESM2_FMT_OLD=/tmp/besm2_fmt-old BESM2_FMT_NEW=/tmp/besm2_fmt-new \
-  tools/benchmark-alibfyaml-liveness.sh > /tmp/report.md
+BESM2_FMT_OLD=/tmp/besm2_fmt-old make benchmark-alibfyaml-liveness > /tmp/report.md
 
 git worktree remove /tmp/alibfyaml-old
 ```
@@ -58,21 +57,27 @@ git worktree remove /tmp/alibfyaml-old
 See `tools/benchmark-alibfyaml-liveness.sh`'s own header comment for
 every environment variable it accepts (`BENCH_N`/`BENCH_ENTITIES`/
 `BENCH_SOURCE`, matching `tools/benchmark.sh`'s own defaults so the two
-reports' numbers are directly comparable in scale).
+reports' numbers are directly comparable in scale). Note that `make`
+itself echoes the recipe line to stdout before the script's own
+output, same as `make benchmark` does -- drop that first line when
+capturing a clean report, as this document's own regeneration did.
 
-The report below is **an average of 3 independent runs** of the script
-(each a full fresh set of `BENCH_N`=200 per-invocation runs and 3
-throughput measurements), not a single run's raw output, since a
-single run's per-invocation numbers in particular are small enough
-(2-4 ms) to be noise-dominated -- see "Reading it" below. The three
-individual runs' throughput numbers agreed with each other to within
-0.01 s in every cell; the averages are simple means across all three.
+The report below is **an average of 3 independent runs** of
+`make benchmark-alibfyaml-liveness` (each a full fresh set of
+`BENCH_N`=200 per-invocation runs and 3 throughput measurements), not
+a single run's raw output, since a single run's per-invocation numbers
+in particular are small enough (2-4 ms) to be noise-dominated -- see
+"Reading it" below. The three individual runs' throughput numbers
+agreed with each other to within 0.02 s in every cell; the averages
+are simple means across all three. The per-invocation table is a
+single representative run (see "Reading it" for why averaging it
+wouldn't add anything meaningful).
 
 ----
 
 # besm2_fmt: alibfyaml Node/Document liveness enforcement -- performance impact
 
-Generated: 2026-09-12, averaged over 3 runs, by `tools/benchmark-alibfyaml-liveness.sh`.
+Generated: 2026-09-12, averaged over 3 runs of `make benchmark-alibfyaml-liveness`.
 
 - Machine: 13th Gen Intel(R) Core(TM) i9-13900HX, 32 threads, Linux 7.1.10-200.fc44.x86_64 x86_64
 - `BENCH_N`=200, `BENCH_ENTITIES`=2000, `BENCH_SOURCE`=./test-data/enyon-boase-2e.yaml
@@ -89,14 +94,14 @@ Mean time per invocation
 
 | Build | grid | terse | hmm | raw-ms |
 |---|---|---|---|---|
-| old | 3.375 ms | 2.494 ms | 2.926 ms | 2.973 ms |
-| new | 2.690 ms | 2.653 ms | 3.378 ms | 3.191 ms |
+| old | 3.155 ms | 2.806 ms | 2.711 ms | 2.269 ms |
+| new | 3.464 ms | 2.097 ms | 2.778 ms | 2.175 ms |
 
 new vs. old (positive = new is slower)
 
 | | grid | terse | hmm | raw-ms |
 |---|---|---|---|---|
-| new/old | -20.3% | +6.4% | +15.4% | +7.3% |
+| new/old | +9.8% | -25.3% | +2.5% | -4.1% |
 
 ## Throughput: multi-entity document (2000 entities, one YAML document)
 
@@ -109,14 +114,14 @@ Time (mean of 3 runs)
 
 | Build | grid | terse | hmm | raw-ms |
 |---|---|---|---|---|
-| old | 0.423 s | 0.190 s | 0.190 s | 0.197 s |
-| new | 0.433 s | 0.220 s | 0.213 s | 0.227 s |
+| old | 0.430 s | 0.190 s | 0.190 s | 0.210 s |
+| new | 0.440 s | 0.213 s | 0.207 s | 0.227 s |
 
 new vs. old (positive = new is slower)
 
 | | grid | terse | hmm | raw-ms |
 |---|---|---|---|---|
-| new/old | +2.4% | +15.8% | +12.3% | +15.3% |
+| new/old | +2.3% | +12.3% | +8.8% | +7.9% |
 
 Entities processed (sanity check -- read 2000 in every run, every mode, both builds)
 
@@ -135,14 +140,14 @@ Time (mean of 3 runs)
 
 | Build | grid | terse | hmm | raw-ms |
 |---|---|---|---|---|
-| old | 0.403 s | 0.170 s | 0.177 s | 0.177 s |
-| new | 0.417 s | 0.190 s | 0.187 s | 0.200 s |
+| old | 0.410 s | 0.167 s | 0.170 s | 0.180 s |
+| new | 0.423 s | 0.190 s | 0.190 s | 0.207 s |
 
 new vs. old (positive = new is slower)
 
 | | grid | terse | hmm | raw-ms |
 |---|---|---|---|---|
-| new/old | +3.3% | +11.8% | +5.7% | +13.0% |
+| new/old | +3.2% | +14.0% | +11.8% | +14.8% |
 
 Entities processed: read all 2000 in every run, every mode, both
 builds (confirms `Document_Stream` itself is unaffected).
@@ -156,25 +161,27 @@ difference.
 
 - **Per-invocation numbers are noise, not signal.** At 2-4 ms total
   runtime, a single run's timing is dominated by process
-  startup/scheduling jitter, not by anything alibfyaml does -- the
-  `grid` mode even shows `new` as *faster* by 20%, which cannot be a
-  real effect of a change that only ever adds work. This matches
+  startup/scheduling jitter, not by anything alibfyaml does -- `terse`
+  even shows `new` as *faster* by 25% here, which cannot be a real
+  effect of a change that only ever adds work (a different run of the
+  same two binaries showed a different mode as the "faster" outlier
+  instead -- see git history of this file). This matches
   `PERFORMANCE-COMPARISON.md`'s own observation that real BESM
   character-sheet files (1-3 KB, one entity) are dominated by
   fixed overhead, not per-entity cost. Not meaningful evidence either
   way; included only for completeness against the same table shape
   `tools/benchmark.sh` uses.
 
-- **Throughput numbers are consistent and real: +2-16% depending on
+- **Throughput numbers are consistent and real: +2-15% depending on
   output mode, corroborating `alibfyaml`'s own synthetic `bench/`
   numbers (+14.5% / +10.7%) but smaller and mode-dependent.** The
   `grid` mode (the heaviest formatter -- full reST grid tables) shows
-  the smallest overhead (+2.4% / +3.3%): most of `grid`'s own runtime
+  the smallest overhead (+2.3% / +3.2%): most of `grid`'s own runtime
   is `besm2_fmt`'s own table-drawing code, not `alibfyaml`, so the
   liveness-tracking cost is a small fraction of a larger total.
   `terse`/`hmm`/`raw-ms` (lighter formatters, doing proportionally
   more of their work in parsing/node-navigation) show more of the
-  underlying cost directly: +5.7% to +15.8%, squarely in the range
+  underlying cost directly: +7.9% to +14.8%, close to the range
   `alibfyaml`'s own `bench/` measured against nothing but parsing and
   navigation. This is exactly the expected shape: a fixed per-Node/
   per-Document overhead shows up as a *smaller relative* cost the more

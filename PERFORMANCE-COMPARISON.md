@@ -307,21 +307,34 @@ conclusion below is unchanged:
   doing 2000x less useful work than each other -- yet they range from
   ~0.04-0.06 s (`tree`/`etree`) to ~0.79-0.82 s (`fyaml`) to
   ~1.79-1.83 s (`yaml`/`entity`), a >30x spread for the *same wrong
-  answer*. That
-  pattern is consistent with `tree`/`etree` opening just the first
-  `---`-delimited document via slibfyaml's handle API and stopping
-  there (roughly constant-time regardless of how many more documents
-  follow), while `yaml`/`entity` (the `yaml` egg) and `fyaml`
-  (`(slibfyaml scheme)`) apparently parse or scan the *entire*
-  2000-document byte stream before collapsing down to one result --
-  i.e. `tree`/`etree` fail fast on this input shape, `yaml`/`fyaml`/
-  `entity` fail slow, paying a cost that scales with the whole file
-  even though almost all of that work is discarded. This wasn't
-  separately traced in besm-tools' own source this session, so read it
-  as "consistent with the numbers," not confirmed by code reading --
-  but it's a large enough, consistent enough gap (reproduced across
-  all four output modes) to be worth someone's attention upstream.
-  `besm2_fmt`'s own `Document_Stream` handles this file shape
+  answer*. Confirmed by reading `besm-tools`' own source (not just
+  inferred from the numbers): `besm2-rst-f.scm`/`besm2-rst-f-e.scm`'s
+  `process-file` calls `document-parse-port`, `slibfyaml`'s
+  **single-document** parse entry point (the direct analogue of
+  `alibfyaml`'s `Parse_String`/`Parse_File`) -- it parses exactly the
+  first document and stops, roughly constant-time regardless of how
+  many more follow, which is exactly `tree`/`etree`'s fail-fast
+  behavior here. Neither file ever calls `(slibfyaml documents
+  streams)` -- `slibfyaml`'s own `Document_Stream`-equivalent
+  multi-document streaming API, functionally identical to
+  `alibfyaml`'s and fully capable of reading all 2000 documents the
+  same way `besm2_fmt` does -- despite both being built on the same
+  handle/tree API family that makes `Document_Stream` support
+  possible. **This is a `besm2-rst-f`/`besm2-rst-f-e` implementation
+  gap, not a limitation of the Node/handle-based approach itself**:
+  swapping `document-parse-port` for a `document-stream-open-*`/
+  `-has-next?`/`-next!` loop, mirroring `besm2_fmt`'s own
+  `Document_Stream` loop, would fix it. `yaml`/`entity` (the `yaml`
+  egg) and `fyaml` (`(slibfyaml scheme)`) apparently parse or scan the
+  *entire* 2000-document byte stream before collapsing down to one
+  result instead -- i.e. `tree`/`etree` fail fast on this input shape
+  for a confirmed, fixable reason, `yaml`/`fyaml`/`entity` fail slow
+  for the separately-documented `yaml-load`/`(slibfyaml scheme)`
+  collapse-to-last-document bug, paying a cost that scales with the
+  whole file even though almost all of that work is discarded --
+  large enough, consistent gaps (reproduced across all four output
+  modes) that both are worth upstream attention, for two different
+  reasons. `besm2_fmt`'s own `Document_Stream` handles this file shape
   correctly (all 2000 entities) and is still faster than four of the
   five besm2-rst-family variants doing 1/2000th the work (only
   `tree`/`etree`'s fail-fast path beats it, and only because it's

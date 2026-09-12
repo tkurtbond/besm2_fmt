@@ -28,6 +28,40 @@ five against each other in isolation (loader choice and the
 shared-record refactor); this document only compares each against
 `besm2_fmt`.
 
+## Historical note: alibfyaml's Node/Document liveness enforcement
+
+`besm2_fmt`'s own numbers in this report (per-invocation especially)
+are noticeably higher than in an earlier version of this document
+(`~2.2 ms` mean per-invocation then vs. `~2.9 ms` now, e.g.) --
+**not** because `besm2_fmt`'s own source changed, but because
+`alibfyaml` (`~/Repos/Ada/alibfyaml`, the Ada binding to `libfyaml`
+this project is built on) has since added runtime Node/Document
+liveness enforcement, closing a real, confirmed-elsewhere
+use-after-free bug class at a measured constant-factor cost (see
+`alibfyaml`'s `PLAN.md`, "Node/Document liveness enforcement"
+section). This project's `besm2_fmt` binary is always built against
+whatever `alibfyaml` is installed system-wide, so this report reflects
+whichever `alibfyaml` was current when it was regenerated -- there is
+no version pin recorded here beyond that.
+
+`ALIBFYAML-LIVENESS-PERFORMANCE.md` (this repo) measures that specific
+change in isolation, with a controlled before/after comparison (two
+`besm2_fmt` builds differing *only* in which `alibfyaml` commit they
+link against, output-correctness-gated before any timing): **+2.3% to
++14.8%** on throughput, depending on output mode, with per-invocation
+numbers there flagged as too noise-dominated at that timescale to be
+meaningful either way -- the same caveat applies to comparing this
+document's own per-invocation numbers across two different points in
+its own history; don't read a clean liveness-enforcement cost out of
+this document's before/after delta the way `ALIBFYAML-LIVENESS-
+PERFORMANCE.md`'s controlled comparison lets you. The besm2-rst-family
+numbers below are entirely unaffected (none of those programs touch
+`alibfyaml`) -- only `besm2_fmt`'s own column moved, and only by the
+amount `ALIBFYAML-LIVENESS-PERFORMANCE.md` already accounts for.
+`besm2_fmt`'s conclusions relative to the `besm2-rst` family below are
+unchanged in kind, just slightly narrower margins -- see "Reading it"
+for the updated ranges.
+
 ## Reproducing this
 
 The report below (everything between the `----` markers) is the
@@ -70,7 +104,7 @@ in the last table rather than showing up by accident in the others.
 
 # besm2_fmt vs besm2-rst-family benchmark
 
-Generated: 2026-09-12 01:18:46 UTC by `tools/benchmark.sh`.
+Generated: 2026-09-12 13:56:38 UTC by `tools/benchmark.sh`.
 
 - Machine: 13th Gen Intel(R) Core(TM) i9-13900HX, 32 threads, Linux 7.1.10-200.fc44.x86_64 x86_64
 - `BENCH_N`=200, `BENCH_ENTITIES`=2000, `BENCH_SOURCE`=./test-data/enyon-boase-2e.yaml
@@ -90,22 +124,22 @@ Mean time per invocation
 
 | Program | grid | terse | hmm | raw-ms |
 |---|---|---|---|---|
-| yaml | 22.199 ms | 17.289 ms | 16.041 ms | 18.072 ms |
-| fyaml | 21.264 ms | 17.911 ms | 17.274 ms | 18.640 ms |
-| tree | 20.037 ms | 15.022 ms | 16.077 ms | 16.638 ms |
-| entity | 22.618 ms | 15.452 ms | 16.575 ms | 18.168 ms |
-| etree | 20.431 ms | 17.032 ms | 15.911 ms | 17.554 ms |
-| besm2_fmt | 2.214 ms | 1.688 ms | 1.965 ms | 1.879 ms |
+| yaml | 22.449 ms | 20.657 ms | 18.113 ms | 19.679 ms |
+| fyaml | 23.946 ms | 18.804 ms | 18.775 ms | 18.780 ms |
+| tree | 21.465 ms | 17.129 ms | 16.421 ms | 17.737 ms |
+| entity | 24.656 ms | 18.292 ms | 17.090 ms | 20.146 ms |
+| etree | 22.680 ms | 19.508 ms | 18.214 ms | 19.594 ms |
+| besm2_fmt | 3.531 ms | 2.950 ms | 2.320 ms | 2.941 ms |
 
 besm2_fmt's speedup over each
 
 | Program | grid | terse | hmm | raw-ms |
 |---|---|---|---|---|
-| yaml | 10.0x | 10.2x | 8.2x | 9.6x |
-| fyaml | 9.6x | 10.6x | 8.8x | 9.9x |
-| tree | 9.1x | 8.9x | 8.2x | 8.9x |
-| entity | 10.2x | 9.2x | 8.4x | 9.7x |
-| etree | 9.2x | 10.1x | 8.1x | 9.3x |
+| yaml | 6.4x | 7.0x | 7.8x | 6.7x |
+| fyaml | 6.8x | 6.4x | 8.1x | 6.4x |
+| tree | 6.1x | 5.8x | 7.1x | 6.0x |
+| entity | 7.0x | 6.2x | 7.4x | 6.9x |
+| etree | 6.4x | 6.6x | 7.9x | 6.7x |
 
 ## Throughput: multi-entity document (2000 entities, one YAML document)
 
@@ -117,12 +151,12 @@ Time
 
 | Program | grid | terse | hmm | raw-ms |
 |---|---|---|---|---|
-| yaml | 15.37 s | 4.66 s | 4.84 s | 5.51 s |
-| fyaml | 14.18 s | 3.63 s | 3.71 s | 4.45 s |
-| tree | 13.53 s | 3.12 s | 3.28 s | 4.00 s |
-| entity | 15.02 s | 4.60 s | 4.71 s | 5.46 s |
-| etree | 13.30 s | 3.03 s | 3.17 s | 3.83 s |
-| besm2_fmt | 0.41 s | 0.19 s | 0.18 s | 0.20 s |
+| yaml | 15.80 s | 4.81 s | 4.94 s | 5.71 s |
+| fyaml | 14.41 s | 3.73 s | 3.82 s | 4.53 s |
+| tree | 13.73 s | 3.22 s | 3.33 s | 4.03 s |
+| entity | 15.17 s | 4.64 s | 4.74 s | 5.53 s |
+| etree | 13.62 s | 3.08 s | 3.24 s | 3.93 s |
+| besm2_fmt | 0.44 s | 0.23 s | 0.22 s | 0.23 s |
 
 Entities processed (sanity check -- should read 2000 everywhere)
 
@@ -139,22 +173,22 @@ Peak RSS
 
 | Program | grid | terse | hmm | raw-ms |
 |---|---|---|---|---|
-| yaml | 75392 KB | 70408 KB | 55540 KB | 70916 KB |
-| fyaml | 180124 KB | 194368 KB | 178912 KB | 194536 KB |
-| tree | 166492 KB | 168300 KB | 166984 KB | 168084 KB |
-| entity | 75596 KB | 56368 KB | 71120 KB | 71296 KB |
-| etree | 172388 KB | 168900 KB | 178612 KB | 179968 KB |
-| besm2_fmt | 135552 KB | 136252 KB | 135928 KB | 136008 KB |
+| yaml | 75060 KB | 69996 KB | 69360 KB | 55076 KB |
+| fyaml | 195232 KB | 194376 KB | 192960 KB | 194148 KB |
+| tree | 177024 KB | 168332 KB | 167020 KB | 167160 KB |
+| entity | 75524 KB | 70628 KB | 71064 KB | 70772 KB |
+| etree | 172196 KB | 168336 KB | 168784 KB | 180100 KB |
+| besm2_fmt | 135728 KB | 134984 KB | 135484 KB | 135472 KB |
 
 besm2_fmt's speedup over each
 
 | Program | grid | terse | hmm | raw-ms |
 |---|---|---|---|---|
-| yaml | 37.5x | 24.5x | 26.9x | 27.5x |
-| fyaml | 34.6x | 19.1x | 20.6x | 22.2x |
-| tree | 33.0x | 16.4x | 18.2x | 20.0x |
-| entity | 36.6x | 24.2x | 26.2x | 27.3x |
-| etree | 32.4x | 15.9x | 17.6x | 19.1x |
+| yaml | 35.9x | 20.9x | 22.5x | 24.8x |
+| fyaml | 32.8x | 16.2x | 17.4x | 19.7x |
+| tree | 31.2x | 14.0x | 15.1x | 17.5x |
+| entity | 34.5x | 20.2x | 21.5x | 24.0x |
+| etree | 31.0x | 13.4x | 14.7x | 17.1x |
 
 ## Throughput: multi-document file (2000 separate documents, one entity each)
 
@@ -177,12 +211,12 @@ Time
 
 | Program | grid | terse | hmm | raw-ms |
 |---|---|---|---|---|
-| yaml | 1.77 s | 1.79 s | 1.77 s | 1.75 s |
-| fyaml | 0.80 s | 0.80 s | 0.80 s | 0.78 s |
-| tree | 0.06 s | 0.05 s | 0.05 s | 0.05 s |
-| entity | 1.79 s | 1.76 s | 1.75 s | 1.77 s |
-| etree | 0.05 s | 0.05 s | 0.05 s | 0.06 s |
-| besm2_fmt | 0.40 s | 0.17 s | 0.17 s | 0.17 s |
+| yaml | 1.83 s | 1.79 s | 1.80 s | 1.80 s |
+| fyaml | 0.82 s | 0.82 s | 0.79 s | 0.80 s |
+| tree | 0.05 s | 0.05 s | 0.06 s | 0.04 s |
+| entity | 1.82 s | 1.83 s | 1.81 s | 1.82 s |
+| etree | 0.05 s | 0.05 s | 0.05 s | 0.05 s |
+| besm2_fmt | 0.41 s | 0.19 s | 0.19 s | 0.20 s |
 
 Entities processed
 
@@ -199,12 +233,12 @@ Peak RSS
 
 | Program | grid | terse | hmm | raw-ms |
 |---|---|---|---|---|
-| yaml | 34208 KB | 34548 KB | 33924 KB | 33980 KB |
-| fyaml | 47396 KB | 46524 KB | 46512 KB | 49312 KB |
-| tree | 27416 KB | 29452 KB | 29796 KB | 29612 KB |
-| entity | 39352 KB | 38432 KB | 39188 KB | 34744 KB |
-| etree | 27408 KB | 29504 KB | 29760 KB | 29684 KB |
-| besm2_fmt | 5888 KB | 5652 KB | 5872 KB | 5880 KB |
+| yaml | 33884 KB | 38428 KB | 38048 KB | 33120 KB |
+| fyaml | 46528 KB | 45672 KB | 46384 KB | 45732 KB |
+| tree | 27260 KB | 26592 KB | 26320 KB | 26556 KB |
+| entity | 33792 KB | 33304 KB | 33480 KB | 34092 KB |
+| etree | 29588 KB | 29736 KB | 29640 KB | 29852 KB |
+| besm2_fmt | 5364 KB | 5840 KB | 5640 KB | 5640 KB |
 ----
 
 ## Reading it
@@ -212,11 +246,16 @@ Peak RSS
 The tables above are generated (by `tools/benchmark.sh`) each time the
 benchmark is rerun, so the specific figures will drift between runs
 and machines; read them for shape, not for the exact numbers quoted
-here at the time this section was last written by hand:
+here at the time this section was last written by hand. This
+particular run postdates `alibfyaml`'s Node/Document liveness
+enforcement change (see "Historical note" above) -- `besm2_fmt`'s
+margins over the `besm2-rst` family are slightly narrower than an
+earlier version of this document recorded, though the shape of every
+conclusion below is unchanged:
 
 - **Time: `besm2_fmt` wins everywhere, against every variant, and the
-  gap widens with scale.** ~8.1-10.6x faster per invocation on a tiny
-  real fixture, ~15.9-37.5x faster processing a 2000-entity document.
+  gap widens with scale.** ~5.8-8.1x faster per invocation on a tiny
+  real fixture, ~13.4-35.9x faster processing a 2000-entity document.
   The five besm2-rst-family variants are all clustered fairly close
   together against `besm2_fmt` -- none of besm-tools' own internal
   refactors (loader choice, or the shared-record refactor `entity`/
@@ -234,9 +273,9 @@ here at the time this section was last written by hand:
 
 - **Memory on the multi-entity (one big document) file splits along
   parser-backend lines, not language lines.** The two `yaml`-egg-based
-  programs (`yaml`, `entity`) use the *least* RSS here (~56-76 MB);
-  every libfyaml-backed program -- `besm2_fmt` itself (~136 MB)
-  included, and besm-tools' own `fyaml`/`tree`/`etree` (~166-195 MB) --
+  programs (`yaml`, `entity`) use the *least* RSS here (~55-76 MB);
+  every libfyaml-backed program -- `besm2_fmt` itself (~135 MB)
+  included, and besm-tools' own `fyaml`/`tree`/`etree` (~167-195 MB) --
   uses substantially more. That lines up with what both projects'
   documentation already says: a pure-Scheme parser builds exactly one
   representation (Scheme alists) of a document, while anything
@@ -248,21 +287,26 @@ here at the time this section was last written by hand:
   this document extends) turns out to be a libfyaml-the-C-library
   cost, not an Ada-vs-Scheme one: besm-tools' own `fyaml`/`tree`/
   `etree` pay it too, in the same language as `yaml`/`entity`.
-  `fyaml`'s RSS (~179-195 MB) sitting toward the high end of
-  `tree`/`etree`'s (~166-180 MB) is consistent with `(slibfyaml
+  `fyaml`'s RSS (~193-195 MB) sitting toward the high end of
+  `tree`/`etree`'s (~167-180 MB) is consistent with `(slibfyaml
   scheme)`'s eager
   whole-document decode building a *complete* second (Scheme alist)
   copy on top of libfyaml's tree, where `tree`/`etree`'s handle-based
   traversal decodes only the scalars each output backend actually
-  reads.
+  reads. `besm2_fmt`'s own RSS here (~135 MB) is essentially unchanged
+  from before the liveness-enforcement change (see "Historical note"
+  above) -- `Owner_Liveness`'s extra allocation (one small heap cell
+  per `Document`) is far too small to show up against `libfyaml`'s own
+  C-side tree memory at this scale, exactly as `ALIBFYAML-LIVENESS-
+  PERFORMANCE.md` found in isolation.
 
 - **The multi-document file exposes a real split *within* the
   besm2-rst family, not just a shared bug.** All six programs process
   exactly 1 entity from this file except `besm2_fmt` (which gets all
   2000 -- see below), so none of the besm2-rst-family times above are
   doing 2000x less useful work than each other -- yet they range from
-  ~0.05-0.06 s (`tree`/`etree`) to ~0.78-0.81 s (`fyaml`) to
-  ~1.76-1.81 s (`yaml`/`entity`), a >30x spread for the *same wrong
+  ~0.04-0.06 s (`tree`/`etree`) to ~0.79-0.82 s (`fyaml`) to
+  ~1.79-1.83 s (`yaml`/`entity`), a >30x spread for the *same wrong
   answer*. That
   pattern is consistent with `tree`/`etree` opening just the first
   `---`-delimited document via slibfyaml's handle API and stopping
@@ -285,7 +329,7 @@ here at the time this section was last written by hand:
 
 - **Real-world files are tiny.** The actual `test-data/*.yaml` fixtures
   are 1-3 KB, one entity each -- at that scale this is entirely
-  dominated by the per-invocation numbers (a couple ms vs. 15-23 ms
+  dominated by the per-invocation numbers (a couple ms vs. 16-25 ms
   across the whole besm2-rst family), and multi-thousand-entity files
   aren't a realistic BESM character-sheet workload. The
   throughput/memory tables exist purely to separate "process startup

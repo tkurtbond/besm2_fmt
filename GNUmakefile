@@ -65,11 +65,13 @@ pdf: rst $(TEST_LETTEROUTPUT)
 test:
 	cd test && gprbuild -p -P test.gpr && ./test_text_layout
 
-# Reproduces PERFORMANCE-COMPARISON.md's besm2_fmt-vs-besm2-rst performance
-# numbers -- see tools/benchmark.sh's header comment for the
-# BESM2_RST/BENCH_N/BENCH_ENTITIES/BENCH_SOURCE environment variables
-# it accepts. Prints its Markdown report to stdout; redirect it
-# yourself (e.g. `make benchmark > /tmp/report.md`) to capture one.
+# Reproduces PERFORMANCE-COMPARISON.md's besm2_fmt-vs-besm2-rst-family
+# performance numbers -- see tools/benchmark.sh's header comment for the
+# BESM2_RST/BESM2_RST_F/BESM2_RST_E/BESM2_RST_FE/BENCH_N/BENCH_ENTITIES/
+# BENCH_SOURCE environment variables it accepts (each besm2-rst-family
+# binary is independently optional). Prints its Markdown report to
+# stdout; redirect it yourself (e.g. `make benchmark > /tmp/report.md`)
+# to capture one.
 benchmark: $(PROGRAM)
 	./tools/benchmark.sh
 

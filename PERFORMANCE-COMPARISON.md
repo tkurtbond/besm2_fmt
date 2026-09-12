@@ -70,7 +70,7 @@ in the last table rather than showing up by accident in the others.
 
 # besm2_fmt vs besm2-rst-family benchmark
 
-Generated: 2026-09-12 00:28:16 UTC by `tools/benchmark.sh`.
+Generated: 2026-09-12 01:18:46 UTC by `tools/benchmark.sh`.
 
 - Machine: 13th Gen Intel(R) Core(TM) i9-13900HX, 32 threads, Linux 7.1.10-200.fc44.x86_64 x86_64
 - `BENCH_N`=200, `BENCH_ENTITIES`=2000, `BENCH_SOURCE`=./test-data/enyon-boase-2e.yaml
@@ -90,22 +90,22 @@ Mean time per invocation
 
 | Program | grid | terse | hmm | raw-ms |
 |---|---|---|---|---|
-| besm2-rst | 21.140 ms | 17.275 ms | 15.988 ms | 17.615 ms |
-| besm2-rst -f/--fyaml | 20.933 ms | 16.581 ms | 17.615 ms | 18.193 ms |
-| besm2-rst-f | 20.880 ms | 14.746 ms | 15.949 ms | 16.852 ms |
-| besm2-rst-e | 22.904 ms | 16.164 ms | 16.683 ms | 17.089 ms |
-| besm2-rst-f-e | 21.103 ms | 16.953 ms | 16.081 ms | 17.655 ms |
-| besm2_fmt | 2.191 ms | 1.922 ms | 2.037 ms | 2.036 ms |
+| yaml | 22.199 ms | 17.289 ms | 16.041 ms | 18.072 ms |
+| fyaml | 21.264 ms | 17.911 ms | 17.274 ms | 18.640 ms |
+| tree | 20.037 ms | 15.022 ms | 16.077 ms | 16.638 ms |
+| entity | 22.618 ms | 15.452 ms | 16.575 ms | 18.168 ms |
+| etree | 20.431 ms | 17.032 ms | 15.911 ms | 17.554 ms |
+| besm2_fmt | 2.214 ms | 1.688 ms | 1.965 ms | 1.879 ms |
 
 besm2_fmt's speedup over each
 
 | Program | grid | terse | hmm | raw-ms |
 |---|---|---|---|---|
-| besm2-rst | 9.6x | 9.0x | 7.8x | 8.7x |
-| besm2-rst -f/--fyaml | 9.6x | 8.6x | 8.6x | 8.9x |
-| besm2-rst-f | 9.5x | 7.7x | 7.8x | 8.3x |
-| besm2-rst-e | 10.5x | 8.4x | 8.2x | 8.4x |
-| besm2-rst-f-e | 9.6x | 8.8x | 7.9x | 8.7x |
+| yaml | 10.0x | 10.2x | 8.2x | 9.6x |
+| fyaml | 9.6x | 10.6x | 8.8x | 9.9x |
+| tree | 9.1x | 8.9x | 8.2x | 8.9x |
+| entity | 10.2x | 9.2x | 8.4x | 9.7x |
+| etree | 9.2x | 10.1x | 8.1x | 9.3x |
 
 ## Throughput: multi-entity document (2000 entities, one YAML document)
 
@@ -117,44 +117,44 @@ Time
 
 | Program | grid | terse | hmm | raw-ms |
 |---|---|---|---|---|
-| besm2-rst | 15.59 s | 4.77 s | 4.84 s | 5.55 s |
-| besm2-rst -f/--fyaml | 13.99 s | 3.57 s | 3.76 s | 4.45 s |
-| besm2-rst-f | 13.48 s | 3.15 s | 3.30 s | 3.99 s |
-| besm2-rst-e | 15.04 s | 4.63 s | 4.68 s | 5.45 s |
-| besm2-rst-f-e | 13.42 s | 3.00 s | 3.13 s | 3.89 s |
-| besm2_fmt | 0.42 s | 0.19 s | 0.19 s | 0.20 s |
+| yaml | 15.37 s | 4.66 s | 4.84 s | 5.51 s |
+| fyaml | 14.18 s | 3.63 s | 3.71 s | 4.45 s |
+| tree | 13.53 s | 3.12 s | 3.28 s | 4.00 s |
+| entity | 15.02 s | 4.60 s | 4.71 s | 5.46 s |
+| etree | 13.30 s | 3.03 s | 3.17 s | 3.83 s |
+| besm2_fmt | 0.41 s | 0.19 s | 0.18 s | 0.20 s |
 
 Entities processed (sanity check -- should read 2000 everywhere)
 
 | Program | grid | terse | hmm | raw-ms |
 |---|---|---|---|---|
-| besm2-rst | 2000 | 2000 | 2000 | 2000 |
-| besm2-rst -f/--fyaml | 2000 | 2000 | 2000 | 2000 |
-| besm2-rst-f | 2000 | 2000 | 2000 | 2000 |
-| besm2-rst-e | 2000 | 2000 | 2000 | 2000 |
-| besm2-rst-f-e | 2000 | 2000 | 2000 | 2000 |
+| yaml | 2000 | 2000 | 2000 | 2000 |
+| fyaml | 2000 | 2000 | 2000 | 2000 |
+| tree | 2000 | 2000 | 2000 | 2000 |
+| entity | 2000 | 2000 | 2000 | 2000 |
+| etree | 2000 | 2000 | 2000 | 2000 |
 | besm2_fmt | 2000 | 2000 | 2000 | 2000 |
 
 Peak RSS
 
 | Program | grid | terse | hmm | raw-ms |
 |---|---|---|---|---|
-| besm2-rst | 59020 KB | 55400 KB | 69940 KB | 71080 KB |
-| besm2-rst -f/--fyaml | 195256 KB | 193872 KB | 193520 KB | 194884 KB |
-| besm2-rst-f | 166452 KB | 168884 KB | 178560 KB | 167996 KB |
-| besm2-rst-e | 75532 KB | 70656 KB | 71376 KB | 70972 KB |
-| besm2-rst-f-e | 172584 KB | 178180 KB | 178844 KB | 171120 KB |
-| besm2_fmt | 135204 KB | 135420 KB | 136228 KB | 135676 KB |
+| yaml | 75392 KB | 70408 KB | 55540 KB | 70916 KB |
+| fyaml | 180124 KB | 194368 KB | 178912 KB | 194536 KB |
+| tree | 166492 KB | 168300 KB | 166984 KB | 168084 KB |
+| entity | 75596 KB | 56368 KB | 71120 KB | 71296 KB |
+| etree | 172388 KB | 168900 KB | 178612 KB | 179968 KB |
+| besm2_fmt | 135552 KB | 136252 KB | 135928 KB | 136008 KB |
 
 besm2_fmt's speedup over each
 
 | Program | grid | terse | hmm | raw-ms |
 |---|---|---|---|---|
-| besm2-rst | 37.1x | 25.1x | 25.5x | 27.7x |
-| besm2-rst -f/--fyaml | 33.3x | 18.8x | 19.8x | 22.2x |
-| besm2-rst-f | 32.1x | 16.6x | 17.4x | 19.9x |
-| besm2-rst-e | 35.8x | 24.4x | 24.6x | 27.2x |
-| besm2-rst-f-e | 32.0x | 15.8x | 16.5x | 19.4x |
+| yaml | 37.5x | 24.5x | 26.9x | 27.5x |
+| fyaml | 34.6x | 19.1x | 20.6x | 22.2x |
+| tree | 33.0x | 16.4x | 18.2x | 20.0x |
+| entity | 36.6x | 24.2x | 26.2x | 27.3x |
+| etree | 32.4x | 15.9x | 17.6x | 19.1x |
 
 ## Throughput: multi-document file (2000 separate documents, one entity each)
 
@@ -177,35 +177,34 @@ Time
 
 | Program | grid | terse | hmm | raw-ms |
 |---|---|---|---|---|
-| besm2-rst | 1.76 s | 1.76 s | 1.77 s | 1.77 s |
-| besm2-rst -f/--fyaml | 0.78 s | 0.79 s | 0.78 s | 0.79 s |
-| besm2-rst-f | 0.06 s | 0.05 s | 0.05 s | 0.06 s |
-| besm2-rst-e | 1.78 s | 1.77 s | 1.75 s | 1.80 s |
-| besm2-rst-f-e | 0.06 s | 0.05 s | 0.05 s | 0.05 s |
-| besm2_fmt | 0.40 s | 0.17 s | 0.17 s | 0.18 s |
+| yaml | 1.77 s | 1.79 s | 1.77 s | 1.75 s |
+| fyaml | 0.80 s | 0.80 s | 0.80 s | 0.78 s |
+| tree | 0.06 s | 0.05 s | 0.05 s | 0.05 s |
+| entity | 1.79 s | 1.76 s | 1.75 s | 1.77 s |
+| etree | 0.05 s | 0.05 s | 0.05 s | 0.06 s |
+| besm2_fmt | 0.40 s | 0.17 s | 0.17 s | 0.17 s |
 
 Entities processed
 
 | Program | grid | terse | hmm | raw-ms |
 |---|---|---|---|---|
-| besm2-rst | 1 | 1 | 1 | 1 |
-| besm2-rst -f/--fyaml | 1 | 1 | 1 | 1 |
-| besm2-rst-f | 1 | 1 | 1 | 1 |
-| besm2-rst-e | 1 | 1 | 1 | 1 |
-| besm2-rst-f-e | 1 | 1 | 1 | 1 |
+| yaml | 1 | 1 | 1 | 1 |
+| fyaml | 1 | 1 | 1 | 1 |
+| tree | 1 | 1 | 1 | 1 |
+| entity | 1 | 1 | 1 | 1 |
+| etree | 1 | 1 | 1 | 1 |
 | besm2_fmt | 2000 | 2000 | 2000 | 2000 |
 
 Peak RSS
 
 | Program | grid | terse | hmm | raw-ms |
 |---|---|---|---|---|
-| besm2-rst | 34332 KB | 38472 KB | 34172 KB | 34004 KB |
-| besm2-rst -f/--fyaml | 47108 KB | 46784 KB | 46704 KB | 49244 KB |
-| besm2-rst-f | 27140 KB | 26724 KB | 26236 KB | 26756 KB |
-| besm2-rst-e | 34880 KB | 34124 KB | 38992 KB | 34952 KB |
-| besm2-rst-f-e | 27168 KB | 29588 KB | 29776 KB | 29596 KB |
-| besm2_fmt | 5712 KB | 5632 KB | 5624 KB | 5900 KB |
-
+| yaml | 34208 KB | 34548 KB | 33924 KB | 33980 KB |
+| fyaml | 47396 KB | 46524 KB | 46512 KB | 49312 KB |
+| tree | 27416 KB | 29452 KB | 29796 KB | 29612 KB |
+| entity | 39352 KB | 38432 KB | 39188 KB | 34744 KB |
+| etree | 27408 KB | 29504 KB | 29760 KB | 29684 KB |
+| besm2_fmt | 5888 KB | 5652 KB | 5872 KB | 5880 KB |
 ----
 
 ## Reading it
@@ -216,8 +215,8 @@ and machines; read them for shape, not for the exact numbers quoted
 here at the time this section was last written by hand:
 
 - **Time: `besm2_fmt` wins everywhere, against every variant, and the
-  gap widens with scale.** ~7.7-10.5x faster per invocation on a tiny
-  real fixture, ~15.8-37.1x faster processing a 2000-entity document.
+  gap widens with scale.** ~8.1-10.6x faster per invocation on a tiny
+  real fixture, ~15.9-37.5x faster processing a 2000-entity document.
   The five besm2-rst-family variants are all clustered fairly close
   together against `besm2_fmt` -- none of besm-tools' own internal
   refactors (loader choice, or the shared-record refactor `entity`/
@@ -235,8 +234,8 @@ here at the time this section was last written by hand:
 
 - **Memory on the multi-entity (one big document) file splits along
   parser-backend lines, not language lines.** The two `yaml`-egg-based
-  programs (`yaml`, `entity`) use the *least* RSS here (~55-76 MB);
-  every libfyaml-backed program -- `besm2_fmt` itself (~135 MB)
+  programs (`yaml`, `entity`) use the *least* RSS here (~56-76 MB);
+  every libfyaml-backed program -- `besm2_fmt` itself (~136 MB)
   included, and besm-tools' own `fyaml`/`tree`/`etree` (~166-195 MB) --
   uses substantially more. That lines up with what both projects'
   documentation already says: a pure-Scheme parser builds exactly one
@@ -249,8 +248,9 @@ here at the time this section was last written by hand:
   this document extends) turns out to be a libfyaml-the-C-library
   cost, not an Ada-vs-Scheme one: besm-tools' own `fyaml`/`tree`/
   `etree` pay it too, in the same language as `yaml`/`entity`.
-  `fyaml`'s RSS (~194 MB) being noticeably higher than `tree`/`etree`'s
-  (~166-179 MB) is consistent with `(slibfyaml scheme)`'s eager
+  `fyaml`'s RSS (~179-195 MB) sitting toward the high end of
+  `tree`/`etree`'s (~166-180 MB) is consistent with `(slibfyaml
+  scheme)`'s eager
   whole-document decode building a *complete* second (Scheme alist)
   copy on top of libfyaml's tree, where `tree`/`etree`'s handle-based
   traversal decodes only the scalars each output backend actually
@@ -261,8 +261,9 @@ here at the time this section was last written by hand:
   exactly 1 entity from this file except `besm2_fmt` (which gets all
   2000 -- see below), so none of the besm2-rst-family times above are
   doing 2000x less useful work than each other -- yet they range from
-  ~0.05 s (`tree`/`etree`) to ~0.78 s (`fyaml`) to ~1.76-1.80 s
-  (`yaml`/`entity`), a >30x spread for the *same wrong answer*. That
+  ~0.05-0.06 s (`tree`/`etree`) to ~0.78-0.81 s (`fyaml`) to
+  ~1.76-1.81 s (`yaml`/`entity`), a >30x spread for the *same wrong
+  answer*. That
   pattern is consistent with `tree`/`etree` opening just the first
   `---`-delimited document via slibfyaml's handle API and stopping
   there (roughly constant-time regardless of how many more documents

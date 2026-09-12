@@ -43,7 +43,10 @@ TEST_LETTEROUTPUT=\
 # below) rather than its LaTeX default.
 COMPARISON_PDFS=build/PERFORMANCE-COMPARISON.ms.pdf build/SOURCE-COMPARISON.ms.pdf
 
-.PHONY: all rst pdf test benchmark pdf-comparison install clean testclean
+# HTML renderings of the same two comparison docs.
+COMPARISON_HTML=build/PERFORMANCE-COMPARISON.html build/SOURCE-COMPARISON.html
+
+.PHONY: all rst pdf test benchmark pdf-comparison html-comparison install clean testclean
 
 all: $(PROGRAM)
 
@@ -77,6 +80,8 @@ benchmark: $(PROGRAM)
 
 pdf-comparison: $(COMPARISON_PDFS)
 
+html-comparison: $(COMPARISON_HTML)
+
 build/%.gen.rst : test-data/%.yaml $(PROGRAM)
 	./$(PROGRAM) -s $< >$@
 
@@ -102,11 +107,17 @@ build/PERFORMANCE-COMPARISON.ms.pdf : PERFORMANCE-COMPARISON.md
 build/SOURCE-COMPARISON.ms.pdf : SOURCE-COMPARISON.md
 	pandoc -r markdown -w ms --template=tkb -o $@ $<
 
+build/PERFORMANCE-COMPARISON.html : PERFORMANCE-COMPARISON.md
+	pandoc -s -r markdown -w html -o $@ $<
+
+build/SOURCE-COMPARISON.html : SOURCE-COMPARISON.md
+	pandoc -s -r markdown -w html -o $@ $<
+
 clean: testclean
 	-rm -f $(PROGRAM)
 
 testclean:
-	-rm -v build/*.gen.rst build/*.ms.pdf build/bench-*.yaml
+	-rm -v build/*.gen.rst build/*.ms.pdf build/*.html build/bench-*.yaml
 
 .PRECIOUS: \
 	build/%.gen.rst build/%-terse.gen.rst build/%-tbl.gen.rst \

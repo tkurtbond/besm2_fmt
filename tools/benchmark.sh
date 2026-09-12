@@ -137,7 +137,7 @@ fi
 # besm2-rst-f-e). Any not set/executable are skipped -- see the header
 # comment above for exactly which env var controls which.
 
-declare -A RST_BIN RST_FLAGS RST_LABEL
+declare -A RST_BIN RST_FLAGS
 RST_ORDER=()
 
 if [ -z "${BESM2_RST:-}" ]; then
@@ -157,17 +157,20 @@ fi
 
 if [ -n "$BESM2_RST" ]; then
   RST_ORDER+=(yaml fyaml)
-  RST_BIN[yaml]="$BESM2_RST";   RST_FLAGS[yaml]="";   RST_LABEL[yaml]="besm2-rst"
-  RST_BIN[fyaml]="$BESM2_RST";  RST_FLAGS[fyaml]="-f"; RST_LABEL[fyaml]="besm2-rst -f/--fyaml"
+  RST_BIN[yaml]="$BESM2_RST";   RST_FLAGS[yaml]=""
+  RST_BIN[fyaml]="$BESM2_RST";  RST_FLAGS[fyaml]="-f"
 fi
 
-# Adds one single-binary variant (code, its env var's name, and the
-# label to show in the report) if that env var is set -- unset means
-# silently skipped (a one-line note on stderr), since none of these
-# have a PATH-install convention worth trusting the way besm2-rst's
-# does above.
+# Adds one single-binary variant (code and its env var's name) if that
+# env var is set -- unset means silently skipped (a one-line note on
+# stderr), since none of these have a PATH-install convention worth
+# trusting the way besm2-rst's does above. Table rows are always the
+# short code (see the "Programs compared below" legend for what each
+# one means) -- a couple of the full binary names/flags (e.g.
+# "besm2-rst -f/--fyaml") are too wide to sit in a table cell next to
+# four data columns without an awkward mid-word wrap in the PDF.
 add_variant () {
-  local code="$1" var="$2" label="$3" path
+  local code="$1" var="$2" path
   path="${!var:-}"
   if [ -z "$path" ]; then
     log "note: $var not set -- '$code' variant skipped"
@@ -175,13 +178,13 @@ add_variant () {
   fi
   [ -x "$path" ] || die "$var is set but not executable: $path"
   RST_ORDER+=("$code")
-  RST_BIN[$code]="$path"; RST_FLAGS[$code]=""; RST_LABEL[$code]="$label"
+  RST_BIN[$code]="$path"; RST_FLAGS[$code]=""
 }
-add_variant tree   BESM2_RST_F  "besm2-rst-f"
-add_variant entity BESM2_RST_E  "besm2-rst-e"
-add_variant etree  BESM2_RST_FE "besm2-rst-f-e"
+add_variant tree   BESM2_RST_F
+add_variant entity BESM2_RST_E
+add_variant etree  BESM2_RST_FE
 
-RST_BIN[besm2_fmt]="$BESM2_FMT"; RST_FLAGS[besm2_fmt]=""; RST_LABEL[besm2_fmt]="besm2_fmt"
+RST_BIN[besm2_fmt]="$BESM2_FMT"; RST_FLAGS[besm2_fmt]=""
 ALL_CODES=("${RST_ORDER[@]}" besm2_fmt)
 
 mkdir -p "$BENCH_DIR"
@@ -280,7 +283,7 @@ print_grid () {
   echo "$header"
   echo "$sep"
   for code in $codes; do
-    row="| ${RST_LABEL[$code]} |"
+    row="| $code |"
     for m in "${MODES[@]}"; do
       mode="${m%%:*}"
       row+=" ${vals[$code:$mode]:-} |"
@@ -304,7 +307,7 @@ print_speedup_grid () {
   echo "$header"
   echo "$sep"
   for code in $codes; do
-    row="| ${RST_LABEL[$code]} |"
+    row="| $code |"
     for m in "${MODES[@]}"; do
       mode="${m%%:*}"
       s=$(awk -v r="${raw[$code:$mode]}" -v f="${raw[besm2_fmt:$mode]}" \

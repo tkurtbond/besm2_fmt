@@ -71,14 +71,15 @@ of this writing):
 |---|---|---|---|
 | `besm2-rst.scm` alone | 995 | 1,268 | 1 |
 | `besm2-rst-f.scm` alone | 1,020 | 1,328 | 1 |
-| `besm2-rst-e.scm` + `besm-entities.scm` | 1,004 | 1,482 | 2 |
-| `besm2-rst-f-e.scm` + `besm-entities.scm` | 1,022 | 1,507 | 2 |
+| `besm2-rst-e.scm`\* | 1,004 | 1,482 | 2 |
+| `besm2-rst-f-e.scm`\* | 1,022 | 1,507 | 2 |
 | `besm2_fmt/src` (Ada) | 1,667 | 2,460 | 17 (`.ads`/`.adb` pairs) |
 
 Each row above is a complete, independently runnable program's total
-SLOC -- `besm-entities.scm`'s 777 SLOC is counted once per row because
-each of `besm2-rst-e.scm`/`besm2-rst-f-e.scm` genuinely needs the
-whole file to run, not because it's being double-counted by mistake.
+SLOC. `\*` marks the two rows that also require `besm-entities.scm`
+to run -- its 777 SLOC is included (counted once, not twice) in both,
+since each genuinely needs the whole file, not because it's being
+double-counted by mistake.
 (Summed once across the distinct-file corpus -- `sloccount` on all
 five files together agrees -- the whole besm-tools side is 3,264 SLOC;
 that number mixes an original and its refactor and isn't the right
@@ -119,14 +120,19 @@ to any single-file Scheme original.
 
 ## Comment and blank-line density
 
-| | Total lines | Comment-only | Blank | Code (rest) |
-|---|---|---|---|---|
-| `besm2-rst.scm` | 1,268 | 142 (11.2%) | 131 (10.3%) | 995 (78.5%) |
-| `besm2-rst-f.scm` | 1,328 | 170 (12.8%) | 138 (10.4%) | 1,020 (76.8%) |
-| `besm2-rst-e.scm` | 351 | 96 (27.4%) | 28 (8.0%) | 227 (64.7%) |
-| `besm2-rst-f-e.scm` | 376 | 97 (25.8%) | 34 (9.0%) | 245 (65.2%) |
-| `besm-entities.scm` | 1,131 | 223 (19.7%) | 131 (11.6%) | 777 (68.7%) |
-| `besm2_fmt/src` | 2,460 | ~509 (~20.7%) | ~282 (~11.5%) | 1,667 (~67.8%) |
+File names below are abbreviated (`.scm` dropped, `besm2-` shortened
+to `rst-` where it was a prefix). Code line counts aren't shown
+separately -- they're each row's remainder after comment-only and
+blank (e.g. `rst`: 1,268 - 142 - 131 = 995, matching its SLOC above):
+
+| File | Total lines | Comment-only | Blank |
+|---|---|---|---|
+| `rst` | 1,268 | 142 (11.2%) | 131 (10.3%) |
+| `rst-f` | 1,328 | 170 (12.8%) | 138 (10.4%) |
+| `rst-e` | 351 | 96 (27.4%) | 28 (8.0%) |
+| `rst-f-e` | 376 | 97 (25.8%) | 34 (9.0%) |
+| `entities` | 1,131 | 223 (19.7%) | 131 (11.6%) |
+| `besm2_fmt/src` | 2,460 | ~509 (~20.7%) | ~282 (~11.5%) |
 
 `besm2-rst-e.scm`/`besm2-rst-f-e.scm` are the most densely commented
 Scheme files here by a wide margin (>25%, close to Ada's own ~20.7%)
@@ -186,8 +192,8 @@ reads from it instead of re-deriving fields itself":
 
 | | Decode/accessor module only | + the formatters it feeds |
 |---|---|---|
-| Scheme (`besm-entities.scm`) | 777 SLOC | 777 SLOC (formatters live in the same file) |
-| Ada (`besm2_fmt-entities.{ads,adb}` + `format_*.{ads,adb}`) | 371 SLOC | 371 + 782 = 1,153 SLOC |
+| Scheme | 777 SLOC | 777 SLOC (formatters live in the same file) |
+| Ada | 371 SLOC | 371 + 782 = 1,153 SLOC |
 
 Two things stand out:
 

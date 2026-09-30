@@ -526,8 +526,8 @@ prints each command-line error a second time. The GNUmakefile always
 asks gprbuild whether to relink, so a change in Arg_Parser or alibfyaml
 is picked up. 1.6 and 1.7 needed changes to alibfyaml (`Open_File`
 raises `Name_Error`/`Use_Error`; `Open_String` takes a `Name`), and
-1.8 and the messages a change to Arg_Parser, so building needs their
-current versions.
+1.8 and the messages a change to Arg_Parser (`e608c8e`), so building
+needs those versions or later.
 
 Not changed: the port's section 2 (byte-wise case folding, underlines
 as long as the name in bytes), where the port copies this program to

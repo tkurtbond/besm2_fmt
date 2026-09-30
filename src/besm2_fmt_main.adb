@@ -6,6 +6,7 @@
 
 with Ada.Command_Line;
 with Ada.Exceptions;
+with Ada.IO_Exceptions;
 with Ada.Text_IO;
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with Arg_Parser;
@@ -81,7 +82,7 @@ procedure BESM2_Fmt_Main is
       declare
          Stream : Streams.Document_Stream :=
            (if Use_Stdin
-            then Streams.Open_String (Read_All_Standard_Input)
+            then Streams.Open_String (Read_All_Standard_Input, Name => Source)
             else Streams.Open_File (Filename));
       begin
          while Streams.Has_Next (Stream) loop
@@ -89,6 +90,11 @@ procedure BESM2_Fmt_Main is
          end loop;
       end;
    exception
+      when E : Ada.IO_Exceptions.Name_Error | Ada.IO_Exceptions.Use_Error =>
+         --  From Open_File: the message is "FILE: REASON".
+         Ada.Text_IO.Put_Line
+           (Ada.Text_IO.Standard_Error,
+            "besm2_fmt: " & Ada.Exceptions.Exception_Message (E));
       when E : Libfyaml.Parse_Error | Libfyaml.Missing_Key | Libfyaml.Data_Error |
                Program_Error =>
          Ada.Text_IO.Put_Line
@@ -128,8 +134,18 @@ begin
       declare
          Output_File : Ada.Text_IO.File_Type;
       begin
-         Ada.Text_IO.Create
-           (Output_File, Ada.Text_IO.Out_File, Config.Output_File.all);
+         begin
+            Ada.Text_IO.Create
+              (Output_File, Ada.Text_IO.Out_File, Config.Output_File.all);
+         exception
+            when E : Ada.IO_Exceptions.Name_Error | Ada.IO_Exceptions.Use_Error =>
+               --  The message is "PATH: REASON".
+               Ada.Text_IO.Put_Line
+                 (Ada.Text_IO.Standard_Error,
+                  "besm2_fmt: can't create " & Ada.Exceptions.Exception_Message (E));
+               Ada.Command_Line.Set_Exit_Status (1);
+               return;
+         end;
          Ada.Text_IO.Set_Output (Output_File);
          Process_All;
          Ada.Text_IO.Set_Output (Ada.Text_IO.Standard_Output);
@@ -137,6 +153,9 @@ begin
       end;
    else
       Process_All;
+      --  Otherwise a write error in what's still buffered would be
+      --  lost when the program ends.
+      Ada.Text_IO.Flush (Ada.Text_IO.Standard_Output);
    end if;
 
 exception
@@ -144,22 +163,22 @@ exception
       --  Matches besm2-rst.scm's `usage`, which always exits 1.
       Ada.Command_Line.Set_Exit_Status (1);
 
-   when E : Arg_Parser.Unknown_Option | Arg_Parser.Unknown_Argument |
-            Arg_Parser.Argument_Required | Arg_Parser.Invalid_Option_Argument =>
-      --  Arg_Parser prints its own diagnostic for these before
-      --  propagating (see e.g. "Unknown option --bogus" above); this
-      --  just gives a clean exit instead of an unhandled-exception
-      --  trace. Matches besm2-rst.scm's `die` convention of exiting 2
-      --  on a user-input error.
-      Ada.Text_IO.Put_Line
-        (Ada.Text_IO.Standard_Error, "besm2_fmt: " & Ada.Exceptions.Exception_Message (E));
+   when Arg_Parser.Unknown_Option | Arg_Parser.Unknown_Argument |
+        Arg_Parser.Argument_Required | Arg_Parser.Invalid_Option_Argument =>
+      --  Arg_Parser has already printed the diagnostic on standard
+      --  error (e.g. "Unknown option --bogus"), including for bad
+      --  numbers and for -w below Config.Min_Table_Width; this just
+      --  gives a clean exit instead of an unhandled-exception trace.
+      --  Matches besm2-rst.scm's `die` convention of exiting 2 on a
+      --  user-input error.
       Ada.Command_Line.Set_Exit_Status (2);
 
-   when Constraint_Error =>
-      --  From Arg_Parser's numeric options (Make_Set_Natural_Option,
-      --  Make_Set_Positive_Option) when the argument isn't a valid
-      --  number, or is out of the option's configured range.
+   when E : Ada.IO_Exceptions.Device_Error =>
+      --  Writing the output failed, e.g. "-o /dev/full". Whatever is
+      --  left isn't written.
+      Ada.Text_IO.Set_Output (Ada.Text_IO.Standard_Output);
       Ada.Text_IO.Put_Line
-        (Ada.Text_IO.Standard_Error, "besm2_fmt: invalid numeric option argument");
-      Ada.Command_Line.Set_Exit_Status (2);
+        (Ada.Text_IO.Standard_Error,
+         "besm2_fmt: error writing output: " & Ada.Exceptions.Exception_Message (E));
+      Ada.Command_Line.Set_Exit_Status (1);
 end BESM2_Fmt_Main;

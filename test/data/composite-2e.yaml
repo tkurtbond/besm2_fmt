@@ -1,0 +1,141 @@
+---
+- name: Lieutenant Enyon Boase
+  stats:                        # Average: (/ (+ 8 6 6) 3.0) 6.666666666666667
+    - name: Body
+      value: 8
+      points: 8
+    - name: Mind
+      value: 6
+      points: 6
+    - name: Soul
+      value: 6
+      points: 6
+  derived:
+    - name: ACV
+      value: 9
+    - name: DCV
+      value: 7
+    - name: HP
+      value: 70
+    - name: EP
+      value: 60
+    - name: SV
+      value: 14
+  attributes:
+    - name: Combat Mastery
+      level: 3
+      points: 6
+    - name: Extra Actions
+      level: 1
+      points: 4
+      details: +1 Extra Action
+    - name: "Own a Big Mecha: FV2021 Coleopteran"
+      level: 2
+      points: 8
+  defects:
+    - name: "Conditional Ownership: Army ownership"
+      points: -2
+    - name: "Unique Defect: Obsessed by Military History"
+      points: -1
+  skills:
+    - name: Interrogation
+      level: 1
+      points: 2
+    - name: Law
+      level: 1
+      points: 2
+      specialisations:
+        - Military
+    - name: Leadership
+      level: 1
+      points: 3
+    - name: Military Sciences
+      level: 2
+      points: 6
+    - name: Persuasion
+      level: 1
+      points: 3
+    - name: Political Sciences
+      level: 1
+      points: 3
+    - name: Stealth
+      level: 1
+      points: 4
+    - name: Visual Arts
+      level: 1
+      points: 1
+    - name: Writing
+      level: 1
+      points: 1
+      specialisations:
+        - Reports
+- name: FV2021 Coleopteran
+  bogus:
+  mecha: true
+  page: BRCS, p. 94=95
+  description: |
+    A three-metre talk British-built humanoid combat walker used by
+    the Canadians on Mars.  They use a new “mind-interface”
+    neuro-helmet that makes the mecha very agile.  However, if a
+    different pilot wants to use the mecha, the neuro-helmet must be
+    “retuned” to their brain waves — this takes a full day; until
+    then, halve the Defence Mastery and Combat Technique: Lightning
+    Reflexes Attribute bonuses.  The mecha are painted standard
+    colours: UN white, with sky-blue helmets.
+  attributes:
+    - name: Armour
+      level: 2
+      points: 8
+    - name: Super-Strength
+      level: 1
+      points: 3
+    - name: Toughness
+      level: 2
+      points: 8
+    - name: Ground Speed
+      level: 1
+      points: 2
+      details: Up to 50 kph
+    - name: Manoeuvre Bonus
+      level: 4
+      points: 4
+      details: Ground
+    - name: Accessories
+      level: 2
+      points: 2
+      details: Radio, Inertial Naviagion
+    - name: Life Support
+      level: 2
+      points: 2
+    - name: Sensors
+      level: 1
+      points: 1
+    - name: "Weapon: Railgun"
+      level: 3
+      points: 12
+      details: |
+        Damage 45, Long-Range, Unreliable
+    - name: "Weapon: Plasma Fist"
+      level: 2
+      points: 1
+      details: Damage 60, Melee, Limited Shots [6 shots]
+    - name: "Weapon: Rocket Pod"
+      level: 2
+      points: 1
+      details: |
+        Damage 45, Auto-fire, Area Effect, Limited Shots ×2 [3 shots],
+        Stoppable
+  defects:
+    - name: Awkward Size
+      points: -2
+      details: |
+        Huge (1-10 tonnes)
+    - name: "Hanger Queen"
+      points: -1
+    - name: "Partial Armour"
+      points: -1
+  derived:
+    - name: AR
+      value: 20
+    - name: HP
+      value: 80

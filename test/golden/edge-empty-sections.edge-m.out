@@ -1,0 +1,15 @@
+Sparse
+------
+
+.. raw:: ms
+
+   .LP
+   .TS
+   tab(#) ;
+   c c lx .
+   =
+   \fBVALUE\fP#\fBPOINTS\fP#\fBSTAT\fP
+   4#0#Body
+   
+   =
+   .TE

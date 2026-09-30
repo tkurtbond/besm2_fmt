@@ -1,0 +1,42 @@
+Empty items
+-----------
+
+.. raw:: ms
+
+   .LP
+   .TS
+   tab(#) ;
+   c l sx .
+   =
+   \fBVALUE\fP#\fBDERIVED VALUE\fP
+   9#T{
+   Attack Combat Value ()
+   T}
+   7#T{
+   Defence Combat Value (, )
+   T}
+   60#T{
+   Health Points
+   T}
+   
+   .T&
+   c c lx .
+   \fBLEVEL\fP#\fBPOINTS\fP#\fBATTRIBUTE\fP
+   1#1#T{
+   Elemental
+   T}
+   
+   .T&
+   c c lx .
+   \fBLEVEL\fP#\fBPOINTS\fP#\fBSKILL\fP
+   1#2#T{
+   Law ()
+   T}
+   1#2#T{
+   Medical
+   T}
+   #\fB4\fP#\fBSKILL POINTS TOTAL\fP
+   
+   #\fB1\fP#\fBTOTAL\fP
+   =
+   .TE

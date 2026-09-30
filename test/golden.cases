@@ -1,0 +1,104 @@
+# Golden-output cases for test/golden.sh.
+#
+# One case per line: MODES ID FIXTURES FLAGS...
+#   MODES     how the program is run and what is compared: "-" for the
+#             plain case, or as many of these as apply, joined by ":"
+#               stdout  standard output only (error messages are
+#                       checked by test/cli.sh instead)
+#               all     every matching fixture in one run, as several
+#                       file arguments; the golden file is ID.out
+#               stdin   the fixture on standard input, not as an
+#                       argument
+#               file    with -o, to a scratch file; the golden file
+#                       holds standard output and error, a
+#                       "==== -o file ====" line, then the file
+#   ID        names the golden files: test/golden/FIXTURE.ID.out
+#   FIXTURES  a shell glob in test/data, without ".yaml" (extglob is
+#             on, so @(a|b) works); several files in "all" mode are
+#             given in the glob's (sorted) order
+#   FLAGS     the command-line options, before the fixtures' paths
+# Blank lines and lines starting with # are ignored.  Golden files hold
+# standard output and standard error together unless the mode says
+# otherwise; every case must exit 0.
+#
+# The cases and golden files started as copies of the Oberon-2 port's
+# (~/Repos/RPG/Tools/obesm2_fmt/test), whose golden files were made
+# from this program; "PLAN.md" in the fixtures' comments means that
+# repository's PLAN.md.
+
+# ---- terse ----
+-      t          *-2e   -t
+-      s-t        *-2e   -s -t
+-      t-bold     *-2e   -t -b -l -M
+-      t-italic   *-2e   -t -i -n
+-      t-bold-it  *-2e   -t -b -i
+-      t-page     *-2e   -t -p
+-      t-page-D   *-2e   -t -p -D
+-      t-under    *-2e   -t -u = -U ~
+-      t-last     *-2e   -H -m -t
+
+# ---- grid, the default ----
+-      grid       *-2e
+-      s          *-2e   -s
+-      one        *-2e   -1
+-      one-s-B    *-2e   -1 -s -B
+-      no-bold    *-2e   -B -D
+-      ascii      *-2e   -s -n
+-      w72        *-2e   -w 72
+-      w25        *-2e   -w 25
+-      under      *-2e   -u = -U ~
+-      emph       *-2e   -b -i -l -M -p
+
+# ---- h-m-m ----
+-      hmm        *-2e   -H
+-      hmm-s      *-2e   -H -s
+-      hmm-S      *-2e   -H -S
+-      hmm-sS     *-2e   -H -s -S
+-      hmm-bold   *-2e   -H -b
+-      hmm-emph   *-2e   -H -i -l -M
+-      hmm-L2     *-2e   -H -L 2
+-      hmm-D-n    *-2e   -H -D -n
+-      hmm-root   *-2e   -H -R Root -L 1
+-      t-hmm      *-2e   -t -H
+
+# ---- raw ms ----
+-      ms         *-2e   -m
+-      ms-s       *-2e   -m -s
+-      ms-s-n     *-2e   -m -s -n
+-      ms-D       *-2e   -m -D
+-      ms-emph    *-2e   -m -b -i -l -M -p
+-      ms-under   *-2e   -m -u = -U ~
+-      ms-one     *-2e   -m -1 -B -w 30
+-      hmm-t-ms   *-2e   -H -t -m
+
+# ---- input errors, several files, standard input, -o ----
+# Only standard output is compared for bad input; test/cli.sh checks
+# the messages.  What matters here is what is written before the
+# error, and that nothing is written after it.
+stdout      bad        @(bad|shape)-*    -t
+stdout      bad-grid   @(bad|shape)-*
+stdout      bad-m      @(bad|shape)-*    -m
+-           edge       edge-*
+-           edge-t     edge-*   -t
+-           edge-H     edge-*   -H
+-           edge-m     edge-*   -m
+# Several files in one run: entity numbers (for -U) start again with
+# each file, and a bad file doesn't end the run.
+all         files      *-2e     -U ~
+all         files-t    *-2e     -t -U ~
+all         files-m    *-2e     -m -U ~
+all         files-H    *-2e     -H -R Root
+all:stdout  files-bad  @(bad-int|composite-2e|bad-root|enyon-boase-2e)   -t
+# Standard input, and -o.
+stdin       stdin      composite-multi-doc-2e   -U ~
+stdin       stdin-t    composite-multi-doc-2e   -t
+stdin:stdout stdin-bad bad-root   -t
+file        o          @(enyon-boase-2e|composite-multi-doc-2e)   -t
+file        o-grid     composite-2e
+file:all    o-files    *-2e     -m -U ~
+file        o-R        composite-2e   -H -R Root -L 1
+
+# Names equal but for case keep their document order (the sort is
+# stable).  This golden file came from besm2-rst, not this program.
+-      t          sort-ties   -t
+-      grid       sort-ties

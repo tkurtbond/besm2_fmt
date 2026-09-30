@@ -42,7 +42,7 @@ package body BESM2_Fmt.Cli is
    begin
       if Arg'Length /= 1 then
          raise Arg_Parser.Invalid_Option_Argument with
-           "-U/--subunderliner takes exactly one character, got """ &
+           "-U/--subunderliner: must be exactly one character, got """ &
            Arg & '"';
       end if;
       Config.Subunderliner := Arg (Arg'First);
@@ -53,7 +53,7 @@ package body BESM2_Fmt.Cli is
    begin
       if Arg'Length /= 1 then
          raise Arg_Parser.Invalid_Option_Argument with
-           "-u/--underliner takes exactly one character, got """ &
+           "-u/--underliner: must be exactly one character, got """ &
            Arg & '"';
       end if;
       Config.Underliner := Arg (Arg'First);

@@ -265,6 +265,13 @@ byte-for-byte against it as the acceptance test — much stronger than
 eyeballing, and catches whitespace/wrapping regressions the eye would
 miss.
 
+**Now:** `make test` runs the `Text_Layout` unit tests, then
+`test/golden.sh` (the cases in `test/golden.cases`, compared with
+`test/golden/`) and `test/cli.sh` (exit statuses and messages). The
+fixtures, cases and golden files came from the Oberon-2 port
+(`~/Repos/RPG/Tools/obesm2_fmt/test`), whose golden files were made
+from this program; see §9.
+
 ## 8. Suggested build order
 
 1. [done] `Text_Layout` in isolation (unit-testable without any YAML
@@ -491,6 +498,41 @@ report was never meaningful, and it also broke when the repo moved
 path, since it's always external to this repo. `BESM2_FMT`/
 `BENCH_SOURCE` env-var overrides pointing elsewhere print as absolute
 too — only the default, in-repo case gets relativized.
+
+## 9. Defects found by the Oberon-2 port (fixed)
+
+The Oberon-2 port (`~/Repos/RPG/Tools/obesm2_fmt`) lists in its
+`ADA-DIFFERENCES.md`, section 1, the defects of this program it fixes.
+They are fixed here too; the numbers are that list's.
+
+| # | Was | Now |
+|---|---|---|
+| 1.1 | A bad option value (`-u xx`, `-w 0`) stopped option parsing, then processed the files before it (or standard input), exit 0 | Exit 2, nothing processed. Already fixed by Arg_Parser `8528c2a`; only the binary was out of date. |
+| 1.2 | `-w` 1..24 failed part way through the output with "invalid numeric option argument" | `-w` must be at least `Config.Min_Table_Width` (25): Arg_Parser rejects it up front |
+| 1.3 | YAML of the wrong shape (`stats: 5`, `stats:` with no value, an entity or list item that isn't a mapping, a customizer of one item, ...) ended the run with an assertion failure | `Libfyaml.Data_Error`, reported with the node's path (`/1/stats: not a sequence`); the next file is processed |
+| 1.4 | Names equal but for case came out in an arbitrary order | A stable sort keeps document order, as besm2-rst does |
+| 1.5 | `-o` to a path that can't be created: unhandled `Name_Error` | `besm2_fmt: can't create PATH: REASON`, exit 1 |
+| 1.6 | A missing file: libfyaml's `[ERR]: failed to open`, then "document failed to parse"; a directory was silently taken for an empty file | `besm2_fmt: FILE: REASON`, from alibfyaml's `Name_Error`/`Use_Error` |
+| 1.7 | YAML errors on standard input named it `(string-in-memory)` | `(stdin)`, through `Open_String`'s new `Name` |
+| 1.8 | `-w -5` was "Argument Required for option -w" | The value `-5`, out of range (Arg_Parser takes the next argument even if it starts with `-`) |
+| 1.9 | `-u=` took the next argument as its value | Sets the underliner to `=`. Already fixed by Arg_Parser `264a098`. |
+| 1.10 | A write error was an unhandled `Device_Error` | `besm2_fmt: error writing output: REASON`, exit 1 |
+| 1.11 | `make rst`'s `-unicode-minus` files had ASCII minus signs | Renamed `-ascii-minus` |
+
+Also: Arg_Parser's messages for bad values now go to standard error
+(they went to standard output) and read `Invalid value for option -w:
+"24" is not in range 25..2147483647`, and this program no longer
+prints each command-line error a second time. The GNUmakefile always
+asks gprbuild whether to relink, so a change in Arg_Parser or alibfyaml
+is picked up. 1.6 and 1.7 needed changes to alibfyaml (`Open_File`
+raises `Name_Error`/`Use_Error`; `Open_String` takes a `Name`), and
+1.8 and the messages a change to Arg_Parser, so building needs their
+current versions.
+
+Not changed: the port's section 2 (byte-wise case folding, underlines
+as long as the name in bytes), where the port copies this program to
+keep byte-for-byte output; and the quirks kept on purpose (section 5
+there), such as exit status 0 after a bad input file.
 
 ## Open questions
 

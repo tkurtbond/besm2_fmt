@@ -1,0 +1,16 @@
+Good
+----
+
+.. raw:: ms
+
+   .LP
+   .TS
+   tab(#) ;
+   c c lx .
+   =
+   \fBVALUE\fP#\fBPOINTS\fP#\fBSTAT\fP
+   4#8#Body
+   
+   #\fB8\fP#\fBTOTAL\fP
+   =
+   .TE

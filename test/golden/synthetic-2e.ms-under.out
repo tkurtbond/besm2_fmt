@@ -1,0 +1,143 @@
+Rana “Frog” Élan
+=====================
+
+*A swamp hero, trimmed.*
+
+One line of description.
+
+**Size:** Small
+
+.. raw:: ms
+
+   .TS
+   tab(#) ;
+   c c lx .
+   =
+   \fBVALUE\fP#\fBPOINTS\fP#\fBSTAT\fP
+   5#10#Body
+   4#8#Mind
+   3#6#Soul
+   
+   .T&
+   c l sx .
+   \fBVALUE\fP#\fBDERIVED VALUE\fP
+   5#T{
+   Attack Combat Value (6 hand-to-hand, 4 ranged)
+   T}
+   3#T{
+   Defence Combat Value
+   T}
+   1#T{
+   Damage Multiplier
+   T}
+   0#T{
+   Armour Rating
+   T}
+   7#T{
+   XYZ
+   T}
+   
+   .T&
+   c c lx .
+   \fBLEVEL\fP#\fBPOINTS\fP#\fBATTRIBUTE\fP
+   1#4#T{
+   armour
+   T}
+   3 (5)#12#T{
+   Weapon Attack (air, Earth, Water; Area −1, Big: lakes, ponds, rivers −3, Range −5, Short +-1, Slow +1, Zone: Swamp −2; Damage 45, Tongue lash)
+   T}
+   1#1#T{
+   Zebra Stripes
+   T}
+   2#4#T{
+   “Quoted” Power
+   T}
+   1#2#T{
+   élan vital
+   T}
+   
+   .T&
+   c c lx .
+   #\fBPOINTS\fP#\fBDEFECT\fP
+   #−2#T{
+   Awkward
+   T}
+   #−1#T{
+   Marked (Green skin, webbed feet)
+   T}
+   
+   .T&
+   c c lx .
+   \fBLEVEL\fP#\fBPOINTS\fP#\fBSKILL\fP
+   1#2#T{
+   acrobatics
+   T}
+   2#4#T{
+   Swimming (Underwater, Racing)
+   T}
+   #\fB6\fP#\fBSKILL POINTS TOTAL\fP
+   
+   #\fB44\fP#\fBTOTAL\fP
+   =
+   .TE
+Unit 7
+~~~~~~
+
+.. raw:: ms
+
+   .LP
+   .TS
+   tab(#) ;
+   c c lx .
+   =
+   \fBLEVEL\fP#\fBPOINTS\fP#\fBATTRIBUTE\fP
+   1#4#T{
+   Armour
+   T}
+   
+   .T&
+   c c lx .
+   #\fBPOINTS\fP#\fBDEFECT\fP
+   #−3#T{
+   Fragile
+   T}
+   
+   #\fB1\fP#\fBTOTAL\fP
+   =
+   .TE
+*No name here*
+
+.. raw:: ms
+
+   .TS
+   tab(#) ;
+   c c lx .
+   =
+   \fBVALUE\fP#\fBPOINTS\fP#\fBSTAT\fP
+   2#4#Body
+   
+   .T&
+   c c lx .
+   \fBLEVEL\fP#\fBPOINTS\fP#\fBATTRIBUTE\fP
+   1#4#T{
+   Flight (Silent −1)
+   T}
+   
+   .T&
+   c c lx .
+   #\fBPOINTS\fP#\fBDEFECT\fP
+   #−6#T{
+   Big
+   T}
+   
+   .T&
+   c c lx .
+   \fBLEVEL\fP#\fBPOINTS\fP#\fBSKILL\fP
+   1#1#T{
+   Piloting
+   T}
+   #\fB1\fP#\fBSKILL POINTS TOTAL\fP
+   
+   #\fB2\fP#\fBTOTAL\fP
+   =
+   .TE

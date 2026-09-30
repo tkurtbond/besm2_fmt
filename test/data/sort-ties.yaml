@@ -1,0 +1,20 @@
+# Made up: names equal when case is ignored, which must keep their
+# document order, as in besm2-rst (the sort must be stable).
+---
+- name: Ties
+  attributes:
+    - {name: armour, level: 1, points: 1}
+    - {name: Armour, level: 2, points: 2}
+    - {name: ARMOUR, level: 3, points: 3}
+    - {name: Aegis, level: 1, points: 1}
+    - {name: armour, level: 4, points: 4}
+  defects:
+    - {name: slow, points: -1}
+    - {name: Slow, points: -2}
+    - {name: SLOW, points: -3}
+  skills:
+    - {name: law, level: 1, points: 1}
+    - {name: Law, level: 2, points: 2}
+    - {name: LAW, level: 3, points: 3}
+    - {name: Law, level: 4, points: 4}
+    - {name: lAw, level: 5, points: 5}

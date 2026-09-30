@@ -1,0 +1,9 @@
+# Made up (PLAN.md, step 9): a document whose top level is a mapping, between two good ones.  The first is written, the third isn't.
+---
+- name: Good
+  stats: [{name: Body, value: 4, points: 8}]
+---
+a: 1
+---
+- name: Good
+  stats: [{name: Body, value: 4, points: 8}]

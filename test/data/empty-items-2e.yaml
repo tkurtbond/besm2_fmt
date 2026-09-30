@@ -1,0 +1,16 @@
+---
+# Lists whose only items are empty strings.  The list isn't empty, so
+# the Ada version and besm2-rst.scm still write the parentheses around
+# it: "Attack Combat Value ()".  This port's grid and raw ms formats
+# once tested the joined text instead and left them out (PLAN.md,
+# step 12).
+- name: Empty items
+  derived:
+    - {name: ACV, value: 9, alternatives: [""]}
+    - {name: DCV, value: 7, alternatives: ["", ""]}
+    - {name: HP, value: 60, alternatives: []}
+  attributes:
+    - {name: Elemental, level: 1, points: 1, elements: [""]}
+  skills:
+    - {name: Law, level: 1, points: 2, specialisations: [""]}
+    - {name: Medical, level: 1, points: 2, specialisations: []}

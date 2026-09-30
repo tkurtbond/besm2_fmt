@@ -1,0 +1,5 @@
+# Made up (PLAN.md, step 9): a points value that is a real number, not an integer.
+- name: Good
+  stats: [{name: Body, value: 4, points: 8}]
+- name: Float
+  stats: [{name: Body, value: 4, points: 8.5}]

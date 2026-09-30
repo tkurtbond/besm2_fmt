@@ -1,0 +1,82 @@
+FV2021 Coleopteran
+------------------
+
+A three-metre talk British-built humanoid combat walker used by
+the Canadians on Mars.  They use a new “mind-interface”
+neuro-helmet that makes the mecha very agile.  However, if a
+different pilot wants to use the mecha, the neuro-helmet must be
+“retuned” to their brain waves — this takes a full day; until
+then, halve the Defence Mastery and Combat Technique: Lightning
+Reflexes Attribute bonuses.  The mecha are painted standard
+colours: UN white, with sky-blue helmets.
+
+
+.. raw:: ms
+
+   .TS
+   tab(#) ;
+   c l sx .
+   =
+   \fBVALUE\fP#\fBDERIVED VALUE\fP
+   20#T{
+   Armour Rating
+   T}
+   80#T{
+   Health Points
+   T}
+   
+   .T&
+   c c lx .
+   \fBLEVEL\fP#\fBPOINTS\fP#\fBATTRIBUTE\fP
+   2#2#T{
+   Accessories (Radio, Inertial Naviagion)
+   T}
+   2#8#T{
+   Armour
+   T}
+   1#2#T{
+   Ground Speed (Up to 50 kph)
+   T}
+   2#2#T{
+   Life Support
+   T}
+   4#4#T{
+   Manoeuvre Bonus (Ground)
+   T}
+   1#1#T{
+   Sensors
+   T}
+   1#3#T{
+   Super-Strength
+   T}
+   2#8#T{
+   Toughness
+   T}
+   2#1#T{
+   Weapon: Plasma Fist (Damage 60, Melee, Limited Shots [6 shots])
+   T}
+   3#12#T{
+   Weapon: Railgun (Damage 45, Long-Range, Unreliable)
+   T}
+   2#1#T{
+   Weapon: Rocket Pod (Damage 45, Auto-fire, Area Effect, Limited Shots ×2 [3 shots], Stoppable)
+   T}
+   #\fB44\fP#\fBATTRIBUTES TOTAL\fP
+   
+   .T&
+   c c lx .
+   #\fBPOINTS\fP#\fBDEFECT\fP
+   #−2#T{
+   Awkward Size (Huge (1-10 tonnes))
+   T}
+   #−1#T{
+   Hanger Queen
+   T}
+   #−1#T{
+   Partial Armour
+   T}
+   #\fB−4\fP#\fBDEFECTS TOTAL\fP
+   
+   #\fB40\fP#\fBTOTAL\fP
+   =
+   .TE

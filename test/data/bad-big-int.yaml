@@ -1,0 +1,5 @@
+# Made up (PLAN.md, step 9): a points value too big for an integer.
+- name: Good
+  stats: [{name: Body, value: 4, points: 8}]
+- name: Big
+  stats: [{name: Body, value: 4, points: 99999999999}]

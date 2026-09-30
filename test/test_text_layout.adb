@@ -2,6 +2,7 @@
 --  involved) -- PLAN.md section 8, build-order step 1: "Text_Layout in
 --  isolation (unit-testable without any YAML at all)."
 
+with Ada.Command_Line;
 with Ada.Containers; use Ada.Containers;
 with Ada.Text_IO;
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
@@ -218,5 +219,6 @@ begin
       Ada.Text_IO.Put_Line ("All checks passed.");
    else
       Ada.Text_IO.Put_Line (Natural'Image (Failures) & " check(s) failed.");
+      Ada.Command_Line.Set_Exit_Status (Ada.Command_Line.Failure);
    end if;
 end Test_Text_Layout;

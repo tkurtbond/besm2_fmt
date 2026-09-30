@@ -1,0 +1,5 @@
+# Made up (PLAN.md, step 9): a customizer that is a mapping.
+- name: Good
+  stats: [{name: Body, value: 4, points: 8}]
+- name: Map
+  attributes: [{name: A, level: 1, points: 2, limiters: [{x: 1}]}]

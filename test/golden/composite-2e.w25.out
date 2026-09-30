@@ -1,0 +1,211 @@
+Lieutenant Enyon Boase
+----------------------
+
++----------+----------+-+
+|**VALUE** |**POINTS**|**STAT**|
++==========+==========+=+
+|8         |8         |Body|
++----------+----------+-+
+|6         |6         |Mind|
++----------+----------+-+
+|6         |6         |Soul|
++----------+----------+-+
+
++----------+------------+
+|**VALUE** |**DERIVED   |
+|          |VALUE**     |
++==========+============+
+|9         |Attack      |
+|          |Combat Value|
++----------+------------+
+|7         |Defence     |
+|          |Combat Value|
++----------+------------+
+|70        |Health      |
+|          |Points      |
++----------+------------+
+|60        |Energy      |
+|          |Points      |
++----------+------------+
+|14        |Shock Value |
++----------+------------+
+
++----------+----------+-+
+|**LEVEL** |**POINTS**|**ATTRIBUTE**|
++==========+==========+=+
+|3         |6         |Combat|
+|          |          |Mastery|
++----------+----------+-+
+|1         |4         |Extra|
+|          |          |Actions|
+|          |          |(+1|
+|          |          |Extra|
+|          |          |Action)|
++----------+----------+-+
+|2         |8         |Own|
+|          |          |a|
+|          |          |Big|
+|          |          |Mecha:|
+|          |          |FV2021|
+|          |          |Coleopteran|
++----------+----------+-+
+
++----------+----------+-+
+|          |**POINTS**|**DEFECT**|
++==========+==========+=+
+|          |\−2       |Conditional|
+|          |          |Ownership:|
+|          |          |Army|
+|          |          |ownership|
++----------+----------+-+
+|          |\−1       |Unique|
+|          |          |Defect:|
+|          |          |Obsessed|
+|          |          |by|
+|          |          |Military|
+|          |          |History|
++----------+----------+-+
+
++----------+----------+-+
+|**LEVEL** |**POINTS**|**SKILL**|
++==========+==========+=+
+|1         |2         |Interrogation|
++----------+----------+-+
+|1         |2         |Law|
+|          |          |(Military)|
++----------+----------+-+
+|1         |3         |Leadership|
++----------+----------+-+
+|2         |6         |Military|
+|          |          |Sciences|
++----------+----------+-+
+|1         |3         |Persuasion|
++----------+----------+-+
+|1         |3         |Political|
+|          |          |Sciences|
++----------+----------+-+
+|1         |4         |Stealth|
++----------+----------+-+
+|1         |1         |Visual|
+|          |          |Arts|
++----------+----------+-+
+|1         |1         |Writing|
+|          |          |(Reports)|
++----------+----------+-+
+|          |**25**    |**SKILL|
+|          |          |POINTS|
+|          |          |TOTAL**|
++----------+----------+-+
+
++----------+----------+-+
+|          |**35**    |**TOTAL**|
++----------+----------+-+
+
+FV2021 Coleopteran
+------------------
+
+A three-metre talk British-built humanoid combat walker used by
+the Canadians on Mars.  They use a new “mind-interface”
+neuro-helmet that makes the mecha very agile.  However, if a
+different pilot wants to use the mecha, the neuro-helmet must be
+“retuned” to their brain waves — this takes a full day; until
+then, halve the Defence Mastery and Combat Technique: Lightning
+Reflexes Attribute bonuses.  The mecha are painted standard
+colours: UN white, with sky-blue helmets.
+
+
++----------+------------+
+|**VALUE** |**DERIVED   |
+|          |VALUE**     |
++==========+============+
+|20        |Armour      |
+|          |Rating      |
++----------+------------+
+|80        |Health      |
+|          |Points      |
++----------+------------+
+
++----------+----------+-+
+|**LEVEL** |**POINTS**|**ATTRIBUTE**|
++==========+==========+=+
+|2         |2         |Accessories|
+|          |          |(Radio,|
+|          |          |Inertial|
+|          |          |Naviagion)|
++----------+----------+-+
+|2         |8         |Armour|
++----------+----------+-+
+|1         |2         |Ground|
+|          |          |Speed|
+|          |          |(Up|
+|          |          |to|
+|          |          |50|
+|          |          |kph)|
++----------+----------+-+
+|2         |2         |Life|
+|          |          |Support|
++----------+----------+-+
+|4         |4         |Manoeuvre|
+|          |          |Bonus|
+|          |          |(Ground)|
++----------+----------+-+
+|1         |1         |Sensors|
++----------+----------+-+
+|1         |3         |Super-Strength|
++----------+----------+-+
+|2         |8         |Toughness|
++----------+----------+-+
+|2         |1         |Weapon:|
+|          |          |Plasma|
+|          |          |Fist|
+|          |          |(Damage|
+|          |          |60,|
+|          |          |Melee,|
+|          |          |Limited|
+|          |          |Shots|
+|          |          |[6|
+|          |          |shots])|
++----------+----------+-+
+|3         |12        |Weapon:|
+|          |          |Railgun|
+|          |          |(Damage|
+|          |          |45,|
+|          |          |Long-Range,|
+|          |          |Unreliable)|
++----------+----------+-+
+|2         |1         |Weapon:|
+|          |          |Rocket|
+|          |          |Pod|
+|          |          |(Damage|
+|          |          |45,|
+|          |          |Auto-fire,|
+|          |          |Area|
+|          |          |Effect,|
+|          |          |Limited|
+|          |          |Shots|
+|          |          |×2|
+|          |          |[3|
+|          |          |shots],|
+|          |          |Stoppable)|
++----------+----------+-+
+
++----------+----------+-+
+|          |**POINTS**|**DEFECT**|
++==========+==========+=+
+|          |\−2       |Awkward|
+|          |          |Size|
+|          |          |(Huge|
+|          |          |(1-10|
+|          |          |tonnes))|
++----------+----------+-+
+|          |\−1       |Hanger|
+|          |          |Queen|
++----------+----------+-+
+|          |\−1       |Partial|
+|          |          |Armour|
++----------+----------+-+
+
++----------+----------+-+
+|          |**40**    |**TOTAL**|
++----------+----------+-+
+

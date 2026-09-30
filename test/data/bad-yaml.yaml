@@ -1,0 +1,5 @@
+# Made up (PLAN.md, step 9): YAML that doesn't parse, after a good entity.
+- name: Good
+  stats: [{name: Body, value: 4, points: 8}]
+- name: Broken
+  stats: [ {name: Body

@@ -1,0 +1,7 @@
+# Made up: "stats:" with no value, which is null, not a sequence.  Once
+# ended the run with a failed assertion; now the good entity before it
+# is written, and the error is reported with the path of stats.
+- name: Good
+  stats: [{name: Body, value: 4, points: 8}]
+- name: Null
+  stats:

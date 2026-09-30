@@ -50,6 +50,11 @@ package BESM2_Fmt.Config is
    Hmm_Depth   : aliased Natural := 0;    -- -L/--hmm-depth
    Table_Width : aliased Positive := 60;  -- -w/--width
 
+   Min_Table_Width : constant Positive := 25;
+   --  The narrowest -w that works: below it, the wrapped column of a
+   --  three-column row has no room (Text_Layout raised
+   --  Constraint_Error part way through the output).
+
    Hmm_Root    : aliased Arg_Parser.String_Reference;  -- -R/--hmm-root; null = unset
    Output_File : aliased Arg_Parser.String_Reference;  -- -o/--output; null = unset (stdout)
 

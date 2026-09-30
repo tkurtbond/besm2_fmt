@@ -1,0 +1,7 @@
+# Made up: a customizer sequence with a name and nothing else.  Once
+# ended the run with a failed assertion; now the good entity before it
+# is written, and the error is reported with the customizer's path.
+- name: Good
+  stats: [{name: Body, value: 4, points: 8}]
+- name: Short
+  attributes: [{name: A, level: 1, points: 2, enhancements: [[x]]}]

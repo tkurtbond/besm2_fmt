@@ -1,0 +1,85 @@
+Derived First
+=============
+
+.. raw:: ms
+
+   .LP
+   .TS
+   tab(#) ;
+   c l sx .
+   =
+   \fBVALUE\fP#\fBDERIVED VALUE\fP
+   40#T{
+   Health Points
+   T}
+   
+   .T&
+   c c lx .
+   \fBLEVEL\fP#\fBPOINTS\fP#\fBSKILL\fP
+   1#2#T{
+   Stealth
+   T}
+   #\fB2\fP#\fBSKILL POINTS TOTAL\fP
+   
+   =
+   .TE
+All Defects
+~~~~~~~~~~~
+
+.. raw:: ms
+
+   .LP
+   .TS
+   tab(#) ;
+   c c lx .
+   =
+   #\fBPOINTS\fP#\fBDEFECT\fP
+   #−2#T{
+   Cursed
+   T}
+   #−1#T{
+   Hunted
+   T}
+   
+   =
+   .TE
+Even
+~~~~
+
+.. raw:: ms
+
+   .LP
+   .TS
+   tab(#) ;
+   c c lx .
+   =
+   \fBLEVEL\fP#\fBPOINTS\fP#\fBATTRIBUTE\fP
+   1#2#T{
+   Armour
+   T}
+   
+   .T&
+   c c lx .
+   #\fBPOINTS\fP#\fBDEFECT\fP
+   #−2#T{
+   Slow
+   T}
+   
+   =
+   .TE
+Skills alone, and no name.
+
+.. raw:: ms
+
+   .TS
+   tab(#) ;
+   c c lx .
+   =
+   \fBLEVEL\fP#\fBPOINTS\fP#\fBSKILL\fP
+   2#4#T{
+   Riding (Horses)
+   T}
+   #\fB4\fP#\fBSKILL POINTS TOTAL\fP
+   
+   =
+   .TE

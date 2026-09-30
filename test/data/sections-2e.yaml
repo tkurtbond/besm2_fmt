@@ -1,0 +1,33 @@
+# Made up, for the raw ms format's section bookkeeping (PLAN.md, step 8):
+# tables that start with each kind of section, entities with no
+# paragraph before the table (".LP"), and totals of zero and below
+# (no TOTAL row).
+---
+- name: Derived First
+  derived:
+    - name: HP
+      value: 40
+  skills:
+    - name: Stealth
+      level: 1
+      points: 2
+- name: All Defects
+  defects:
+    - name: Cursed
+      points: -2
+    - name: Hunted
+      points: -1
+- name: Even
+  attributes:
+    - name: Armour
+      level: 1
+      points: 2
+  defects:
+    - name: Slow
+      points: -2
+- description: Skills alone, and no name.
+  skills:
+    - name: Riding
+      level: 2
+      points: 4
+      specialisations: [Horses]

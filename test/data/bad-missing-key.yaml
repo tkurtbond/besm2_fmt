@@ -1,0 +1,7 @@
+# Made up (PLAN.md, step 9): a missing required key in the second entity.  The first is written, the rest of the file isn't.
+- name: Good
+  stats: [{name: Body, value: 4, points: 8}]
+- name: NoPoints
+  stats: [{name: Body, value: 4}]
+- name: Good
+  stats: [{name: Body, value: 4, points: 8}]

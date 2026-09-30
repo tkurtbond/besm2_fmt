@@ -1,0 +1,77 @@
+
+
+
+**
+
+
+
+**Size:** 
+
+.. raw:: ms
+
+   .TS
+   tab(#) ;
+   c c lx .
+   =
+   \fBVALUE\fP#\fBPOINTS\fP#\fBSTAT\fP
+   4#4#Body
+   
+   #\fB4\fP#\fBTOTAL\fP
+   =
+   .TE
+Tagline that trims to nothing
+-----------------------------
+
+**
+
+.. raw:: ms
+
+   .TS
+   tab(#) ;
+   c c lx .
+   =
+   \fBLEVEL\fP#\fBPOINTS\fP#\fBATTRIBUTE\fP
+   1#1#T{
+   Blank Details
+   T}
+   2#2#T{
+   Empty Effective
+   T}
+   
+   .T&
+   c c lx .
+   #\fBPOINTS\fP#\fBDEFECT\fP
+   #−1#T{
+   Empty Details
+   T}
+   
+   .T&
+   c c lx .
+   \fBLEVEL\fP#\fBPOINTS\fP#\fBSKILL\fP
+   1#1#T{
+   No Specialisations
+   T}
+   #\fB1\fP#\fBSKILL POINTS TOTAL\fP
+   
+   #\fB2\fP#\fBTOTAL\fP
+   =
+   .TE
+.. raw:: ms
+
+   .LP
+   .TS
+   tab(#) ;
+   c c lx .
+   =
+   \fBVALUE\fP#\fBPOINTS\fP#\fBSTAT\fP
+   #0#
+   
+   .T&
+   c l sx .
+   \fBVALUE\fP#\fBDERIVED VALUE\fP
+   #T{
+   Attack Combat Value
+   T}
+   
+   =
+   .TE

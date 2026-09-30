@@ -1,0 +1,8 @@
+# Made up (PLAN.md, step 9): an empty document between two good ones: an error, as in besm2-rst.
+---
+- name: Good
+  stats: [{name: Body, value: 4, points: 8}]
+---
+---
+- name: Good
+  stats: [{name: Body, value: 4, points: 8}]

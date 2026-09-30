@@ -1,0 +1,104 @@
+# Made up, for what the real fixtures don't cover (PLAN.md, section 8):
+# every enhancement/limiter shape, elements, effective levels, derived
+# alternatives, skill specialisations, mecha true and false, an entity
+# without a name, a tagline, a size, UTF-8 names in the sort order, and
+# a literal block scalar in a defect's details.
+---
+- name: Rana “Frog” Élan
+  tagline: "  A swamp hero, trimmed.  "
+  size: Small
+  description: One line of description.
+  stats:
+    - name: Body
+      value: 5
+      points: 10
+    - name: Mind
+      value: 4
+      points: 8
+    - name: Soul
+      value: 3
+      points: 6
+  derived:
+    - name: ACV
+      value: 5
+      alternatives: [6 hand-to-hand, 4 ranged]
+    - name: DCV
+      value: 3
+    - name: DM
+      value: 1
+    - name: AR
+      value: 0
+    - name: XYZ
+      value: 7
+  attributes:
+    - name: Weapon Attack
+      level: 3
+      points: 12
+      effective: 5
+      elements: [Water, air, Earth]
+      enhancements:
+        - Area
+        - [Range, 5]
+        - [Zone, 2, Swamp]
+        - [Big, 3, lakes, ponds, rivers]
+      limiters:
+        - Slow
+        - [Short, -1]
+      details: |
+        Damage 45, Tongue lash
+    - name: élan vital
+      level: 1
+      points: 2
+    - name: Zebra Stripes
+      level: 1
+      points: 1
+    - name: “Quoted” Power
+      level: 2
+      points: 4
+    - name: armour
+      level: 1
+      points: 4
+      effective: ""
+  defects:
+    - name: Marked
+      points: -1
+      details: |
+        Green skin,
+        webbed feet
+    - name: Awkward
+      points: -2
+  skills:
+    - name: Swimming
+      level: 2
+      points: 4
+      specialisations: [Underwater, Racing]
+    - name: acrobatics
+      level: 1
+      points: 2
+- name: Unit 7
+  mecha: false
+  attributes:
+    - name: Armour
+      level: 1
+      points: 4
+  defects:
+    - name: Fragile
+      points: -3
+- tagline: No name here
+  mecha: true
+  stats:
+    - name: Body
+      value: 2
+      points: 4
+  attributes:
+    - name: Flight
+      level: 1
+      points: 4
+      enhancements: [Silent]
+  defects:
+    - name: Big
+      points: -6
+  skills:
+    - name: Piloting
+      level: 1
+      points: 1

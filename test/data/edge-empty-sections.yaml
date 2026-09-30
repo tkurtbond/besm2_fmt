@@ -1,0 +1,7 @@
+# Made up (PLAN.md, step 9): empty sections, and a points value of -0.
+- name: Sparse
+  stats: [{name: Body, value: 4, points: -0}]
+  derived: []
+  attributes: []
+  defects: []
+  skills: []

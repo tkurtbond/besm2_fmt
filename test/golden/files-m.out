@@ -1,0 +1,863 @@
+Lieutenant Enyon Boase
+----------------------
+
+.. raw:: ms
+
+   .LP
+   .TS
+   tab(#) ;
+   c c lx .
+   =
+   \fBVALUE\fP#\fBPOINTS\fP#\fBSTAT\fP
+   8#8#Body
+   6#6#Mind
+   6#6#Soul
+   
+   .T&
+   c l sx .
+   \fBVALUE\fP#\fBDERIVED VALUE\fP
+   9#T{
+   Attack Combat Value
+   T}
+   7#T{
+   Defence Combat Value
+   T}
+   70#T{
+   Health Points
+   T}
+   60#T{
+   Energy Points
+   T}
+   14#T{
+   Shock Value
+   T}
+   
+   .T&
+   c c lx .
+   \fBLEVEL\fP#\fBPOINTS\fP#\fBATTRIBUTE\fP
+   3#6#T{
+   Combat Mastery
+   T}
+   1#4#T{
+   Extra Actions (+1 Extra Action)
+   T}
+   2#8#T{
+   Own a Big Mecha: FV2021 Coleopteran
+   T}
+   
+   .T&
+   c c lx .
+   #\fBPOINTS\fP#\fBDEFECT\fP
+   #−2#T{
+   Conditional Ownership: Army ownership
+   T}
+   #−1#T{
+   Unique Defect: Obsessed by Military History
+   T}
+   
+   .T&
+   c c lx .
+   \fBLEVEL\fP#\fBPOINTS\fP#\fBSKILL\fP
+   1#2#T{
+   Interrogation
+   T}
+   1#2#T{
+   Law (Military)
+   T}
+   1#3#T{
+   Leadership
+   T}
+   2#6#T{
+   Military Sciences
+   T}
+   1#3#T{
+   Persuasion
+   T}
+   1#3#T{
+   Political Sciences
+   T}
+   1#4#T{
+   Stealth
+   T}
+   1#1#T{
+   Visual Arts
+   T}
+   1#1#T{
+   Writing (Reports)
+   T}
+   #\fB25\fP#\fBSKILL POINTS TOTAL\fP
+   
+   #\fB35\fP#\fBTOTAL\fP
+   =
+   .TE
+FV2021 Coleopteran
+~~~~~~~~~~~~~~~~~~
+
+A three-metre talk British-built humanoid combat walker used by
+the Canadians on Mars.  They use a new “mind-interface”
+neuro-helmet that makes the mecha very agile.  However, if a
+different pilot wants to use the mecha, the neuro-helmet must be
+“retuned” to their brain waves — this takes a full day; until
+then, halve the Defence Mastery and Combat Technique: Lightning
+Reflexes Attribute bonuses.  The mecha are painted standard
+colours: UN white, with sky-blue helmets.
+
+
+.. raw:: ms
+
+   .TS
+   tab(#) ;
+   c l sx .
+   =
+   \fBVALUE\fP#\fBDERIVED VALUE\fP
+   20#T{
+   Armour Rating
+   T}
+   80#T{
+   Health Points
+   T}
+   
+   .T&
+   c c lx .
+   \fBLEVEL\fP#\fBPOINTS\fP#\fBATTRIBUTE\fP
+   2#2#T{
+   Accessories (Radio, Inertial Naviagion)
+   T}
+   2#8#T{
+   Armour
+   T}
+   1#2#T{
+   Ground Speed (Up to 50 kph)
+   T}
+   2#2#T{
+   Life Support
+   T}
+   4#4#T{
+   Manoeuvre Bonus (Ground)
+   T}
+   1#1#T{
+   Sensors
+   T}
+   1#3#T{
+   Super-Strength
+   T}
+   2#8#T{
+   Toughness
+   T}
+   2#1#T{
+   Weapon: Plasma Fist (Damage 60, Melee, Limited Shots [6 shots])
+   T}
+   3#12#T{
+   Weapon: Railgun (Damage 45, Long-Range, Unreliable)
+   T}
+   2#1#T{
+   Weapon: Rocket Pod (Damage 45, Auto-fire, Area Effect, Limited Shots ×2 [3 shots], Stoppable)
+   T}
+   
+   .T&
+   c c lx .
+   #\fBPOINTS\fP#\fBDEFECT\fP
+   #−2#T{
+   Awkward Size (Huge (1-10 tonnes))
+   T}
+   #−1#T{
+   Hanger Queen
+   T}
+   #−1#T{
+   Partial Armour
+   T}
+   
+   #\fB40\fP#\fBTOTAL\fP
+   =
+   .TE
+Lieutenant Enyon Boase
+----------------------
+
+.. raw:: ms
+
+   .LP
+   .TS
+   tab(#) ;
+   c c lx .
+   =
+   \fBVALUE\fP#\fBPOINTS\fP#\fBSTAT\fP
+   8#8#Body
+   6#6#Mind
+   6#6#Soul
+   
+   .T&
+   c l sx .
+   \fBVALUE\fP#\fBDERIVED VALUE\fP
+   9#T{
+   Attack Combat Value
+   T}
+   7#T{
+   Defence Combat Value
+   T}
+   70#T{
+   Health Points
+   T}
+   60#T{
+   Energy Points
+   T}
+   14#T{
+   Shock Value
+   T}
+   
+   .T&
+   c c lx .
+   \fBLEVEL\fP#\fBPOINTS\fP#\fBATTRIBUTE\fP
+   3#6#T{
+   Combat Mastery
+   T}
+   1#4#T{
+   Extra Actions (+1 Extra Action)
+   T}
+   2#8#T{
+   Own a Big Mecha: FV2021 Coleopteran
+   T}
+   
+   .T&
+   c c lx .
+   #\fBPOINTS\fP#\fBDEFECT\fP
+   #−2#T{
+   Conditional Ownership: Army ownership
+   T}
+   #−1#T{
+   Unique Defect: Obsessed by Military History
+   T}
+   
+   .T&
+   c c lx .
+   \fBLEVEL\fP#\fBPOINTS\fP#\fBSKILL\fP
+   1#2#T{
+   Interrogation
+   T}
+   1#2#T{
+   Law (Military)
+   T}
+   1#3#T{
+   Leadership
+   T}
+   2#6#T{
+   Military Sciences
+   T}
+   1#3#T{
+   Persuasion
+   T}
+   1#3#T{
+   Political Sciences
+   T}
+   1#4#T{
+   Stealth
+   T}
+   1#1#T{
+   Visual Arts
+   T}
+   1#1#T{
+   Writing (Reports)
+   T}
+   #\fB25\fP#\fBSKILL POINTS TOTAL\fP
+   
+   #\fB35\fP#\fBTOTAL\fP
+   =
+   .TE
+FV2021 Coleopteran
+~~~~~~~~~~~~~~~~~~
+
+A three-metre talk British-built humanoid combat walker used by
+the Canadians on Mars.  They use a new “mind-interface”
+neuro-helmet that makes the mecha very agile.  However, if a
+different pilot wants to use the mecha, the neuro-helmet must be
+“retuned” to their brain waves — this takes a full day; until
+then, halve the Defence Mastery and Combat Technique: Lightning
+Reflexes Attribute bonuses.  The mecha are painted standard
+colours: UN white, with sky-blue helmets.
+
+
+.. raw:: ms
+
+   .TS
+   tab(#) ;
+   c l sx .
+   =
+   \fBVALUE\fP#\fBDERIVED VALUE\fP
+   20#T{
+   Armour Rating
+   T}
+   80#T{
+   Health Points
+   T}
+   
+   .T&
+   c c lx .
+   \fBLEVEL\fP#\fBPOINTS\fP#\fBATTRIBUTE\fP
+   2#2#T{
+   Accessories (Radio, Inertial Naviagion)
+   T}
+   2#8#T{
+   Armour
+   T}
+   1#2#T{
+   Ground Speed (Up to 50 kph)
+   T}
+   2#2#T{
+   Life Support
+   T}
+   4#4#T{
+   Manoeuvre Bonus (Ground)
+   T}
+   1#1#T{
+   Sensors
+   T}
+   1#3#T{
+   Super-Strength
+   T}
+   2#8#T{
+   Toughness
+   T}
+   2#1#T{
+   Weapon: Plasma Fist (Damage 60, Melee, Limited Shots [6 shots])
+   T}
+   3#12#T{
+   Weapon: Railgun (Damage 45, Long-Range, Unreliable)
+   T}
+   2#1#T{
+   Weapon: Rocket Pod (Damage 45, Auto-fire, Area Effect, Limited Shots ×2 [3 shots], Stoppable)
+   T}
+   
+   .T&
+   c c lx .
+   #\fBPOINTS\fP#\fBDEFECT\fP
+   #−2#T{
+   Awkward Size (Huge (1-10 tonnes))
+   T}
+   #−1#T{
+   Hanger Queen
+   T}
+   #−1#T{
+   Partial Armour
+   T}
+   
+   #\fB40\fP#\fBTOTAL\fP
+   =
+   .TE
+Empty items
+-----------
+
+.. raw:: ms
+
+   .LP
+   .TS
+   tab(#) ;
+   c l sx .
+   =
+   \fBVALUE\fP#\fBDERIVED VALUE\fP
+   9#T{
+   Attack Combat Value ()
+   T}
+   7#T{
+   Defence Combat Value (, )
+   T}
+   60#T{
+   Health Points
+   T}
+   
+   .T&
+   c c lx .
+   \fBLEVEL\fP#\fBPOINTS\fP#\fBATTRIBUTE\fP
+   1#1#T{
+   Elemental
+   T}
+   
+   .T&
+   c c lx .
+   \fBLEVEL\fP#\fBPOINTS\fP#\fBSKILL\fP
+   1#2#T{
+   Law ()
+   T}
+   1#2#T{
+   Medical
+   T}
+   #\fB4\fP#\fBSKILL POINTS TOTAL\fP
+   
+   #\fB1\fP#\fBTOTAL\fP
+   =
+   .TE
+
+
+
+**
+
+
+
+**Size:** 
+
+.. raw:: ms
+
+   .TS
+   tab(#) ;
+   c c lx .
+   =
+   \fBVALUE\fP#\fBPOINTS\fP#\fBSTAT\fP
+   4#4#Body
+   
+   #\fB4\fP#\fBTOTAL\fP
+   =
+   .TE
+Tagline that trims to nothing
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+**
+
+.. raw:: ms
+
+   .TS
+   tab(#) ;
+   c c lx .
+   =
+   \fBLEVEL\fP#\fBPOINTS\fP#\fBATTRIBUTE\fP
+   1#1#T{
+   Blank Details
+   T}
+   2#2#T{
+   Empty Effective
+   T}
+   
+   .T&
+   c c lx .
+   #\fBPOINTS\fP#\fBDEFECT\fP
+   #−1#T{
+   Empty Details
+   T}
+   
+   .T&
+   c c lx .
+   \fBLEVEL\fP#\fBPOINTS\fP#\fBSKILL\fP
+   1#1#T{
+   No Specialisations
+   T}
+   #\fB1\fP#\fBSKILL POINTS TOTAL\fP
+   
+   #\fB2\fP#\fBTOTAL\fP
+   =
+   .TE
+.. raw:: ms
+
+   .LP
+   .TS
+   tab(#) ;
+   c c lx .
+   =
+   \fBVALUE\fP#\fBPOINTS\fP#\fBSTAT\fP
+   #0#
+   
+   .T&
+   c l sx .
+   \fBVALUE\fP#\fBDERIVED VALUE\fP
+   #T{
+   Attack Combat Value
+   T}
+   
+   =
+   .TE
+Lieutenant Enyon Boase
+----------------------
+
+.. raw:: ms
+
+   .LP
+   .TS
+   tab(#) ;
+   c c lx .
+   =
+   \fBVALUE\fP#\fBPOINTS\fP#\fBSTAT\fP
+   8#8#Body
+   6#6#Mind
+   6#6#Soul
+   
+   .T&
+   c l sx .
+   \fBVALUE\fP#\fBDERIVED VALUE\fP
+   9#T{
+   Attack Combat Value
+   T}
+   7#T{
+   Defence Combat Value
+   T}
+   70#T{
+   Health Points
+   T}
+   60#T{
+   Energy Points
+   T}
+   14#T{
+   Shock Value
+   T}
+   
+   .T&
+   c c lx .
+   \fBLEVEL\fP#\fBPOINTS\fP#\fBATTRIBUTE\fP
+   3#6#T{
+   Combat Mastery
+   T}
+   1#4#T{
+   Extra Actions (+1 Extra Action)
+   T}
+   2#8#T{
+   Own a Big Mecha: FV2021 Coleopteran
+   T}
+   
+   .T&
+   c c lx .
+   #\fBPOINTS\fP#\fBDEFECT\fP
+   #−2#T{
+   Conditional Ownership: Army ownership
+   T}
+   #−1#T{
+   Unique Defect: Obsessed by Military History
+   T}
+   
+   .T&
+   c c lx .
+   \fBLEVEL\fP#\fBPOINTS\fP#\fBSKILL\fP
+   1#2#T{
+   Interrogation
+   T}
+   1#2#T{
+   Law (Military)
+   T}
+   1#3#T{
+   Leadership
+   T}
+   2#6#T{
+   Military Sciences
+   T}
+   1#3#T{
+   Persuasion
+   T}
+   1#3#T{
+   Political Sciences
+   T}
+   1#4#T{
+   Stealth
+   T}
+   1#1#T{
+   Visual Arts
+   T}
+   1#1#T{
+   Writing (Reports)
+   T}
+   #\fB25\fP#\fBSKILL POINTS TOTAL\fP
+   
+   #\fB35\fP#\fBTOTAL\fP
+   =
+   .TE
+FV2021 Coleopteran
+------------------
+
+A three-metre talk British-built humanoid combat walker used by
+the Canadians on Mars.  They use a new “mind-interface”
+neuro-helmet that makes the mecha very agile.  However, if a
+different pilot wants to use the mecha, the neuro-helmet must be
+“retuned” to their brain waves — this takes a full day; until
+then, halve the Defence Mastery and Combat Technique: Lightning
+Reflexes Attribute bonuses.  The mecha are painted standard
+colours: UN white, with sky-blue helmets.
+
+
+.. raw:: ms
+
+   .TS
+   tab(#) ;
+   c l sx .
+   =
+   \fBVALUE\fP#\fBDERIVED VALUE\fP
+   20#T{
+   Armour Rating
+   T}
+   80#T{
+   Health Points
+   T}
+   
+   .T&
+   c c lx .
+   \fBLEVEL\fP#\fBPOINTS\fP#\fBATTRIBUTE\fP
+   2#2#T{
+   Accessories (Radio, Inertial Naviagion)
+   T}
+   2#8#T{
+   Armour
+   T}
+   1#2#T{
+   Ground Speed (Up to 50 kph)
+   T}
+   2#2#T{
+   Life Support
+   T}
+   4#4#T{
+   Manoeuvre Bonus (Ground)
+   T}
+   1#1#T{
+   Sensors
+   T}
+   1#3#T{
+   Super-Strength
+   T}
+   2#8#T{
+   Toughness
+   T}
+   2#1#T{
+   Weapon: Plasma Fist (Damage 60, Melee, Limited Shots [6 shots])
+   T}
+   3#12#T{
+   Weapon: Railgun (Damage 45, Long-Range, Unreliable)
+   T}
+   2#1#T{
+   Weapon: Rocket Pod (Damage 45, Auto-fire, Area Effect, Limited Shots ×2 [3 shots], Stoppable)
+   T}
+   
+   .T&
+   c c lx .
+   #\fBPOINTS\fP#\fBDEFECT\fP
+   #−2#T{
+   Awkward Size (Huge (1-10 tonnes))
+   T}
+   #−1#T{
+   Hanger Queen
+   T}
+   #−1#T{
+   Partial Armour
+   T}
+   
+   #\fB40\fP#\fBTOTAL\fP
+   =
+   .TE
+Derived First
+-------------
+
+.. raw:: ms
+
+   .LP
+   .TS
+   tab(#) ;
+   c l sx .
+   =
+   \fBVALUE\fP#\fBDERIVED VALUE\fP
+   40#T{
+   Health Points
+   T}
+   
+   .T&
+   c c lx .
+   \fBLEVEL\fP#\fBPOINTS\fP#\fBSKILL\fP
+   1#2#T{
+   Stealth
+   T}
+   #\fB2\fP#\fBSKILL POINTS TOTAL\fP
+   
+   =
+   .TE
+All Defects
+~~~~~~~~~~~
+
+.. raw:: ms
+
+   .LP
+   .TS
+   tab(#) ;
+   c c lx .
+   =
+   #\fBPOINTS\fP#\fBDEFECT\fP
+   #−2#T{
+   Cursed
+   T}
+   #−1#T{
+   Hunted
+   T}
+   
+   =
+   .TE
+Even
+~~~~
+
+.. raw:: ms
+
+   .LP
+   .TS
+   tab(#) ;
+   c c lx .
+   =
+   \fBLEVEL\fP#\fBPOINTS\fP#\fBATTRIBUTE\fP
+   1#2#T{
+   Armour
+   T}
+   
+   .T&
+   c c lx .
+   #\fBPOINTS\fP#\fBDEFECT\fP
+   #−2#T{
+   Slow
+   T}
+   
+   =
+   .TE
+Skills alone, and no name.
+
+.. raw:: ms
+
+   .TS
+   tab(#) ;
+   c c lx .
+   =
+   \fBLEVEL\fP#\fBPOINTS\fP#\fBSKILL\fP
+   2#4#T{
+   Riding (Horses)
+   T}
+   #\fB4\fP#\fBSKILL POINTS TOTAL\fP
+   
+   =
+   .TE
+Rana “Frog” Élan
+---------------------
+
+*A swamp hero, trimmed.*
+
+One line of description.
+
+**Size:** Small
+
+.. raw:: ms
+
+   .TS
+   tab(#) ;
+   c c lx .
+   =
+   \fBVALUE\fP#\fBPOINTS\fP#\fBSTAT\fP
+   5#10#Body
+   4#8#Mind
+   3#6#Soul
+   
+   .T&
+   c l sx .
+   \fBVALUE\fP#\fBDERIVED VALUE\fP
+   5#T{
+   Attack Combat Value (6 hand-to-hand, 4 ranged)
+   T}
+   3#T{
+   Defence Combat Value
+   T}
+   1#T{
+   Damage Multiplier
+   T}
+   0#T{
+   Armour Rating
+   T}
+   7#T{
+   XYZ
+   T}
+   
+   .T&
+   c c lx .
+   \fBLEVEL\fP#\fBPOINTS\fP#\fBATTRIBUTE\fP
+   1#4#T{
+   armour
+   T}
+   3 (5)#12#T{
+   Weapon Attack (air, Earth, Water; Area −1, Big: lakes, ponds, rivers −3, Range −5, Short +-1, Slow +1, Zone: Swamp −2; Damage 45, Tongue lash)
+   T}
+   1#1#T{
+   Zebra Stripes
+   T}
+   2#4#T{
+   “Quoted” Power
+   T}
+   1#2#T{
+   élan vital
+   T}
+   
+   .T&
+   c c lx .
+   #\fBPOINTS\fP#\fBDEFECT\fP
+   #−2#T{
+   Awkward
+   T}
+   #−1#T{
+   Marked (Green skin, webbed feet)
+   T}
+   
+   .T&
+   c c lx .
+   \fBLEVEL\fP#\fBPOINTS\fP#\fBSKILL\fP
+   1#2#T{
+   acrobatics
+   T}
+   2#4#T{
+   Swimming (Underwater, Racing)
+   T}
+   #\fB6\fP#\fBSKILL POINTS TOTAL\fP
+   
+   #\fB44\fP#\fBTOTAL\fP
+   =
+   .TE
+Unit 7
+~~~~~~
+
+.. raw:: ms
+
+   .LP
+   .TS
+   tab(#) ;
+   c c lx .
+   =
+   \fBLEVEL\fP#\fBPOINTS\fP#\fBATTRIBUTE\fP
+   1#4#T{
+   Armour
+   T}
+   
+   .T&
+   c c lx .
+   #\fBPOINTS\fP#\fBDEFECT\fP
+   #−3#T{
+   Fragile
+   T}
+   
+   #\fB1\fP#\fBTOTAL\fP
+   =
+   .TE
+*No name here*
+
+.. raw:: ms
+
+   .TS
+   tab(#) ;
+   c c lx .
+   =
+   \fBVALUE\fP#\fBPOINTS\fP#\fBSTAT\fP
+   2#4#Body
+   
+   .T&
+   c c lx .
+   \fBLEVEL\fP#\fBPOINTS\fP#\fBATTRIBUTE\fP
+   1#4#T{
+   Flight (Silent −1)
+   T}
+   
+   .T&
+   c c lx .
+   #\fBPOINTS\fP#\fBDEFECT\fP
+   #−6#T{
+   Big
+   T}
+   
+   .T&
+   c c lx .
+   \fBLEVEL\fP#\fBPOINTS\fP#\fBSKILL\fP
+   1#1#T{
+   Piloting
+   T}
+   #\fB1\fP#\fBSKILL POINTS TOTAL\fP
+   
+   #\fB2\fP#\fBTOTAL\fP
+   =
+   .TE

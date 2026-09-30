@@ -168,7 +168,8 @@ private
         (Description => "Width of table in characters.",
          Short_Name  => 'w',
          Long_Name   => "width",
-         Variable    => BESM2_Fmt.Config.Table_Width'Access));
+         Variable    => BESM2_Fmt.Config.Table_Width'Access,
+         First       => BESM2_Fmt.Config.Min_Table_Width));
 
    The_Parser : Arg_Parser.Parser :=
      Arg_Parser.Make_Parser

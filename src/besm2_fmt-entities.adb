@@ -28,22 +28,90 @@ package body BESM2_Fmt.Entities is
      (Ada.Characters.Handling.To_Lower (To_String (L)) <
       Ada.Characters.Handling.To_Lower (To_String (R)));
 
-   package String_Sorting is new String_Vectors.Generic_Sorting ("<" => CI_Less);
+   --  A stable sort: names equal but for case keep their document
+   --  order, as in besm2-rst.scm. Generic_Sorting's Sort isn't stable
+   --  (GNAT's put "armour 1, Armour 2, ARMOUR 3" in the order
+   --  "ARMOUR 3, armour 1, Armour 2"). An insertion sort, since the
+   --  lists are short.
+   generic
+      with package Vectors is new Ada.Containers.Vectors (<>);
+      with function "<" (L, R : Vectors.Element_Type) return Boolean;
+   procedure Stable_Sort (V : in out Vectors.Vector);
+
+   procedure Stable_Sort (V : in out Vectors.Vector) is
+      use type Vectors.Extended_Index;
+   begin
+      if V.Is_Empty then
+         return;
+      end if;
+      for I in V.First_Index + 1 .. V.Last_Index loop
+         declare
+            Item : constant Vectors.Element_Type := V (I);
+            J    : Vectors.Extended_Index := I - 1;
+         begin
+            while J >= V.First_Index and then Item < V (J) loop
+               V.Replace_Element (J + 1, V (J));
+               J := J - 1;
+            end loop;
+            V.Replace_Element (J + 1, Item);
+         end;
+      end loop;
+   end Stable_Sort;
+
+   procedure String_Sort is new Stable_Sort (String_Vectors, CI_Less);
 
    function Attribute_CI_Less (L, R : Attribute) return Boolean is
      (CI_Less (L.Name, R.Name));
-   package Attribute_Sorting is new Attribute_Vectors.Generic_Sorting
-     ("<" => Attribute_CI_Less);
+   procedure Attribute_Sort is new Stable_Sort
+     (Attribute_Vectors, Attribute_CI_Less);
 
    function Defect_CI_Less (L, R : Defect) return Boolean is
      (CI_Less (L.Name, R.Name));
-   package Defect_Sorting is new Defect_Vectors.Generic_Sorting
-     ("<" => Defect_CI_Less);
+   procedure Defect_Sort is new Stable_Sort (Defect_Vectors, Defect_CI_Less);
 
    function Skill_CI_Less (L, R : Skill) return Boolean is
      (CI_Less (L.Name, R.Name));
-   package Skill_Sorting is new Skill_Vectors.Generic_Sorting
-     ("<" => Skill_CI_Less);
+   procedure Skill_Sort is new Stable_Sort (Skill_Vectors, Skill_CI_Less);
+
+   -----------------------------------------------------------------
+   --  Shape checks. YAML of the wrong shape (a list that's a scalar,
+   --  an item that isn't a mapping, ...) is bad input, reported like
+   --  any other, with the node's path; not a failed precondition in
+   --  Libfyaml.Nodes, which would end the run.
+   -----------------------------------------------------------------
+
+   procedure Require (N : Nod.Node; OK : Boolean; Problem : String) is
+   begin
+      if not OK then
+         raise Libfyaml.Data_Error with N.Path & ": " & Problem;
+      end if;
+   end Require;
+
+   procedure Require_Mapping (N : Nod.Node) is
+   begin
+      Require (N, N.Is_Mapping, "not a mapping");
+   end Require_Mapping;
+
+   procedure Require_Sequence (N : Nod.Node) is
+   begin
+      Require (N, N.Is_Sequence, "not a sequence");
+   end Require_Sequence;
+
+   procedure Require_Scalar (N : Nod.Node) is
+   begin
+      Require (N, N.Is_Scalar, "not a scalar");
+   end Require_Scalar;
+
+   --  Map's value for Key, which must be a sequence if it's there;
+   --  Null_Node if it isn't.
+   function Sequence_Field (Map : Nod.Node; Key : String) return Nod.Node is
+      N : constant Nod.Node := Map.Value (Key);
+   begin
+      if N.Is_Valid then
+         Require_Sequence (N);
+      end if;
+      return N;
+   end Sequence_Field;
 
    function Join (Vec : String_Vectors.Vector; Sep : String) return String is
       Result : Unbounded_String;
@@ -66,6 +134,7 @@ package body BESM2_Fmt.Entities is
 
       procedure Add (Element : Nod.Node) is
       begin
+         Require_Scalar (Element);
          Result.Append (To_Unbounded_String (Element.Scalar_Value));
       end Add;
    begin
@@ -103,6 +172,12 @@ package body BESM2_Fmt.Entities is
               (To_Unbounded_String
                  (Item.Scalar_Value & " " & Sign_For (Kind) & "1"));
          elsif Item.Is_Sequence then
+            --  Checked before any item is read: the declarations below
+            --  need the first two.
+            Require (Item, Item.Length >= 2, "customizer sequence too short");
+            for K in 1 .. Item.Length loop
+               Require_Scalar (Item.Item (K));
+            end loop;
             declare
                Len       : constant Natural := Item.Length;
                Name      : constant String := Item.Item (1).Scalar_Value;
@@ -111,9 +186,7 @@ package body BESM2_Fmt.Entities is
                  Sign_For (Kind) &
                  Ada.Strings.Fixed.Trim (Counts_As'Image, Ada.Strings.Both);
             begin
-               if Len < 2 then
-                  raise Program_Error with "customizer sequence too short";
-               elsif Len = 2 then
+               if Len = 2 then
                   Result.Append (To_Unbounded_String (Name & " " & Sign_Str));
                else
                   declare
@@ -131,7 +204,7 @@ package body BESM2_Fmt.Entities is
                end if;
             end;
          else
-            raise Program_Error with "do not understand customizer";
+            Require (Item, False, "do not understand customizer");
          end if;
       end Add;
    begin
@@ -149,7 +222,7 @@ package body BESM2_Fmt.Entities is
          declare
             Sorted : String_Vectors.Vector := Load_String_List (Elements);
          begin
-            String_Sorting.Sort (Sorted);
+            String_Sort (Sorted);
             if not Sorted.Is_Empty then
                Parts.Append (To_Unbounded_String (Join (Sorted, ", ")));
             end if;
@@ -166,7 +239,7 @@ package body BESM2_Fmt.Entities is
             Custom.Append_Vector (Format_Customizers (Limiters, Limiter));
          end if;
          if not Custom.Is_Empty then
-            String_Sorting.Sort (Custom);
+            String_Sort (Custom);
             Parts.Append (To_Unbounded_String (Join (Custom, ", ")));
          end if;
       end;
@@ -192,7 +265,7 @@ package body BESM2_Fmt.Entities is
       Points => N.Integer_Value ("points"));
 
    function Load_Derived (N : Nod.Node) return Derived_Value is
-      Alt_Node : constant Nod.Node := N.Value ("alternatives");
+      Alt_Node : constant Nod.Node := Sequence_Field (N, "alternatives");
    begin
       return
         (Name  => To_Unbounded_String (N.String_Value ("name")),
@@ -208,9 +281,9 @@ package body BESM2_Fmt.Entities is
       Level_Text   : Unbounded_String := To_Unbounded_String (N.String_Value ("level"));
       Details_Text : Unbounded_String := Optional_String (N, "details");
       Effective    : constant Unbounded_String := Optional_String (N, "effective");
-      Enhancements : constant Nod.Node := N.Value ("enhancements");
-      Limiters     : constant Nod.Node := N.Value ("limiters");
-      Elements     : constant Nod.Node := N.Value ("elements");
+      Enhancements : constant Nod.Node := Sequence_Field (N, "enhancements");
+      Limiters     : constant Nod.Node := Sequence_Field (N, "limiters");
+      Elements     : constant Nod.Node := Sequence_Field (N, "elements");
    begin
       if Length (Details_Text) > 0 then
          Details_Text :=
@@ -241,7 +314,8 @@ package body BESM2_Fmt.Entities is
    end Load_Defect;
 
    function Load_Skill (N : Nod.Node) return Skill is
-      Specialisations_Node : constant Nod.Node := N.Value ("specialisations");
+      Specialisations_Node : constant Nod.Node :=
+        Sequence_Field (N, "specialisations");
    begin
       return
         (Name   => To_Unbounded_String (N.String_Value ("name")),
@@ -261,9 +335,10 @@ package body BESM2_Fmt.Entities is
       Result : Entity;
 
       procedure Load_Stats_Field is
-         Stats_Node : constant Nod.Node := N.Value ("stats");
+         Stats_Node : constant Nod.Node := Sequence_Field (N, "stats");
          procedure Add (Item : Nod.Node) is
          begin
+            Require_Mapping (Item);
             Result.Stats.Append (Load_Stat (Item));
          end Add;
       begin
@@ -276,9 +351,10 @@ package body BESM2_Fmt.Entities is
       end Load_Stats_Field;
 
       procedure Load_Derived_Field is
-         Derived_Node : constant Nod.Node := N.Value ("derived");
+         Derived_Node : constant Nod.Node := Sequence_Field (N, "derived");
          procedure Add (Item : Nod.Node) is
          begin
+            Require_Mapping (Item);
             Result.Derived.Append (Load_Derived (Item));
          end Add;
       begin
@@ -288,15 +364,16 @@ package body BESM2_Fmt.Entities is
       end Load_Derived_Field;
 
       procedure Load_Attributes_Field is
-         Attrs_Node : constant Nod.Node := N.Value ("attributes");
+         Attrs_Node : constant Nod.Node := Sequence_Field (N, "attributes");
          procedure Add (Item : Nod.Node) is
          begin
+            Require_Mapping (Item);
             Result.Attributes.Append (Load_Attribute (Item));
          end Add;
       begin
          if Attrs_Node.Is_Valid then
             Attrs_Node.Iterate (Add'Access);
-            Attribute_Sorting.Sort (Result.Attributes);
+            Attribute_Sort (Result.Attributes);
             for A of Result.Attributes loop
                Result.Attributes_Total := Result.Attributes_Total + A.Points;
             end loop;
@@ -304,15 +381,16 @@ package body BESM2_Fmt.Entities is
       end Load_Attributes_Field;
 
       procedure Load_Defects_Field is
-         Defects_Node : constant Nod.Node := N.Value ("defects");
+         Defects_Node : constant Nod.Node := Sequence_Field (N, "defects");
          procedure Add (Item : Nod.Node) is
          begin
+            Require_Mapping (Item);
             Result.Defects.Append (Load_Defect (Item));
          end Add;
       begin
          if Defects_Node.Is_Valid then
             Defects_Node.Iterate (Add'Access);
-            Defect_Sorting.Sort (Result.Defects);
+            Defect_Sort (Result.Defects);
             for D of Result.Defects loop
                Result.Defects_Total := Result.Defects_Total + D.Points;
             end loop;
@@ -320,15 +398,16 @@ package body BESM2_Fmt.Entities is
       end Load_Defects_Field;
 
       procedure Load_Skills_Field is
-         Skills_Node : constant Nod.Node := N.Value ("skills");
+         Skills_Node : constant Nod.Node := Sequence_Field (N, "skills");
          procedure Add (Item : Nod.Node) is
          begin
+            Require_Mapping (Item);
             Result.Skills.Append (Load_Skill (Item));
          end Add;
       begin
          if Skills_Node.Is_Valid then
             Skills_Node.Iterate (Add'Access);
-            Skill_Sorting.Sort (Result.Skills);
+            Skill_Sort (Result.Skills);
             for S of Result.Skills loop
                Result.Skills_Total := Result.Skills_Total + S.Points;
             end loop;
@@ -336,6 +415,7 @@ package body BESM2_Fmt.Entities is
       end Load_Skills_Field;
 
    begin
+      Require_Mapping (N);
       Result.Has_Name := N.Has_Key ("name");
       if Result.Has_Name then
          Result.Name := To_Unbounded_String (N.String_Value ("name"));

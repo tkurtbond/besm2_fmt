@@ -52,6 +52,13 @@ now it is empty. The line is needed (tbl makes it an empty row, the gap
 between sections) but its indent isn't: pandoc's ms output is
 byte-identical, and docutils' output is the same too.
 
+A customizer's counts-as of 0 or less, which the Overview leaves as a
+separate decision (`+-1`), is now an input error: "counts-as must be
+positive", and the entity is skipped. The sign comes from the
+customizer's type, so a negative number gave `+-1` for a limiter and
+`−-1` for an enhancement. The new fixture `bad-counts-as` covers it,
+and `synthetic-2e`'s `[Short, -1]` is now `[Short, 1]`.
+
 ## Overview
 
 Six of the "quirks kept on purpose" (ADA-DIFFERENCES.md, section 5) are really defects, and each should be fixed the same way in all four programs:

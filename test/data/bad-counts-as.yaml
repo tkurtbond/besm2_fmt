@@ -1,0 +1,16 @@
+# Made up: customizers whose counts-as isn't positive.  The sign comes
+# from the type (a minus for an enhancement, a plus for a limiter), so
+# counts-as is a number of levels; these were once written "+-1" and
+# "−0".  Each bad entity is reported and skipped, and the good ones
+# around them are written.
+- name: Good
+  attributes:
+    - {name: Weapon, level: 2, points: 8, enhancements: [[Range, 2]], limiters: [[Slow, 1, Reload]]}
+- name: Negative Limiter
+  attributes:
+    - {name: Weapon, level: 2, points: 8, limiters: [[Slow, -1]]}
+- name: Zero Enhancement
+  attributes:
+    - {name: Weapon, level: 2, points: 8, enhancements: [[Accurate, 0, Aimed, Braced]]}
+- name: Also Good
+  stats: [{name: Body, value: 4, points: 8}]

@@ -186,6 +186,9 @@ package body BESM2_Fmt.Entities is
                  Sign_For (Kind) &
                  Ada.Strings.Fixed.Trim (Counts_As'Image, Ada.Strings.Both);
             begin
+               --  The sign comes from Kind, so counts-as is a number of
+               --  levels: a negative one would be written "+-1" or "−-1".
+               Require (Item.Item (2), Counts_As > 0, "counts-as must be positive");
                if Len = 2 then
                   Result.Append (To_Unbounded_String (Name & " " & Sign_Str));
                else

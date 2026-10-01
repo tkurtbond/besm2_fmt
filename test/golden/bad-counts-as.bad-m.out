@@ -1,0 +1,37 @@
+Good
+----
+
+.. raw:: ms
+
+   .LP
+   .TS
+   tab(#) ;
+   c c lx .
+   =
+   \fBLEVEL\fP#\fBPOINTS\fP#\fBATTRIBUTE\fP
+   2#8#T{
+   Weapon (Range −2, Slow: Reload +1)
+   T}
+
+   #\fB8\fP#\fBTOTAL\fP
+   =
+   .TE
+
+Also Good
+---------
+
+.. raw:: ms
+
+   .LP
+   .TS
+   tab(#) ;
+   c c lx .
+   =
+   \fBVALUE\fP#\fBPOINTS\fP#\fBSTAT\fP
+   4#8#Body
+
+   #\fB8\fP#\fBTOTAL\fP
+   =
+   .TE
+
+==== exit 1 ====

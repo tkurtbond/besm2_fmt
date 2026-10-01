@@ -35,6 +35,16 @@ TEST_TBLOUTPUT=$(foreach f,$(notdir $(TEST_DATA)),build/$(addsuffix -tbl.gen.rst
 TEST_ASCII_MINUS_OUTPUT=$(foreach f,$(notdir $(TEST_DATA)),build/$(addsuffix -ascii-minus.gen.rst,$(basename $(f))))
 TEST_ASCII_MINUS_TBLOUTPUT=$(foreach f,$(notdir $(TEST_DATA)),build/$(addsuffix -tbl-ascii-minus.gen.rst,$(basename $(f))))
 
+# -nosubtotals variants: each of the five reST variants above again,
+# but without -s/--subtotals, so the output with and without the
+# subtotals (and the skill points total) can be compared side by side.
+TEST_NOSUBTOTALS_OUTPUT=\
+	$(foreach f,$(notdir $(TEST_DATA)),build/$(addsuffix -nosubtotals.gen.rst,$(basename $(f)))) \
+	$(foreach f,$(notdir $(TEST_DATA)),build/$(addsuffix -terse-nosubtotals.gen.rst,$(basename $(f)))) \
+	$(foreach f,$(notdir $(TEST_DATA)),build/$(addsuffix -tbl-nosubtotals.gen.rst,$(basename $(f)))) \
+	$(foreach f,$(notdir $(TEST_DATA)),build/$(addsuffix -ascii-minus-nosubtotals.gen.rst,$(basename $(f)))) \
+	$(foreach f,$(notdir $(TEST_DATA)),build/$(addsuffix -tbl-ascii-minus-nosubtotals.gen.rst,$(basename $(f))))
+
 # This is the list of generated h-m-m outlines (-H/--hmm), with items
 # in their entity's node, and as separate nodes (-S/--hmm-separate).
 # No PDF, since h-m-m isn't reST.
@@ -48,7 +58,8 @@ TEST_LETTEROUTPUT=\
 	$(foreach f,$(notdir $(TEST_DATA)),build/$(addsuffix -terse.ms.pdf,$(basename $(f)))) \
 	$(foreach f,$(notdir $(TEST_DATA)),build/$(addsuffix -tbl.ms.pdf,$(basename $(f)))) \
 	$(foreach f,$(notdir $(TEST_DATA)),build/$(addsuffix -ascii-minus.ms.pdf,$(basename $(f)))) \
-	$(foreach f,$(notdir $(TEST_DATA)),build/$(addsuffix -tbl-ascii-minus.ms.pdf,$(basename $(f))))
+	$(foreach f,$(notdir $(TEST_DATA)),build/$(addsuffix -tbl-ascii-minus.ms.pdf,$(basename $(f)))) \
+	$(TEST_NOSUBTOTALS_OUTPUT:.gen.rst=.ms.pdf)
 
 # PDF renderings of the two top-level comparison docs (performance,
 # source size), via pandoc's ms writer (like the reST test output
@@ -82,7 +93,8 @@ install:
 
 rst: $(PROGRAM) \
 	$(TEST_OUTPUT) $(TEST_TERSEOUTPUT) $(TEST_TBLOUTPUT) \
-	$(TEST_ASCII_MINUS_OUTPUT) $(TEST_ASCII_MINUS_TBLOUTPUT)
+	$(TEST_ASCII_MINUS_OUTPUT) $(TEST_ASCII_MINUS_TBLOUTPUT) \
+	$(TEST_NOSUBTOTALS_OUTPUT)
 
 pdf: rst $(TEST_LETTEROUTPUT)
 
@@ -149,6 +161,21 @@ build/%-ascii-minus.gen.rst : test/data/%.yaml $(PROGRAM)
 build/%-tbl-ascii-minus.gen.rst : test/data/%.yaml $(PROGRAM)
 	./$(PROGRAM) -s -m -n $< >$@ # ms tables, ASCII minus sign
 
+build/%-nosubtotals.gen.rst : test/data/%.yaml $(PROGRAM)
+	./$(PROGRAM) $< >$@ # no subtotals
+
+build/%-terse-nosubtotals.gen.rst : test/data/%.yaml $(PROGRAM)
+	./$(PROGRAM) -t $< >$@ # terse, no subtotals
+
+build/%-tbl-nosubtotals.gen.rst : test/data/%.yaml $(PROGRAM)
+	./$(PROGRAM) -m $< >$@ # ms tables, no subtotals
+
+build/%-ascii-minus-nosubtotals.gen.rst : test/data/%.yaml $(PROGRAM)
+	./$(PROGRAM) -n $< >$@ # ASCII minus sign, no subtotals
+
+build/%-tbl-ascii-minus-nosubtotals.gen.rst : test/data/%.yaml $(PROGRAM)
+	./$(PROGRAM) -m -n $< >$@ # ms tables, ASCII minus sign, no subtotals
+
 build/%.gen.hmm : test/data/%.yaml $(PROGRAM)
 	./$(PROGRAM) -s -H $< >$@ # h-m-m
 
@@ -180,6 +207,9 @@ testclean:
 .PRECIOUS: \
 	build/%.gen.rst build/%-terse.gen.rst build/%-tbl.gen.rst \
 	build/%-ascii-minus.gen.rst build/%-tbl-ascii-minus.gen.rst \
+	build/%-nosubtotals.gen.rst build/%-terse-nosubtotals.gen.rst \
+	build/%-tbl-nosubtotals.gen.rst build/%-ascii-minus-nosubtotals.gen.rst \
+	build/%-tbl-ascii-minus-nosubtotals.gen.rst \
 	build/%.gen.hmm build/%-separate.gen.hmm
 
 print-%  : ; @echo $* = $($*)

@@ -1,7 +1,7 @@
 # Made up, for the raw ms format's section bookkeeping (PLAN.md, step 8):
 # tables that start with each kind of section, entities with no
 # paragraph before the table (".LP"), and totals of zero and below
-# (no TOTAL row).
+# (which once had no TOTAL row in raw ms: besm2_fmt's QUIRKS.md, 6).
 ---
 - name: Derived First
   derived:

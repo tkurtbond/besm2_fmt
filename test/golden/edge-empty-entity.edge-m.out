@@ -3,6 +3,8 @@
    .LP
    .TS
    tab(#) ;
+   c c lx .
+   =
    #\fB0\fP#\fBTOTAL\fP
    =
    .TE

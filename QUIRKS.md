@@ -23,6 +23,17 @@ written, with two corrections marked.
 golden file with a `==== exit 1 ====` line instead, since the bad-input
 globs mix fixtures that do and don't exit 1.
 
+Item 6 brought out two older defects in raw ms. The TOTAL row has
+three columns, but it used whatever format the last section left. An
+entity whose last section was derived values (`c l sx`, two columns)
+lost the row ("tbl: excess table entry"). Before item 6 that happened
+only when the total was positive. An entity with no sections had no
+format line at all, so tbl gave up on its table, with or without the
+row. Now the row gets its own `c c lx .` format when it needs one:
+after `.T&`, or above the `=` when it is the only row. besm-tools'
+empty-strings-2e fixture showed the first defect; `edge-empty-entity`
+shows the second.
+
 ## Overview
 
 Six of the "quirks kept on purpose" (ADA-DIFFERENCES.md, section 5) are really defects, and each should be fixed the same way in all four programs:

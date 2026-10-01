@@ -279,6 +279,17 @@ package body BESM2_Fmt.Format_Raw_Ms is
          IO.Put_Line (Raw_Prefix);
       end if;
 
+      --  The total row has three columns, so it needs a format of its
+      --  own when there was no section, or the last was Derived's two.
+      if not First_Section_Seen then
+         IO.Put_Line (Raw_Prefix & "c c lx .");
+         IO.Put_Line (Raw_Prefix & "=");
+      elsif not E.Derived.Is_Empty and then E.Attributes.Is_Empty
+        and then E.Defects.Is_Empty and then E.Skills.Is_Empty
+      then
+         IO.Put_Line (Raw_Prefix & ".T&");
+         IO.Put_Line (Raw_Prefix & "c c lx .");
+      end if;
       IO.Put_Line
         (Raw_Prefix & "#" & Tbold (Signed_Points_Image (E.Entity_Total)) & "#" &
          Tbold ("TOTAL"));

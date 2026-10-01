@@ -2,7 +2,10 @@ SHELL=bash
 
 PROGRAM=besm2_fmt
 
-TEST_DATA=$(wildcard test-data/*.yaml)
+# The -2e fixtures of the golden tests, the same files the Oberon-2
+# ports' make rst, make pdf and make hmm read.  (test-data/ holds the
+# older set from besm-tools, still the benchmark's default source.)
+TEST_DATA=$(wildcard test/data/*-2e.yaml)
 
 # This is the list of generated reST files using reST grid tables
 # (Format_Grid, the default output).
@@ -27,10 +30,16 @@ TEST_TBLOUTPUT=$(foreach f,$(notdir $(TEST_DATA)),build/$(addsuffix -tbl.gen.rst
 # (Format_*.Label_Points), never a sign glyph, so -n changes nothing
 # there. h-m-m itself (-H/--hmm) isn't reST at all
 # (a tab-indented outline), so pandoc can't turn it into a PDF the way
-# it can grid/terse/tbl -- not built here, matching besm-tools'
-# GNUmakefile, which doesn't build h-m-m output either.
+# it can grid/terse/tbl; make hmm builds it (TEST_HMMOUTPUT, below).
 TEST_ASCII_MINUS_OUTPUT=$(foreach f,$(notdir $(TEST_DATA)),build/$(addsuffix -ascii-minus.gen.rst,$(basename $(f))))
 TEST_ASCII_MINUS_TBLOUTPUT=$(foreach f,$(notdir $(TEST_DATA)),build/$(addsuffix -tbl-ascii-minus.gen.rst,$(basename $(f))))
+
+# This is the list of generated h-m-m outlines (-H/--hmm), with items
+# in their entity's node, and as separate nodes (-S/--hmm-separate).
+# No PDF, since h-m-m isn't reST.
+TEST_HMMOUTPUT=\
+	$(foreach f,$(notdir $(TEST_DATA)),build/$(addsuffix .gen.hmm,$(basename $(f)))) \
+	$(foreach f,$(notdir $(TEST_DATA)),build/$(addsuffix -separate.gen.hmm,$(basename $(f))))
 
 # This is the list of letter-sized PDFs for every variant above.
 TEST_LETTEROUTPUT=\
@@ -48,7 +57,7 @@ COMPARISON_PDFS=build/PERFORMANCE-COMPARISON.ms.pdf build/SOURCE-COMPARISON.ms.p
 # HTML renderings of the same two comparison docs.
 COMPARISON_HTML=build/PERFORMANCE-COMPARISON.html build/SOURCE-COMPARISON.html
 
-.PHONY: all rst pdf test golden golden-regenerate benchmark benchmark-alibfyaml-liveness pdf-comparison html-comparison install clean testclean
+.PHONY: all rst pdf hmm test golden golden-regenerate benchmark benchmark-alibfyaml-liveness pdf-comparison html-comparison install clean testclean
 
 all: $(PROGRAM)
 
@@ -75,6 +84,8 @@ rst: $(PROGRAM) \
 	$(TEST_ASCII_MINUS_OUTPUT) $(TEST_ASCII_MINUS_TBLOUTPUT)
 
 pdf: rst $(TEST_LETTEROUTPUT)
+
+hmm: $(PROGRAM) $(TEST_HMMOUTPUT)
 
 # Unit tests, then golden-output tests (test/golden.sh, with the cases
 # in test/golden.cases), then command-line tests (test/cli.sh).
@@ -122,20 +133,26 @@ pdf-comparison: $(COMPARISON_PDFS)
 
 html-comparison: $(COMPARISON_HTML)
 
-build/%.gen.rst : test-data/%.yaml $(PROGRAM)
+build/%.gen.rst : test/data/%.yaml $(PROGRAM)
 	./$(PROGRAM) -s $< >$@
 
-build/%-terse.gen.rst : test-data/%.yaml $(PROGRAM)
+build/%-terse.gen.rst : test/data/%.yaml $(PROGRAM)
 	./$(PROGRAM) -s -t $< >$@ # terse
 
-build/%-tbl.gen.rst : test-data/%.yaml $(PROGRAM)
+build/%-tbl.gen.rst : test/data/%.yaml $(PROGRAM)
 	./$(PROGRAM) -s -m $< >$@ # ms tables
 
-build/%-ascii-minus.gen.rst : test-data/%.yaml $(PROGRAM)
+build/%-ascii-minus.gen.rst : test/data/%.yaml $(PROGRAM)
 	./$(PROGRAM) -s -n $< >$@ # ASCII minus sign
 
-build/%-tbl-ascii-minus.gen.rst : test-data/%.yaml $(PROGRAM)
+build/%-tbl-ascii-minus.gen.rst : test/data/%.yaml $(PROGRAM)
 	./$(PROGRAM) -s -m -n $< >$@ # ms tables, ASCII minus sign
+
+build/%.gen.hmm : test/data/%.yaml $(PROGRAM)
+	./$(PROGRAM) -s -H $< >$@ # h-m-m
+
+build/%-separate.gen.hmm : test/data/%.yaml $(PROGRAM)
+	./$(PROGRAM) -s -H -S $< >$@ # h-m-m, items as separate nodes
 
 #MS_COLUMNS=-V twocolumns
 build/%.ms.pdf : build/%.gen.rst
@@ -157,10 +174,11 @@ clean: testclean
 	-rm -f $(PROGRAM)
 
 testclean:
-	-rm -v build/*.gen.rst build/*.ms.pdf build/*.html build/bench-*.yaml
+	-rm -v build/*.gen.rst build/*.gen.hmm build/*.ms.pdf build/*.html build/bench-*.yaml
 
 .PRECIOUS: \
 	build/%.gen.rst build/%-terse.gen.rst build/%-tbl.gen.rst \
-	build/%-ascii-minus.gen.rst build/%-tbl-ascii-minus.gen.rst
+	build/%-ascii-minus.gen.rst build/%-tbl-ascii-minus.gen.rst \
+	build/%.gen.hmm build/%-separate.gen.hmm
 
 print-%  : ; @echo $* = $($*)

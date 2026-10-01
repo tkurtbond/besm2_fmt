@@ -91,6 +91,7 @@ Lieutenant Enyon Boase
    #\fB35\fP#\fBTOTAL\fP
    =
    .TE
+
 FV2021 Coleopteran
 ~~~~~~~~~~~~~~~~~~
 
@@ -171,6 +172,7 @@ colours: UN white, with sky-blue helmets.
    #\fB40\fP#\fBTOTAL\fP
    =
    .TE
+
 Lieutenant Enyon Boase
 ----------------------
 
@@ -263,6 +265,7 @@ Lieutenant Enyon Boase
    #\fB35\fP#\fBTOTAL\fP
    =
    .TE
+
 FV2021 Coleopteran
 ~~~~~~~~~~~~~~~~~~
 
@@ -343,6 +346,7 @@ colours: UN white, with sky-blue helmets.
    #\fB40\fP#\fBTOTAL\fP
    =
    .TE
+
 Empty items
 -----------
 
@@ -388,6 +392,7 @@ Empty items
 
 
 
+
 **
 
 
@@ -406,6 +411,7 @@ Empty items
    #\fB4\fP#\fBTOTAL\fP
    =
    .TE
+
 Tagline that trims to nothing
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -443,6 +449,7 @@ Tagline that trims to nothing
    #\fB2\fP#\fBTOTAL\fP
    =
    .TE
+
 .. raw:: ms
 
    .LP
@@ -460,8 +467,10 @@ Tagline that trims to nothing
    Attack Combat Value
    T}
    
+   #\fB0\fP#\fBTOTAL\fP
    =
    .TE
+
 Lieutenant Enyon Boase
 ----------------------
 
@@ -554,6 +563,7 @@ Lieutenant Enyon Boase
    #\fB35\fP#\fBTOTAL\fP
    =
    .TE
+
 FV2021 Coleopteran
 ------------------
 
@@ -634,6 +644,7 @@ colours: UN white, with sky-blue helmets.
    #\fB40\fP#\fBTOTAL\fP
    =
    .TE
+
 Derived First
 -------------
 
@@ -657,8 +668,10 @@ Derived First
    T}
    #\fB2\fP#\fBSKILL POINTS TOTAL\fP
    
+   #\fB0\fP#\fBTOTAL\fP
    =
    .TE
+
 All Defects
 ~~~~~~~~~~~
 
@@ -677,8 +690,10 @@ All Defects
    Hunted
    T}
    
+   #\fB−3\fP#\fBTOTAL\fP
    =
    .TE
+
 Even
 ~~~~
 
@@ -701,8 +716,10 @@ Even
    Slow
    T}
    
+   #\fB0\fP#\fBTOTAL\fP
    =
    .TE
+
 Skills alone, and no name.
 
 .. raw:: ms
@@ -717,8 +734,10 @@ Skills alone, and no name.
    T}
    #\fB4\fP#\fBSKILL POINTS TOTAL\fP
    
+   #\fB0\fP#\fBTOTAL\fP
    =
    .TE
+
 Rana “Frog” Élan
 ---------------------
 
@@ -801,6 +820,7 @@ One line of description.
    #\fB44\fP#\fBTOTAL\fP
    =
    .TE
+
 Unit 7
 ~~~~~~
 
@@ -826,6 +846,7 @@ Unit 7
    #\fB1\fP#\fBTOTAL\fP
    =
    .TE
+
 *No name here*
 
 .. raw:: ms
@@ -862,3 +883,4 @@ Unit 7
    #\fB2\fP#\fBTOTAL\fP
    =
    .TE
+

@@ -165,6 +165,12 @@ package body BESM2_Fmt.Format_Grid is
       if not Config.Omit_Entity_Description and then E.Has_Description then
          IO.Put_Line (To_String (E.Description));
          IO.New_Line;
+         if Config.Page_After_Description then
+            IO.Put_Line (".. raw:: ms");
+            IO.New_Line;
+            IO.Put_Line ("   .bp");
+            IO.New_Line;
+         end if;
       end if;
 
       if E.Has_Size then

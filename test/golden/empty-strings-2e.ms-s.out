@@ -20,6 +20,7 @@
    #\fB4\fP#\fBTOTAL\fP
    =
    .TE
+
 Tagline that trims to nothing
 -----------------------------
 
@@ -59,6 +60,7 @@ Tagline that trims to nothing
    #\fB2\fP#\fBTOTAL\fP
    =
    .TE
+
 .. raw:: ms
 
    .LP
@@ -77,5 +79,7 @@ Tagline that trims to nothing
    Attack Combat Value
    T}
    
+   #\fB0\fP#\fBTOTAL\fP
    =
    .TE
+

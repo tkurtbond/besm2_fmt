@@ -21,8 +21,10 @@ Derived First
    T}
    #\fB2\fP#\fBSKILL POINTS TOTAL\fP
    
+   #\fB0\fP#\fBTOTAL\fP
    =
    .TE
+
 All Defects
 -----------
 
@@ -41,8 +43,10 @@ All Defects
    Hunted
    T}
    
+   #\fB−3\fP#\fBTOTAL\fP
    =
    .TE
+
 Even
 ----
 
@@ -65,8 +69,10 @@ Even
    Slow
    T}
    
+   #\fB0\fP#\fBTOTAL\fP
    =
    .TE
+
 Skills alone, and no name.
 
 .. raw:: ms
@@ -81,5 +87,7 @@ Skills alone, and no name.
    T}
    #\fB4\fP#\fBSKILL POINTS TOTAL\fP
    
+   #\fB0\fP#\fBTOTAL\fP
    =
    .TE
+

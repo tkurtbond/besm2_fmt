@@ -136,6 +136,12 @@ package body BESM2_Fmt.Format_Raw_Ms is
          Paragraph_Seen := True;
          IO.Put_Line (To_String (E.Description));
          IO.New_Line;
+         if Config.Page_After_Description then
+            IO.Put_Line (".. raw:: ms");
+            IO.New_Line;
+            IO.Put_Line ("   .bp");
+            IO.New_Line;
+         end if;
       end if;
 
       if E.Has_Size then
@@ -273,17 +279,14 @@ package body BESM2_Fmt.Format_Raw_Ms is
          IO.Put_Line (Raw_Prefix);
       end if;
 
-      --  Grand total: only shown when positive (unlike Format_Grid's
-      --  unconditional TOTAL row) -- besm2-rst.scm's own
-      --  "(when (> entity-total 0) ...)". The closing "=" and ".TE"
-      --  are unconditional either way.
-      if E.Entity_Total > 0 then
-         IO.Put_Line
-           (Raw_Prefix & "#" & Tbold (Signed_Points_Image (E.Entity_Total)) & "#" &
-            Tbold ("TOTAL"));
-      end if;
+      IO.Put_Line
+        (Raw_Prefix & "#" & Tbold (Signed_Points_Image (E.Entity_Total)) & "#" &
+         Tbold ("TOTAL"));
       IO.Put_Line (Raw_Prefix & "=");
       IO.Put_Line (Raw_Prefix & ".TE");
+      --  The blank line ends the raw block before the next entity's
+      --  name.
+      IO.New_Line;
    end Process_Entity;
 
 end BESM2_Fmt.Format_Raw_Ms;

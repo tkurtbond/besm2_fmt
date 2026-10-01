@@ -83,6 +83,7 @@ One line of description.
    #\fB44\fP#\fBTOTAL\fP
    =
    .TE
+
 Unit 7
 ------
 
@@ -110,6 +111,7 @@ Unit 7
    #\fB1\fP#\fBTOTAL\fP
    =
    .TE
+
 *No name here*
 
 .. raw:: ms
@@ -149,3 +151,4 @@ Unit 7
    #\fB2\fP#\fBTOTAL\fP
    =
    .TE
+

@@ -18,7 +18,7 @@ Empty items
    60#T{
    Health Points
    T}
-   
+
    .T&
    c c lx .
    \fBLEVEL\fP#\fBPOINTS\fP#\fBATTRIBUTE\fP
@@ -26,7 +26,7 @@ Empty items
    Elemental
    T}
    #\fB1\fP#\fBATTRIBUTES TOTAL\fP
-   
+
    .T&
    c c lx .
    \fBLEVEL\fP#\fBPOINTS\fP#\fBSKILL\fP
@@ -37,7 +37,7 @@ Empty items
    Medical
    T}
    #\fB4\fP#\fBSKILL POINTS TOTAL\fP
-   
+
    #\fB1\fP#\fBTOTAL\fP
    =
    .TE

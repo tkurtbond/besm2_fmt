@@ -18,7 +18,7 @@ One line of description.
    4#8#Mind
    3#6#Soul
    #\fB24\fP#\fBSTATS TOTAL\fP
-   
+
    .T&
    c l sx .
    \fBVALUE\fP#\fBDERIVED VALUE\fP
@@ -37,7 +37,7 @@ One line of description.
    7#T{
    XYZ
    T}
-   
+
    .T&
    c c lx .
    \fBLEVEL\fP#\fBPOINTS\fP#\fBATTRIBUTE\fP
@@ -57,7 +57,7 @@ One line of description.
    élan vital
    T}
    #\fB23\fP#\fBATTRIBUTES TOTAL\fP
-   
+
    .T&
    c c lx .
    #\fBPOINTS\fP#\fBDEFECT\fP
@@ -68,7 +68,7 @@ One line of description.
    Marked (Green skin, webbed feet)
    T}
    #\fB−3\fP#\fBDEFECTS TOTAL\fP
-   
+
    .T&
    c c lx .
    \fBLEVEL\fP#\fBPOINTS\fP#\fBSKILL\fP
@@ -79,7 +79,7 @@ One line of description.
    Swimming (Underwater, Racing)
    T}
    #\fB6\fP#\fBSKILL POINTS TOTAL\fP
-   
+
    #\fB44\fP#\fBTOTAL\fP
    =
    .TE
@@ -99,7 +99,7 @@ Unit 7
    Armour
    T}
    #\fB4\fP#\fBATTRIBUTES TOTAL\fP
-   
+
    .T&
    c c lx .
    #\fBPOINTS\fP#\fBDEFECT\fP
@@ -107,7 +107,7 @@ Unit 7
    Fragile
    T}
    #\fB−3\fP#\fBDEFECTS TOTAL\fP
-   
+
    #\fB1\fP#\fBTOTAL\fP
    =
    .TE
@@ -123,7 +123,7 @@ Unit 7
    \fBVALUE\fP#\fBPOINTS\fP#\fBSTAT\fP
    2#4#Body
    #\fB4\fP#\fBSTATS TOTAL\fP
-   
+
    .T&
    c c lx .
    \fBLEVEL\fP#\fBPOINTS\fP#\fBATTRIBUTE\fP
@@ -131,7 +131,7 @@ Unit 7
    Flight (Silent −1)
    T}
    #\fB4\fP#\fBATTRIBUTES TOTAL\fP
-   
+
    .T&
    c c lx .
    #\fBPOINTS\fP#\fBDEFECT\fP
@@ -139,7 +139,7 @@ Unit 7
    Big
    T}
    #\fB−6\fP#\fBDEFECTS TOTAL\fP
-   
+
    .T&
    c c lx .
    \fBLEVEL\fP#\fBPOINTS\fP#\fBSKILL\fP
@@ -147,7 +147,7 @@ Unit 7
    Piloting
    T}
    #\fB1\fP#\fBSKILL POINTS TOTAL\fP
-   
+
    #\fB2\fP#\fBTOTAL\fP
    =
    .TE

@@ -12,7 +12,7 @@ Lieutenant Enyon Boase
    8#8#Body
    6#6#Mind
    6#6#Soul
-   
+
    .T&
    c l sx .
    \fBVALUE\fP#\fBDERIVED VALUE\fP
@@ -31,7 +31,7 @@ Lieutenant Enyon Boase
    14#T{
    Shock Value
    T}
-   
+
    .T&
    c c lx .
    \fBLEVEL\fP#\fBPOINTS\fP#\fBATTRIBUTE\fP
@@ -44,7 +44,7 @@ Lieutenant Enyon Boase
    2#8#T{
    Own a Big Mecha: FV2021 Coleopteran
    T}
-   
+
    .T&
    c c lx .
    #\fBPOINTS\fP#\fBDEFECT\fP
@@ -54,7 +54,7 @@ Lieutenant Enyon Boase
    #−1#T{
    Unique Defect: Obsessed by Military History
    T}
-   
+
    .T&
    c c lx .
    \fBLEVEL\fP#\fBPOINTS\fP#\fBSKILL\fP
@@ -85,7 +85,7 @@ Lieutenant Enyon Boase
    1#1#T{
    Writing (Reports)
    T}
-   
+
    #\fB35\fP#\fBTOTAL\fP
    =
    .TE
@@ -107,7 +107,7 @@ FV2021 Coleopteran
    80#T{
    Health Points
    T}
-   
+
    .T&
    c c lx .
    \fBLEVEL\fP#\fBPOINTS\fP#\fBATTRIBUTE\fP
@@ -144,7 +144,7 @@ FV2021 Coleopteran
    2#1#T{
    Weapon: Rocket Pod (Damage 45, Auto-fire, Area Effect, Limited Shots ×2 [3 shots], Stoppable)
    T}
-   
+
    .T&
    c c lx .
    #\fBPOINTS\fP#\fBDEFECT\fP
@@ -157,7 +157,7 @@ FV2021 Coleopteran
    #−1#T{
    Partial Armour
    T}
-   
+
    #\fB40\fP#\fBTOTAL\fP
    =
    .TE

@@ -12,14 +12,14 @@ Derived First
    40#T{
    Health Points
    T}
-   
+
    .T&
    c c lx .
    \fBLEVEL\fP#\fBPOINTS\fP#\fBSKILL\fP
    1#2#T{
    Stealth
    T}
-   
+
    #\fB0\fP#\fBTOTAL\fP
    =
    .TE
@@ -41,7 +41,7 @@ All Defects
    #−1#T{
    Hunted
    T}
-   
+
    #\fB−3\fP#\fBTOTAL\fP
    =
    .TE
@@ -60,14 +60,14 @@ Even
    1#2#T{
    Armour
    T}
-   
+
    .T&
    c c lx .
    #\fBPOINTS\fP#\fBDEFECT\fP
    #−2#T{
    Slow
    T}
-   
+
    #\fB0\fP#\fBTOTAL\fP
    =
    .TE
@@ -88,7 +88,7 @@ Skills alone, and no name.
    2#4#T{
    Riding (Horses)
    T}
-   
+
    #\fB0\fP#\fBTOTAL\fP
    =
    .TE

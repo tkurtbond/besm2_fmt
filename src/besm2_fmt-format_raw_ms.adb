@@ -184,7 +184,7 @@ package body BESM2_Fmt.Format_Raw_Ms is
               (Raw_Prefix & "#" & Tbold (Points_Image (E.Stats_Total)) & "#" &
                Tbold ("STATS TOTAL"));
          end if;
-         IO.Put_Line (Raw_Prefix);
+         IO.New_Line;
       end if;
 
       if not E.Derived.Is_Empty then
@@ -202,7 +202,7 @@ package body BESM2_Fmt.Format_Raw_Ms is
             IO.Put_Line (Raw_Prefix & Format_Derived_Description (D));
             IO.Put_Line (Raw_Prefix & "T}");
          end loop;
-         IO.Put_Line (Raw_Prefix);
+         IO.New_Line;
       end if;
 
       if not E.Attributes.Is_Empty then
@@ -227,7 +227,7 @@ package body BESM2_Fmt.Format_Raw_Ms is
               (Raw_Prefix & "#" & Tbold (Points_Image (E.Attributes_Total)) & "#" &
                Tbold ("ATTRIBUTES TOTAL"));
          end if;
-         IO.Put_Line (Raw_Prefix);
+         IO.New_Line;
       end if;
 
       if not E.Defects.Is_Empty then
@@ -250,7 +250,7 @@ package body BESM2_Fmt.Format_Raw_Ms is
               (Raw_Prefix & "#" & Tbold (Signed_Points_Image (E.Defects_Total)) & "#" &
                Tbold ("DEFECTS TOTAL"));
          end if;
-         IO.Put_Line (Raw_Prefix);
+         IO.New_Line;
       end if;
 
       if not E.Skills.Is_Empty then
@@ -274,7 +274,7 @@ package body BESM2_Fmt.Format_Raw_Ms is
               (Raw_Prefix & "#" & Tbold (Points_Image (E.Skills_Total)) & "#" &
                Tbold ("SKILL POINTS TOTAL"));
          end if;
-         IO.Put_Line (Raw_Prefix);
+         IO.New_Line;
       end if;
 
       --  The total row has three columns, so it needs a format of its

@@ -16,7 +16,7 @@
    \fBVALUE\fP#\fBPOINTS\fP#\fBSTAT\fP
    4#4#Body
    #\fB4\fP#\fBSTATS TOTAL\fP
-   
+
    #\fB4\fP#\fBTOTAL\fP
    =
    .TE
@@ -40,7 +40,7 @@ Tagline that trims to nothing
    Empty Effective
    T}
    #\fB3\fP#\fBATTRIBUTES TOTAL\fP
-   
+
    .T&
    c c lx .
    #\fBPOINTS\fP#\fBDEFECT\fP
@@ -48,7 +48,7 @@ Tagline that trims to nothing
    Empty Details
    T}
    #\fB−1\fP#\fBDEFECTS TOTAL\fP
-   
+
    .T&
    c c lx .
    \fBLEVEL\fP#\fBPOINTS\fP#\fBSKILL\fP
@@ -56,7 +56,7 @@ Tagline that trims to nothing
    No Specialisations
    T}
    #\fB1\fP#\fBSKILL POINTS TOTAL\fP
-   
+
    #\fB2\fP#\fBTOTAL\fP
    =
    .TE
@@ -71,14 +71,14 @@ Tagline that trims to nothing
    \fBVALUE\fP#\fBPOINTS\fP#\fBSTAT\fP
    #0#
    #\fB0\fP#\fBSTATS TOTAL\fP
-   
+
    .T&
    c l sx .
    \fBVALUE\fP#\fBDERIVED VALUE\fP
    #T{
    Attack Combat Value
    T}
-   
+
    .T&
    c c lx .
    #\fB0\fP#\fBTOTAL\fP

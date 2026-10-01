@@ -13,7 +13,7 @@ Lieutenant Enyon Boase
    6#6#Mind
    6#6#Soul
    #\fB20\fP#\fBSTATS TOTAL\fP
-   
+
    .T&
    c l sx .
    \fBVALUE\fP#\fBDERIVED VALUE\fP
@@ -32,7 +32,7 @@ Lieutenant Enyon Boase
    14#T{
    Shock Value
    T}
-   
+
    .T&
    c c lx .
    \fBLEVEL\fP#\fBPOINTS\fP#\fBATTRIBUTE\fP
@@ -46,7 +46,7 @@ Lieutenant Enyon Boase
    Own a Big Mecha: FV2021 Coleopteran
    T}
    #\fB18\fP#\fBATTRIBUTES TOTAL\fP
-   
+
    .T&
    c c lx .
    #\fBPOINTS\fP#\fBDEFECT\fP
@@ -57,7 +57,7 @@ Lieutenant Enyon Boase
    Unique Defect: Obsessed by Military History
    T}
    #\fB-3\fP#\fBDEFECTS TOTAL\fP
-   
+
    .T&
    c c lx .
    \fBLEVEL\fP#\fBPOINTS\fP#\fBSKILL\fP
@@ -89,7 +89,7 @@ Lieutenant Enyon Boase
    Writing (Reports)
    T}
    #\fB25\fP#\fBSKILL POINTS TOTAL\fP
-   
+
    #\fB35\fP#\fBTOTAL\fP
    =
    .TE
@@ -120,7 +120,7 @@ colours: UN white, with sky-blue helmets.
    80#T{
    Health Points
    T}
-   
+
    .T&
    c c lx .
    \fBLEVEL\fP#\fBPOINTS\fP#\fBATTRIBUTE\fP
@@ -158,7 +158,7 @@ colours: UN white, with sky-blue helmets.
    Weapon: Rocket Pod (Damage 45, Auto-fire, Area Effect, Limited Shots ×2 [3 shots], Stoppable)
    T}
    #\fB44\fP#\fBATTRIBUTES TOTAL\fP
-   
+
    .T&
    c c lx .
    #\fBPOINTS\fP#\fBDEFECT\fP
@@ -172,7 +172,7 @@ colours: UN white, with sky-blue helmets.
    Partial Armour
    T}
    #\fB-4\fP#\fBDEFECTS TOTAL\fP
-   
+
    #\fB40\fP#\fBTOTAL\fP
    =
    .TE

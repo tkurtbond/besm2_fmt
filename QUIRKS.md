@@ -47,6 +47,11 @@ shown"), is now shown only under `-s` in grid and raw ms, like the
 other subtotals and as terse and h-m-m already did. `-s`'s help says
 so.
 
+In raw ms, the line between sections was the three-blank indent alone;
+now it is empty. The line is needed (tbl makes it an empty row, the gap
+between sections) but its indent isn't: pandoc's ms output is
+byte-identical, and docutils' output is the same too.
+
 ## Overview
 
 Six of the "quirks kept on purpose" (ADA-DIFFERENCES.md, section 5) are really defects, and each should be fixed the same way in all four programs:

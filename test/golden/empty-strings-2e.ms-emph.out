@@ -19,7 +19,7 @@
    =
    \fBVALUE\fP#\fBPOINTS\fP#\fBSTAT\fP
    4#4#Body
-   
+
    #\fB4\fP#\fBTOTAL\fP
    =
    .TE
@@ -42,21 +42,21 @@ Tagline that trims to nothing
    2#2#T{
    Empty Effective
    T}
-   
+
    .T&
    c c lx .
    #\fBPOINTS\fP#\fBDEFECT\fP
    #−1#T{
    Empty Details
    T}
-   
+
    .T&
    c c lx .
    \fBLEVEL\fP#\fBPOINTS\fP#\fBSKILL\fP
    1#1#T{
    No Specialisations
    T}
-   
+
    #\fB2\fP#\fBTOTAL\fP
    =
    .TE
@@ -70,14 +70,14 @@ Tagline that trims to nothing
    =
    \fBVALUE\fP#\fBPOINTS\fP#\fBSTAT\fP
    #0#
-   
+
    .T&
    c l sx .
    \fBVALUE\fP#\fBDERIVED VALUE\fP
    #T{
    Attack Combat Value
    T}
-   
+
    .T&
    c c lx .
    #\fB0\fP#\fBTOTAL\fP

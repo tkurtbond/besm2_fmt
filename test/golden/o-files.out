@@ -13,7 +13,7 @@ Lieutenant Enyon Boase
    8#8#Body
    6#6#Mind
    6#6#Soul
-   
+
    .T&
    c l sx .
    \fBVALUE\fP#\fBDERIVED VALUE\fP
@@ -32,7 +32,7 @@ Lieutenant Enyon Boase
    14#T{
    Shock Value
    T}
-   
+
    .T&
    c c lx .
    \fBLEVEL\fP#\fBPOINTS\fP#\fBATTRIBUTE\fP
@@ -45,7 +45,7 @@ Lieutenant Enyon Boase
    2#8#T{
    Own a Big Mecha: FV2021 Coleopteran
    T}
-   
+
    .T&
    c c lx .
    #\fBPOINTS\fP#\fBDEFECT\fP
@@ -55,7 +55,7 @@ Lieutenant Enyon Boase
    #−1#T{
    Unique Defect: Obsessed by Military History
    T}
-   
+
    .T&
    c c lx .
    \fBLEVEL\fP#\fBPOINTS\fP#\fBSKILL\fP
@@ -86,7 +86,7 @@ Lieutenant Enyon Boase
    1#1#T{
    Writing (Reports)
    T}
-   
+
    #\fB35\fP#\fBTOTAL\fP
    =
    .TE
@@ -117,7 +117,7 @@ colours: UN white, with sky-blue helmets.
    80#T{
    Health Points
    T}
-   
+
    .T&
    c c lx .
    \fBLEVEL\fP#\fBPOINTS\fP#\fBATTRIBUTE\fP
@@ -154,7 +154,7 @@ colours: UN white, with sky-blue helmets.
    2#1#T{
    Weapon: Rocket Pod (Damage 45, Auto-fire, Area Effect, Limited Shots ×2 [3 shots], Stoppable)
    T}
-   
+
    .T&
    c c lx .
    #\fBPOINTS\fP#\fBDEFECT\fP
@@ -167,7 +167,7 @@ colours: UN white, with sky-blue helmets.
    #−1#T{
    Partial Armour
    T}
-   
+
    #\fB40\fP#\fBTOTAL\fP
    =
    .TE
@@ -186,7 +186,7 @@ Lieutenant Enyon Boase
    8#8#Body
    6#6#Mind
    6#6#Soul
-   
+
    .T&
    c l sx .
    \fBVALUE\fP#\fBDERIVED VALUE\fP
@@ -205,7 +205,7 @@ Lieutenant Enyon Boase
    14#T{
    Shock Value
    T}
-   
+
    .T&
    c c lx .
    \fBLEVEL\fP#\fBPOINTS\fP#\fBATTRIBUTE\fP
@@ -218,7 +218,7 @@ Lieutenant Enyon Boase
    2#8#T{
    Own a Big Mecha: FV2021 Coleopteran
    T}
-   
+
    .T&
    c c lx .
    #\fBPOINTS\fP#\fBDEFECT\fP
@@ -228,7 +228,7 @@ Lieutenant Enyon Boase
    #−1#T{
    Unique Defect: Obsessed by Military History
    T}
-   
+
    .T&
    c c lx .
    \fBLEVEL\fP#\fBPOINTS\fP#\fBSKILL\fP
@@ -259,7 +259,7 @@ Lieutenant Enyon Boase
    1#1#T{
    Writing (Reports)
    T}
-   
+
    #\fB35\fP#\fBTOTAL\fP
    =
    .TE
@@ -290,7 +290,7 @@ colours: UN white, with sky-blue helmets.
    80#T{
    Health Points
    T}
-   
+
    .T&
    c c lx .
    \fBLEVEL\fP#\fBPOINTS\fP#\fBATTRIBUTE\fP
@@ -327,7 +327,7 @@ colours: UN white, with sky-blue helmets.
    2#1#T{
    Weapon: Rocket Pod (Damage 45, Auto-fire, Area Effect, Limited Shots ×2 [3 shots], Stoppable)
    T}
-   
+
    .T&
    c c lx .
    #\fBPOINTS\fP#\fBDEFECT\fP
@@ -340,7 +340,7 @@ colours: UN white, with sky-blue helmets.
    #−1#T{
    Partial Armour
    T}
-   
+
    #\fB40\fP#\fBTOTAL\fP
    =
    .TE
@@ -365,14 +365,14 @@ Empty items
    60#T{
    Health Points
    T}
-   
+
    .T&
    c c lx .
    \fBLEVEL\fP#\fBPOINTS\fP#\fBATTRIBUTE\fP
    1#1#T{
    Elemental
    T}
-   
+
    .T&
    c c lx .
    \fBLEVEL\fP#\fBPOINTS\fP#\fBSKILL\fP
@@ -382,7 +382,7 @@ Empty items
    1#2#T{
    Medical
    T}
-   
+
    #\fB1\fP#\fBTOTAL\fP
    =
    .TE
@@ -404,7 +404,7 @@ Empty items
    =
    \fBVALUE\fP#\fBPOINTS\fP#\fBSTAT\fP
    4#4#Body
-   
+
    #\fB4\fP#\fBTOTAL\fP
    =
    .TE
@@ -427,21 +427,21 @@ Tagline that trims to nothing
    2#2#T{
    Empty Effective
    T}
-   
+
    .T&
    c c lx .
    #\fBPOINTS\fP#\fBDEFECT\fP
    #−1#T{
    Empty Details
    T}
-   
+
    .T&
    c c lx .
    \fBLEVEL\fP#\fBPOINTS\fP#\fBSKILL\fP
    1#1#T{
    No Specialisations
    T}
-   
+
    #\fB2\fP#\fBTOTAL\fP
    =
    .TE
@@ -455,14 +455,14 @@ Tagline that trims to nothing
    =
    \fBVALUE\fP#\fBPOINTS\fP#\fBSTAT\fP
    #0#
-   
+
    .T&
    c l sx .
    \fBVALUE\fP#\fBDERIVED VALUE\fP
    #T{
    Attack Combat Value
    T}
-   
+
    .T&
    c c lx .
    #\fB0\fP#\fBTOTAL\fP
@@ -483,7 +483,7 @@ Lieutenant Enyon Boase
    8#8#Body
    6#6#Mind
    6#6#Soul
-   
+
    .T&
    c l sx .
    \fBVALUE\fP#\fBDERIVED VALUE\fP
@@ -502,7 +502,7 @@ Lieutenant Enyon Boase
    14#T{
    Shock Value
    T}
-   
+
    .T&
    c c lx .
    \fBLEVEL\fP#\fBPOINTS\fP#\fBATTRIBUTE\fP
@@ -515,7 +515,7 @@ Lieutenant Enyon Boase
    2#8#T{
    Own a Big Mecha: FV2021 Coleopteran
    T}
-   
+
    .T&
    c c lx .
    #\fBPOINTS\fP#\fBDEFECT\fP
@@ -525,7 +525,7 @@ Lieutenant Enyon Boase
    #−1#T{
    Unique Defect: Obsessed by Military History
    T}
-   
+
    .T&
    c c lx .
    \fBLEVEL\fP#\fBPOINTS\fP#\fBSKILL\fP
@@ -556,7 +556,7 @@ Lieutenant Enyon Boase
    1#1#T{
    Writing (Reports)
    T}
-   
+
    #\fB35\fP#\fBTOTAL\fP
    =
    .TE
@@ -587,7 +587,7 @@ colours: UN white, with sky-blue helmets.
    80#T{
    Health Points
    T}
-   
+
    .T&
    c c lx .
    \fBLEVEL\fP#\fBPOINTS\fP#\fBATTRIBUTE\fP
@@ -624,7 +624,7 @@ colours: UN white, with sky-blue helmets.
    2#1#T{
    Weapon: Rocket Pod (Damage 45, Auto-fire, Area Effect, Limited Shots ×2 [3 shots], Stoppable)
    T}
-   
+
    .T&
    c c lx .
    #\fBPOINTS\fP#\fBDEFECT\fP
@@ -637,7 +637,7 @@ colours: UN white, with sky-blue helmets.
    #−1#T{
    Partial Armour
    T}
-   
+
    #\fB40\fP#\fBTOTAL\fP
    =
    .TE
@@ -656,14 +656,14 @@ Derived First
    40#T{
    Health Points
    T}
-   
+
    .T&
    c c lx .
    \fBLEVEL\fP#\fBPOINTS\fP#\fBSKILL\fP
    1#2#T{
    Stealth
    T}
-   
+
    #\fB0\fP#\fBTOTAL\fP
    =
    .TE
@@ -685,7 +685,7 @@ All Defects
    #−1#T{
    Hunted
    T}
-   
+
    #\fB−3\fP#\fBTOTAL\fP
    =
    .TE
@@ -704,14 +704,14 @@ Even
    1#2#T{
    Armour
    T}
-   
+
    .T&
    c c lx .
    #\fBPOINTS\fP#\fBDEFECT\fP
    #−2#T{
    Slow
    T}
-   
+
    #\fB0\fP#\fBTOTAL\fP
    =
    .TE
@@ -728,7 +728,7 @@ Skills alone, and no name.
    2#4#T{
    Riding (Horses)
    T}
-   
+
    #\fB0\fP#\fBTOTAL\fP
    =
    .TE
@@ -752,7 +752,7 @@ One line of description.
    5#10#Body
    4#8#Mind
    3#6#Soul
-   
+
    .T&
    c l sx .
    \fBVALUE\fP#\fBDERIVED VALUE\fP
@@ -771,7 +771,7 @@ One line of description.
    7#T{
    XYZ
    T}
-   
+
    .T&
    c c lx .
    \fBLEVEL\fP#\fBPOINTS\fP#\fBATTRIBUTE\fP
@@ -790,7 +790,7 @@ One line of description.
    1#2#T{
    élan vital
    T}
-   
+
    .T&
    c c lx .
    #\fBPOINTS\fP#\fBDEFECT\fP
@@ -800,7 +800,7 @@ One line of description.
    #−1#T{
    Marked (Green skin, webbed feet)
    T}
-   
+
    .T&
    c c lx .
    \fBLEVEL\fP#\fBPOINTS\fP#\fBSKILL\fP
@@ -810,7 +810,7 @@ One line of description.
    2#4#T{
    Swimming (Underwater, Racing)
    T}
-   
+
    #\fB44\fP#\fBTOTAL\fP
    =
    .TE
@@ -829,14 +829,14 @@ Unit 7
    1#4#T{
    Armour
    T}
-   
+
    .T&
    c c lx .
    #\fBPOINTS\fP#\fBDEFECT\fP
    #−3#T{
    Fragile
    T}
-   
+
    #\fB1\fP#\fBTOTAL\fP
    =
    .TE
@@ -851,28 +851,28 @@ Unit 7
    =
    \fBVALUE\fP#\fBPOINTS\fP#\fBSTAT\fP
    2#4#Body
-   
+
    .T&
    c c lx .
    \fBLEVEL\fP#\fBPOINTS\fP#\fBATTRIBUTE\fP
    1#4#T{
    Flight (Silent −1)
    T}
-   
+
    .T&
    c c lx .
    #\fBPOINTS\fP#\fBDEFECT\fP
    #−6#T{
    Big
    T}
-   
+
    .T&
    c c lx .
    \fBLEVEL\fP#\fBPOINTS\fP#\fBSKILL\fP
    1#1#T{
    Piloting
    T}
-   
+
    #\fB2\fP#\fBTOTAL\fP
    =
    .TE

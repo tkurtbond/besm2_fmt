@@ -29,9 +29,6 @@ package BESM2_Fmt.Format_Hmm is
    --  The -R/--hmm-root root-node line (besm2-rst.scm's
    --  "(when (and *hmm-output* *hmm-root*) ...)" in `main`) is not
    --  part of this procedure -- it is printed once per program run,
-   --  not once per entity, so BESM2_Fmt_Main handles it directly. See
-   --  BESM2_Fmt_Main's comment on that for a real, faithfully-ported
-   --  quirk: it always goes to standard output, even under
-   --  -o/--output.
+   --  not once per entity, so BESM2_Fmt_Main handles it directly.
 
 end BESM2_Fmt.Format_Hmm;

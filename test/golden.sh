@@ -30,7 +30,8 @@ esac
 mkdir -p "$golden"
 
 # run OUT FILES...: run $prog as case $modes says, with $flags, writing
-# what is compared to OUT; return its exit status.
+# what is compared to OUT, then a "==== exit 1 ====" line if it exited
+# 1 (an input error, reported); return its exit status.
 run() {
   local o=$1 st; shift
   local in=/dev/null
@@ -48,6 +49,7 @@ run() {
     # shellcheck disable=SC2086
     "$prog" $flags "$@" >"$o" 2>&1 <"$in"; st=$?
   fi
+  [ $st -eq 1 ] && echo "==== exit 1 ====" >>"$o"
   return $st
 }
 
@@ -57,7 +59,7 @@ compare() {
   local label=$1
   if [ ! -e "$out" ]; then
     echo "FAIL - $label: no golden file (test/golden.sh generate)"; failed=$((failed + 1))
-  elif [ $status -ne 0 ]; then
+  elif [ $status -gt 1 ]; then
     echo "FAIL - $label ($flags): exit $status"; failed=$((failed + 1))
   elif ! cmp -s "$out" "$tmp/out"; then
     echo "FAIL - $label ($flags)"; diff "$out" "$tmp/out" | head -20 | sed 's/^/    /'
@@ -94,7 +96,7 @@ while read -r modelist id pattern flags; do
     elif [ "$mode" = regenerate ] || [ ! -e "$out" ]; then
       count=$((count + 1))
       run "$out" "${files[@]}"; status=$?
-      if [ $status -ne 0 ]; then
+      if [ $status -gt 1 ]; then
         echo "golden.sh: $prog $flags ${files[*]} exited $status" >&2; exit 2
       fi
       echo "wrote $out"

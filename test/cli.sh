@@ -4,9 +4,9 @@
 # test/cli.sh [program]; prints ok/FAIL per case and exits 1 if any
 # failed.  Adapted from the Oberon-2 port's test/cli.sh.
 #
-# Statuses: help 1, command-line mistakes 2, an output file that can't
-# be created or written 1, bad input files 0 (reported, and the run
-# goes on with the next file).
+# Statuses: help 0, command-line mistakes 2, an output file that can't
+# be created or written 1, bad input 1 (reported, and the run goes on
+# with the next entity or file).
 
 prog=${1:-./besm2_fmt}
 data=test/data
@@ -60,8 +60,14 @@ check_err() {
 f=$data/enyon-boase-2e.yaml
 
 # ---- options ----
-check "-h shows the usage and exits 1" 1 '^-w ARG, --width=ARG +Width of table' -h
-check "--help after a file still exits 1" 1 '^besm2_fmt \[options\] \[files\.\.\.\]$' "$f" --help
+check "-h shows the usage and exits 0" 0 '^-w ARG, --width=ARG +Width of table' -h
+check "--help after a file still exits 0" 0 '^besm2_fmt \[options\] \[files\.\.\.\]$' "$f" --help
+"$prog" -h </dev/null >"$tmp/out" 2>"$tmp/err"
+if [ -s "$tmp/out" ] && [ ! -s "$tmp/err" ]; then
+  echo "ok   - -h writes the usage to standard output"
+else
+  fail "-h writes the usage to standard output" "$tmp/out" "$tmp/err"
+fi
 check_err "an unknown long option exits 2" 2 '^Unknown option --bogus$' --bogus "$f"
 check_err "an unknown short option exits 2" 2 '^Unknown option -x$' -x "$f"
 check_err "a missing option argument exits 2" 2 '^Argument Required for option -u$' -u
@@ -91,45 +97,54 @@ check_err "-o to a directory that doesn't exist exits 1 with the OS reason" 1 \
   '^besm2_fmt: can.t create /nonexistent/dir/out: No such file or directory$' -o /nonexistent/dir/out "$f"
 "$prog" "$f" nosuch.yaml "$f" </dev/null >"$tmp/out" 2>"$tmp/err"
 status=$?
-if [ $status -eq 0 ] && [ "$(cat "$tmp/err")" = "besm2_fmt: nosuch.yaml: No such file or directory" ] \
+if [ $status -eq 1 ] && [ "$(cat "$tmp/err")" = "besm2_fmt: nosuch.yaml: No such file or directory" ] \
    && [ "$(grep -c '^Lieutenant Enyon Boase$' "$tmp/out")" -eq 2 ]; then
-  echo "ok   - a missing file is reported with the OS reason and the run goes on, exit 0"
+  echo "ok   - a missing file is reported with the OS reason and the run goes on, exit 1"
 else
-  fail "a missing file is reported with the OS reason and the run goes on, exit 0" "$tmp/err"
+  fail "a missing file is reported with the OS reason and the run goes on, exit 1" "$tmp/err"
 fi
-check_err "a directory is reported, not taken for an empty file" 0 \
+check_err "a directory is reported, not taken for an empty file" 1 \
   '^besm2_fmt: test/data: Is a directory$' test/data
-check_err "-- ends the options" 0 '^besm2_fmt: -t: No such file or directory$' -- -t
+check_err "-- ends the options" 1 '^besm2_fmt: -t: No such file or directory$' -- -t
 
 # ---- bad input ----
-# A bad entity is reported, writes nothing, and ends its file; entities
-# before it are written, and the run goes on with the next file.
-printf -- '- name: Good\n- name: Bad\n  stats: [{name: B}]\n- name: Never\n' >"$tmp/bad.yaml"
+# A bad entity is reported and writes nothing; the entities before and
+# after it are written, the run goes on with the next file, and the
+# status is 1.
+printf -- '- name: Good\n- name: Bad\n  stats: [{name: B}]\n- name: After\n' >"$tmp/bad.yaml"
 "$prog" "$tmp/bad.yaml" "$data/composite-multi-doc-2e.yaml" >"$tmp/out" 2>&1
 status=$?
-if [ $status -eq 0 ] && grep -q 'Good' "$tmp/out" && ! grep -q 'Bad\|Never' "$tmp/out" \
+if [ $status -eq 1 ] && grep -q 'Good' "$tmp/out" && ! grep -q 'Bad' "$tmp/out" \
+   && grep -q '^After$' "$tmp/out" \
    && grep -q 'error processing .*bad.yaml: missing required key "value"$' "$tmp/out" \
    && grep -q 'Coleopteran' "$tmp/out"; then
-  echo "ok   - a bad entity ends its file, not the run, with status 0"
+  echo "ok   - a bad entity is skipped, not its file or the run, with status 1"
 else
-  fail "a bad entity ends its file, not the run, with status 0" "$tmp/out"
+  fail "a bad entity is skipped, not its file or the run, with status 1" "$tmp/out"
+fi
+# With -U, the entity after a bad first one is the file's first.
+printf -- '- name: Bad\n  stats: [{name: B}]\n- name: After\n' >"$tmp/bad.yaml"
+if "$prog" -U '~' "$tmp/bad.yaml" 2>/dev/null | grep -q '^-----$'; then
+  echo "ok   - a bad entity isn't counted"
+else
+  fail "a bad entity isn't counted"
 fi
 printf -- '- 5\n' >"$tmp/shape.yaml"
-check "an entity that isn't a mapping is an input error, not a halt" 0 \
+check "an entity that isn't a mapping is an input error, not a halt" 1 \
   'error processing .*shape\.yaml: /0: not a mapping$' "$tmp/shape.yaml"
-check "a customizer of one item is an input error, not a halt" 0 \
+check "a customizer of one item is an input error, not a halt" 1 \
   'error processing .*shape-customizer-short\.yaml: /1/attributes/0/enhancements/0: customizer sequence too short$' \
   "$data/shape-customizer-short.yaml"
-check "stats: with no value is an input error, not a halt" 0 \
+check "stats: with no value is an input error, not a halt" 1 \
   'error processing .*shape-null-stats\.yaml: /1/stats: not a sequence$' "$data/shape-null-stats.yaml"
 printf -- '- {name: X, attributes: [{name: A, level: 1, points: 1, enhancements: Area}]}\n' >"$tmp/shape.yaml"
-check "enhancements that aren't a sequence are an input error" 0 \
+check "enhancements that aren't a sequence are an input error" 1 \
   '/0/attributes/0/enhancements: not a sequence$' "$tmp/shape.yaml"
 printf -- '- {name: X, attributes: [{name: A, level: 1, points: 1, limiters: [[R, 1, [a]]]}]}\n' >"$tmp/shape.yaml"
-check "an applies-to that isn't a scalar is an input error" 0 \
+check "an applies-to that isn't a scalar is an input error" 1 \
   '/0/attributes/0/limiters/0/2: not a scalar$' "$tmp/shape.yaml"
 printf -- '- {name: X, skills: [Law]}\n' >"$tmp/shape.yaml"
-check "a list item that isn't a mapping is an input error" 0 \
+check "a list item that isn't a mapping is an input error" 1 \
   '/0/skills/0: not a mapping$' "$tmp/shape.yaml"
 printf -- '- 5\n' >"$tmp/shape.yaml"
 "$prog" "$tmp/shape.yaml" "$f" >"$tmp/out" 2>/dev/null
@@ -138,21 +153,21 @@ if grep -q '^Lieutenant Enyon Boase$' "$tmp/out"; then
 else
   fail "the file after one of the wrong shape is still processed" "$tmp/out"
 fi
-check "YAML that doesn't parse is reported gcc style" 0 \
+check "YAML that doesn't parse is reported gcc style" 1 \
   '^besm2_fmt: error processing .*bad-yaml\.yaml: .*bad-yaml\.yaml:6:1: error: missing comma in flow mapping$' \
   "$data/bad-yaml.yaml"
-check "a bad integer is reported" 0 \
+check "a bad integer is reported" 1 \
   '^besm2_fmt: error processing .*bad-int\.yaml: not a valid integer: "lots"$' "$data/bad-int.yaml"
-check "a missing key is reported" 0 \
+check "a missing key is reported" 1 \
   '^besm2_fmt: error processing .*bad-missing-key\.yaml: missing required key "points"$' "$data/bad-missing-key.yaml"
-check "a bad customizer is reported with its path" 0 \
+check "a bad customizer is reported with its path" 1 \
   'error processing .*bad-customizer-map\.yaml: /1/attributes/0/limiters/0: do not understand customizer$' \
   "$data/bad-customizer-map.yaml"
 check_err "a file with no documents is not an error, and writes nothing" 0 '' "$data/edge-empty.yaml"
-check "an empty document is an error" 0 \
+check "an empty document is an error" 1 \
   'expected a top-level YAML sequence of entities in .*bad-empty-doc\.yaml$' "$data/bad-empty-doc.yaml"
 printf -- 'a: 1\n' >"$tmp/map.yaml"
-check "a top level that isn't a sequence is reported" 0 \
+check "a top level that isn't a sequence is reported" 1 \
   'expected a top-level YAML sequence of entities in .*map\.yaml$' "$tmp/map.yaml"
 
 # ---- output errors ----
@@ -178,14 +193,12 @@ else
   fail "no file names reads standard input"
 fi
 
-# -R/--hmm-root goes to standard output even under -o, as in
-# besm2-rst.scm; everything else goes to the file.
+# -R/--hmm-root goes into the file under -o, first, with the rest.
 "$prog" -H -R Root -L 2 -o "$tmp/file" "$f" >"$tmp/stdout" 2>&1
-if [ "$(cat "$tmp/stdout")" = "$(printf '\t\tRoot')" ] && [ -s "$tmp/file" ] \
-   && ! grep -q Root "$tmp/file"; then
-  echo "ok   - -R goes to standard output under -o, the rest to the file"
+if [ ! -s "$tmp/stdout" ] && [ "$(head -1 "$tmp/file")" = "$(printf '\t\tRoot')" ]; then
+  echo "ok   - -R goes into the -o file, with the rest"
 else
-  fail "-R goes to standard output under -o, the rest to the file" "$tmp/stdout"
+  fail "-R goes into the -o file, with the rest" "$tmp/stdout" "$tmp/file"
 fi
 
 if [ "$failed" -eq 0 ]; then echo "All checks passed."; else echo "$failed check(s) failed."; exit 1; fi

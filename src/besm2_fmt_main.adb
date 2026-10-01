@@ -32,6 +32,18 @@ procedure BESM2_Fmt_Main is
    use type Arg_Parser.String_Reference;
    use type Config.Output_Format;
 
+   --  Set when an error in the input has been reported; the run then
+   --  exits 1.
+   Errors_Reported : Boolean := False;
+
+   procedure Report (Source : String; Message : String) is
+   begin
+      Errors_Reported := True;
+      Ada.Text_IO.Put_Line
+        (Ada.Text_IO.Standard_Error,
+         "besm2_fmt: error processing " & Source & ": " & Message);
+   end Report;
+
    function Read_All_Standard_Input return String is
       Buffer : Unbounded_String;
    begin
@@ -45,36 +57,47 @@ procedure BESM2_Fmt_Main is
    --  Count is threaded across every document in the file (not reset
    --  per document): Entity_No is 1 for the first entity in a *file*,
    --  2 for the second, etc., regardless of how many "---"-separated
-   --  YAML documents that file is split into.
+   --  YAML documents that file is split into.  Each entity is loaded
+   --  completely before any of it is written, so one with an error
+   --  writes nothing: it is reported, doesn't count, and the next entity
+   --  is processed.  A top level that isn't a sequence ends its
+   --  document.
    procedure Process_Entities
      (D : Doc.Document; Source : String; Count : in out Natural)
    is
       Root : constant Nod.Node := D.Root;
 
       procedure Visit (Item : Nod.Node) is
-         E : constant BESM2_Fmt.Entities.Entity :=
-           BESM2_Fmt.Entities.Load_Entity (Item);
       begin
-         Count := Count + 1;
-         case Config.Format is
-            when Config.Terse   => BESM2_Fmt.Format_Terse.Process_Entity (E, Count);
-            when Config.Grid    => BESM2_Fmt.Format_Grid.Process_Entity (E, Count);
-            when Config.Hmm     => BESM2_Fmt.Format_Hmm.Process_Entity (E, Count);
-            when Config.Raw_Ms  => BESM2_Fmt.Format_Raw_Ms.Process_Entity (E, Count);
-         end case;
+         declare
+            E : constant BESM2_Fmt.Entities.Entity :=
+              BESM2_Fmt.Entities.Load_Entity (Item);
+         begin
+            Count := Count + 1;
+            case Config.Format is
+               when Config.Terse   => BESM2_Fmt.Format_Terse.Process_Entity (E, Count);
+               when Config.Grid    => BESM2_Fmt.Format_Grid.Process_Entity (E, Count);
+               when Config.Hmm     => BESM2_Fmt.Format_Hmm.Process_Entity (E, Count);
+               when Config.Raw_Ms  => BESM2_Fmt.Format_Raw_Ms.Process_Entity (E, Count);
+            end case;
+         end;
+      exception
+         when E : Libfyaml.Missing_Key | Libfyaml.Data_Error =>
+            Report (Source, Ada.Exceptions.Exception_Message (E));
       end Visit;
    begin
       if not Root.Is_Valid or else not Root.Is_Sequence then
-         raise Program_Error with
-           "expected a top-level YAML sequence of entities in " & Source;
+         Report (Source, "expected a top-level YAML sequence of entities in " & Source);
+         return;
       end if;
       Root.Iterate (Visit'Access);
    end Process_Entities;
 
    --  It is a file of possibly multiple entities, possibly spread
-   --  across multiple "---"-separated YAML documents. Matches
-   --  besm2-rst.scm's process-file: on error, report it and move on
-   --  to the next file rather than aborting the whole run.
+   --  across multiple "---"-separated YAML documents.  An error in an
+   --  entity is reported by Process_Entities; a YAML error ends the
+   --  file, since libfyaml can't resume after one.  Either way the run
+   --  goes on with the next file.
    procedure Process_One (Filename : String; Use_Stdin : Boolean) is
       Source : constant String := (if Use_Stdin then "(stdin)" else Filename);
       Count  : Natural := 0;
@@ -92,19 +115,24 @@ procedure BESM2_Fmt_Main is
    exception
       when E : Ada.IO_Exceptions.Name_Error | Ada.IO_Exceptions.Use_Error =>
          --  From Open_File: the message is "FILE: REASON".
+         Errors_Reported := True;
          Ada.Text_IO.Put_Line
            (Ada.Text_IO.Standard_Error,
             "besm2_fmt: " & Ada.Exceptions.Exception_Message (E));
-      when E : Libfyaml.Parse_Error | Libfyaml.Missing_Key | Libfyaml.Data_Error |
-               Program_Error =>
-         Ada.Text_IO.Put_Line
-           (Ada.Text_IO.Standard_Error,
-            "besm2_fmt: error processing " & Source & ": " &
-            Ada.Exceptions.Exception_Message (E));
+      when E : Libfyaml.Parse_Error =>
+         Report (Source, Ada.Exceptions.Exception_Message (E));
    end Process_One;
 
    procedure Process_All is
    begin
+      --  The -R/--hmm-root line: once per run, not per entity
+      --  (BESM2_Fmt.Format_Hmm.Process_Entity never sees it), and with
+      --  the rest of the output, into the -o/--output file if any.
+      if Config.Hmm_Output and then Config.Hmm_Root /= null then
+         Ada.Text_IO.Put_Line
+           (String'(1 .. Config.Hmm_Depth => ASCII.HT) & Config.Hmm_Root.all);
+      end if;
+
       if BESM2_Fmt.Cli.Filenames.Is_Empty then
          Process_One ("", True);
       else
@@ -116,19 +144,6 @@ procedure BESM2_Fmt_Main is
 
 begin
    BESM2_Fmt.Cli.Parse;
-
-   --  besm2-rst.scm's `main`: "(when (and *hmm-output* *hmm-root*) (show
-   --  #t (indent) *hmm-root* nl))", run once per program invocation (not
-   --  once per entity -- BESM2_Fmt.Format_Hmm.Process_Entity never sees
-   --  this), and -- because it runs before the -o/--output redirection
-   --  below, exactly like the Scheme's own ordering -- always to
-   --  standard output, even when -o sends everything else to a file.
-   --  Confirmed against the real besm2-rst binary: this is faithfully
-   --  ported as-is, not a bug to route around.
-   if Config.Hmm_Output and then Config.Hmm_Root /= null then
-      Ada.Text_IO.Put_Line
-        (String'(1 .. Config.Hmm_Depth => ASCII.HT) & Config.Hmm_Root.all);
-   end if;
 
    if Config.Output_File /= null then
       declare
@@ -158,10 +173,14 @@ begin
       Ada.Text_IO.Flush (Ada.Text_IO.Standard_Output);
    end if;
 
+   if Errors_Reported then
+      Ada.Command_Line.Set_Exit_Status (1);
+   end if;
+
 exception
    when BESM2_Fmt.Cli.Help_Requested =>
-      --  Matches besm2-rst.scm's `usage`, which always exits 1.
-      Ada.Command_Line.Set_Exit_Status (1);
+      --  Asking for help isn't an error.
+      Ada.Command_Line.Set_Exit_Status (0);
 
    when Arg_Parser.Unknown_Option | Arg_Parser.Unknown_Argument |
         Arg_Parser.Argument_Required | Arg_Parser.Invalid_Option_Argument =>
@@ -169,8 +188,8 @@ exception
       --  error (e.g. "Unknown option --bogus"), including for bad
       --  numbers and for -w below Config.Min_Table_Width; this just
       --  gives a clean exit instead of an unhandled-exception trace.
-      --  Matches besm2-rst.scm's `die` convention of exiting 2 on a
-      --  user-input error.
+      --  Matches besm2-rst.scm, which exits 2 for a command-line
+      --  mistake.
       Ada.Command_Line.Set_Exit_Status (2);
 
    when E : Ada.IO_Exceptions.Device_Error =>

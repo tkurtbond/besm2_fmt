@@ -19,7 +19,8 @@
 #   FLAGS     the command-line options, before the fixtures' paths
 # Blank lines and lines starting with # are ignored.  Golden files hold
 # standard output and standard error together unless the mode says
-# otherwise; every case must exit 0.
+# otherwise.  A case that exits 1 (bad input, reported) ends its golden
+# file with a "==== exit 1 ====" line; any other status but 0 fails.
 #
 # The cases and golden files started as copies of the Oberon-2 port's
 # (~/Repos/RPG/Tools/obesm2_fmt/test), whose golden files were made
@@ -73,8 +74,9 @@
 
 # ---- input errors, several files, standard input, -o ----
 # Only standard output is compared for bad input; test/cli.sh checks
-# the messages.  What matters here is what is written before the
-# error, and that nothing is written after it.
+# the messages.  What matters here is that a bad entity writes nothing,
+# that the entities around it are written, and that a YAML error ends
+# its file.
 stdout      bad        @(bad|shape)-*    -t
 stdout      bad-grid   @(bad|shape)-*
 stdout      bad-m      @(bad|shape)-*    -m

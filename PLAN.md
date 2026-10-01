@@ -393,7 +393,8 @@ from this program; see §9.
    trailing space before its newline (`" (...) "`) that
    Attributes/Defects/Skills' subtotals don't — an actual
    inconsistency in `besm2-rst.scm` itself, ported as-is like the
-   `mecha?` existence-check quirk below.
+   `mecha?` existence-check quirk below. (Since fixed in all four
+   programs: QUIRKS.md, Status.)
 6. [done] raw-`ms`/`tbl` backend (`Format_Raw_Ms`,
    `process-entity-raw-ms`'s process-stat-raw-ms/process-derived-raw-ms/
    process-attribute-raw-ms/process-defect-raw-ms/process-skill-raw-ms)

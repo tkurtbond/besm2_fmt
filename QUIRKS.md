@@ -34,6 +34,14 @@ after `.T&`, or above the `=` when it is the only row. besm-tools'
 empty-strings-2e fixture showed the first defect; `edge-empty-entity`
 shows the second.
 
+Two spacing slips that ADA-DIFFERENCES.md listed as kept on purpose
+are fixed too, in terse and h-m-m. The Statistics subtotal was followed
+by a space that the other subtotals don't have (two spaces before the
+dash in terse, a trailing blank in h-m-m). Defect details and skill
+specialisations were followed by two spaces before the points,
+attribute details by one; now all three have one. The h-m-m
+description line no longer ends with a blank either.
+
 ## Overview
 
 Six of the "quirks kept on purpose" (ADA-DIFFERENCES.md, section 5) are really defects, and each should be fixed the same way in all four programs:

@@ -86,7 +86,7 @@ package body BESM2_Fmt.Format_Hmm is
    function Format_Defect (D : Entities.Defect; Mecha : Boolean) return String is
       Details_Part : constant String :=
         (if Length (D.Details) > 0
-         then All_One_Line (To_String (D.Details) & ".  ")
+         then All_One_Line (To_String (D.Details) & ". ")
          else "");
    begin
       return
@@ -99,7 +99,7 @@ package body BESM2_Fmt.Format_Hmm is
       Level_Prefix : constant String := (if Config.Level then "Level " else "");
       Spec_Part    : constant String :=
         (if not S.Specialisations.Is_Empty
-         then Entities.Join (S.Specialisations, ", ") & ".  "
+         then Entities.Join (S.Specialisations, ", ") & ". "
          else "");
       Emphasized : constant String :=
         Emphasize (To_String (S.Name) & Sep & Level_Prefix & To_String (S.Level));
@@ -160,7 +160,7 @@ package body BESM2_Fmt.Format_Hmm is
       end if;
 
       if not Config.Omit_Entity_Description and then E.Has_Description then
-         IO.Put_Line (Indent (D2) & All_One_Line (To_String (E.Description)) & " ");
+         IO.Put_Line (Indent (D2) & All_One_Line (To_String (E.Description)));
       end if;
 
       if E.Has_Size then
@@ -170,7 +170,7 @@ package body BESM2_Fmt.Format_Hmm is
       if not E.Stats.Is_Empty then
          IO.Put (Indent (D2) & TL.Bold ("Statistics"));
          if Config.Show_Subtotals then
-            IO.Put (" (" & Label_Points (E.Stats_Total, E.Mecha) & ") ");
+            IO.Put (" (" & Label_Points (E.Stats_Total, E.Mecha) & ")");
          end if;
          IO.New_Line;
          IO.Put (Indent (D3));

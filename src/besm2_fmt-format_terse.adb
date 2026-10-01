@@ -55,7 +55,7 @@ package body BESM2_Fmt.Format_Terse is
 
    function Format_Defect (D : Entities.Defect; Mecha : Boolean) return String is
       Details_Part : constant String :=
-        (if Length (D.Details) > 0 then To_String (D.Details) & ".  " else "");
+        (if Length (D.Details) > 0 then To_String (D.Details) & ". " else "");
    begin
       return
         Emphasize (To_String (D.Name)) & " (" & Details_Part &
@@ -70,7 +70,7 @@ package body BESM2_Fmt.Format_Terse is
           (To_String (S.Name) & Sep & Level_Prefix & To_String (S.Level));
       Spec_Part    : constant String :=
         (if not S.Specialisations.Is_Empty
-         then Entities.Join (S.Specialisations, ", ") & ".  "
+         then Entities.Join (S.Specialisations, ", ") & ". "
          else "");
    begin
       return
@@ -123,7 +123,7 @@ package body BESM2_Fmt.Format_Terse is
       if not E.Stats.Is_Empty then
          IO.Put (Bold ("Statistics"));
          if Config.Show_Subtotals then
-            IO.Put (" (" & Label_Points (E.Stats_Total, E.Mecha) & ") ");
+            IO.Put (" (" & Label_Points (E.Stats_Total, E.Mecha) & ")");
          end if;
          IO.Put_Line (" — ");
          for I in E.Stats.First_Index .. E.Stats.Last_Index loop

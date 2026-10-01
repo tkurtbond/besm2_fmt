@@ -75,8 +75,8 @@ After bad input the run still exits 0, so `make rst` quietly builds incomplete o
 | Top level not a list (`bad-root`) | **nothing reported**, next file, exit 0 (see the correction below) | reported, next file, exit 0 |
 
 > **Correction.** `bad-root`'s mapping is the file's second document,
-> and besm2-rst reads only the first (ADA-DIFFERENCES.md, 4.4), so it
-> never sees it. A single-document file whose top level is a mapping
+> and besm2-rst reads only the last (the yaml egg; with `-f`, only the
+> first: ADA-DIFFERENCES.md, 4.4), so it never sees it. A single-document file whose top level is a mapping
 > was reported, as a `(car) bad argument type` error.
 
 **Fix, the same in all four:**

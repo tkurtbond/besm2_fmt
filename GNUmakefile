@@ -27,8 +27,9 @@ TEST_TBLOUTPUT=$(foreach f,$(notdir $(TEST_DATA)),build/$(addsuffix -tbl.gen.rst
 # Unicode minus on; these were once misnamed -unicode-minus for that
 # reason.) There's no ascii-minus variant of terse or h-m-m output --
 # both render defect points as a "N BP"/"N CP" suffix
-# (Format_*.Label_Points), never a sign glyph, so -n changes nothing
-# there. h-m-m itself (-H/--hmm) isn't reST at all
+# (Format_*.Label_Points), never a sign glyph, so -n changes only
+# enhancement and limiter signs there (of the fixtures, only
+# synthetic-2e's). h-m-m itself (-H/--hmm) isn't reST at all
 # (a tab-indented outline), so pandoc can't turn it into a PDF the way
 # it can grid/terse/tbl; make hmm builds it (TEST_HMMOUTPUT, below).
 TEST_ASCII_MINUS_OUTPUT=$(foreach f,$(notdir $(TEST_DATA)),build/$(addsuffix -ascii-minus.gen.rst,$(basename $(f))))

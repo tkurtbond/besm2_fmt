@@ -143,7 +143,7 @@ private
          Long_Name   => "page",
          Variable    => BESM2_Fmt.Config.Page_After_Description'Access),
       Arg_Parser.Make_Set_Boolean_True_Option
-        (Description => "Show subtotals for stats, attributes, and defects.",
+        (Description => "Show subtotals for stats, attributes, defects, and skills.",
          Short_Name  => 's',
          Long_Name   => "subtotals",
          Variable    => BESM2_Fmt.Config.Show_Subtotals'Access),

@@ -250,13 +250,12 @@ package body BESM2_Fmt.Format_Grid is
             Row3 (To_String (S.Level), Points_Image (S.Points), Format_Skill_Description (S));
             Sep3;
          end loop;
-         --  Unlike stats/attributes/defects, the skill-points total row
-         --  is unconditional -- besm2-rst.scm's process-entity never
-         --  guards it with *show-subtotals*.
-         Row3
-           ("", TL.Hbolding (Points_Image (E.Skills_Total)),
-            TL.Hbolding ("SKILL POINTS TOTAL"));
-         Sep3;
+         if Config.Show_Subtotals then
+            Row3
+              ("", TL.Hbolding (Points_Image (E.Skills_Total)),
+               TL.Hbolding ("SKILL POINTS TOTAL"));
+            Sep3;
+         end if;
          Empty_Or_Blank_Line;
       end if;
 

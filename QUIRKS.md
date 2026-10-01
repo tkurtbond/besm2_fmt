@@ -42,6 +42,11 @@ specialisations were followed by two spaces before the points,
 attribute details by one; now all three have one. The h-m-m
 description line no longer ends with a blank either.
 
+The skill points total, which the Overview below keeps ("always
+shown"), is now shown only under `-s` in grid and raw ms, like the
+other subtotals and as terse and h-m-m already did. `-s`'s help says
+so.
+
 ## Overview
 
 Six of the "quirks kept on purpose" (ADA-DIFFERENCES.md, section 5) are really defects, and each should be fixed the same way in all four programs:

@@ -269,13 +269,11 @@ package body BESM2_Fmt.Format_Raw_Ms is
             IO.Put_Line (Raw_Prefix & Format_Skill_Description (S));
             IO.Put_Line (Raw_Prefix & "T}");
          end loop;
-         --  Unlike Stats/Attributes/Defects above, the skill-points
-         --  total row is unconditional -- matches Format_Grid's own
-         --  Skills total (besm2-rst.scm's process-entity-raw-ms never
-         --  guards this one with *show-subtotals* either).
-         IO.Put_Line
-           (Raw_Prefix & "#" & Tbold (Points_Image (E.Skills_Total)) & "#" &
-            Tbold ("SKILL POINTS TOTAL"));
+         if Config.Show_Subtotals then
+            IO.Put_Line
+              (Raw_Prefix & "#" & Tbold (Points_Image (E.Skills_Total)) & "#" &
+               Tbold ("SKILL POINTS TOTAL"));
+         end if;
          IO.Put_Line (Raw_Prefix);
       end if;
 

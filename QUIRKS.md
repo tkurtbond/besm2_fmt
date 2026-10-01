@@ -1,6 +1,27 @@
 # besm2_fmt: quirks worth fixing
 
-2026-09-30
+2026-09-30; done 2026-10-01
+
+## Status
+
+All six are fixed in all four programs, in the order the plan below
+gives, each checked against the program before it:
+
+| Program | Commits |
+| --- | --- |
+| besm2-rst, and besm2-rst-f, -e and -f-e (besm-tools) | `e7fdd75` |
+| Ada (this repository) | `bf18fa4` (items 1–3), `afb25ce` (items 4–6) |
+| Buffer port (obesm2_fmt) | `5a9ff04`, `3be8f1e` |
+| Ropes port (obesm2_fmt2) | `3c6310a` (its catch-up with the Buffer port's step 14), `48154ad`, `4703413` |
+
+The ADA-DIFFERENCES.md update is the Buffer port's step 15: section 5.1
+lists these fixes, and section 4 gains the differences from besm2-rst
+found on the way (4.6 to 4.9). The rest of this document is the plan as
+written, with two corrections marked.
+
+`golden.sh` didn't get a `fail` mode: a case that exits 1 ends its
+golden file with a `==== exit 1 ====` line instead, since the bad-input
+globs mix fixtures that do and don't exit 1.
 
 ## Overview
 
@@ -51,7 +72,12 @@ After bad input the run still exits 0, so `make rst` quietly builds incomplete o
 | YAML syntax error (`bad-yaml`) | reported, next file, exit 0 | reported, next file, exit 0 |
 | Bad integer (`bad-int`) | `(+) bad argument type`, next file, exit 0 | reported, next file, exit 0 |
 | Bad customizer (`bad-customizer-map`) | reported, next file, exit 0 | reported, next file, exit 0 |
-| Top level not a list (`bad-root`) | **nothing reported**, next file, exit 0 | reported, next file, exit 0 |
+| Top level not a list (`bad-root`) | **nothing reported**, next file, exit 0 (see the correction below) | reported, next file, exit 0 |
+
+> **Correction.** `bad-root`'s mapping is the file's second document,
+> and besm2-rst reads only the first (ADA-DIFFERENCES.md, 4.4), so it
+> never sees it. A single-document file whose top level is a mapping
+> was reported, as a `(car) bad argument type` error.
 
 **Fix, the same in all four:**
 

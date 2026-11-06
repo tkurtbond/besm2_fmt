@@ -19,10 +19,20 @@ package BESM2_Fmt.Entities is
    package String_Vectors is new Ada.Containers.Vectors
      (Index_Type => Positive, Element_Type => Unbounded_String);
 
+   --  A number's `overrides:` (PLAN.md, A4): the keys of its mapping
+   --  whose number the user typed instead of the generator's.  The
+   --  terse and grid formats print an overridden number with
+   --  Text_Layout.Override_Mark after it; the others print it plain.
+   --  Each mapping accepts only the keys of its computed numbers:
+   --  points on a stat, attribute, defect or skill, damage on an
+   --  attribute, value on a derived value.  Any other name is bad
+   --  input.
+
    type Stat is record
-      Name   : Unbounded_String;
-      Value  : Unbounded_String;
-      Points : Integer;
+      Name        : Unbounded_String;
+      Value       : Unbounded_String;
+      Points      : Integer;
+      Points_Mark : Boolean := False;  -- overrides: [points]
    end record;
 
    package Stat_Vectors is new Ada.Containers.Vectors
@@ -32,12 +42,15 @@ package BESM2_Fmt.Entities is
       Name         : Unbounded_String;
       Value        : Unbounded_String;
       Alternatives : String_Vectors.Vector;  -- empty = none
+      Value_Mark   : Boolean := False;       -- overrides: [value]
    end record;
 
    package Derived_Vectors is new Ada.Containers.Vectors
      (Index_Type => Positive, Element_Type => Derived_Value);
 
    type Attribute is record
+      --  With its `subject`, if any, after ": " (PLAN.md, A4): the
+      --  packed name a file without `subject` has.
       Name    : Unbounded_String;
       --  Already includes the "(effective)" suffix when present (see
       --  besm2-rst.scm's process-attribute: this combining is
@@ -50,17 +63,24 @@ package BESM2_Fmt.Entities is
       --  and the free-text "details" field, already combined and
       --  joined. Empty means "no details" (make-attribute-details
       --  never yields a present-but-empty result -- see its Ada port
-      --  in the body).
+      --  in the body).  Before them, a Weapon Attack's `abilities`,
+      --  `disabilities`, `different-gunner` and `damage`, in the
+      --  book's order (p. 92); after the elements, the `choices`.
       Details : Unbounded_String;
+      --  Details with Override_Mark after the damage when it is
+      --  overridden (overrides: [damage]); else the same as Details.
+      Marked_Details : Unbounded_String;
+      Points_Mark    : Boolean := False;  -- overrides: [points]
    end record;
 
    package Attribute_Vectors is new Ada.Containers.Vectors
      (Index_Type => Positive, Element_Type => Attribute);
 
    type Defect is record
-      Name    : Unbounded_String;
-      Points  : Integer;
-      Details : Unbounded_String;  -- trimmed "details" text; empty = none
+      Name        : Unbounded_String;  -- with its `subject`, as an Attribute's
+      Points      : Integer;
+      Details     : Unbounded_String;  -- trimmed "details" text; empty = none
+      Points_Mark : Boolean := False;  -- overrides: [points]
    end record;
 
    package Defect_Vectors is new Ada.Containers.Vectors
@@ -71,6 +91,7 @@ package BESM2_Fmt.Entities is
       Level           : Unbounded_String;
       Points          : Integer;
       Specialisations : String_Vectors.Vector;  -- empty = none
+      Points_Mark     : Boolean := False;       -- overrides: [points]
    end record;
 
    package Skill_Vectors is new Ada.Containers.Vectors

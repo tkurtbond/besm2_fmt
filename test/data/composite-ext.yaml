@@ -1,0 +1,168 @@
+# composite-2e.yaml with the keys of PLAN.md's A4 (besm2_cg_po):
+# `subject` in place of the packed names, defect `level`s, a `creation`
+# block, and the weapons' damage, Abilities and Disabilities as keys in
+# place of `details`.  The names stay as written ("Weapon",
+# "Super-Strength", "Hanger Queen"); renaming them is `--upgrade`'s job.
+# Only the weapons print differently (test/upgraded.sh).
+---
+- name: Lieutenant Enyon Boase
+  creation:
+    character-points: 35
+    genre: Modern Military
+  stats:                        # Average: (/ (+ 8 6 6) 3.0) 6.666666666666667
+    - name: Body
+      value: 8
+      points: 8
+    - name: Mind
+      value: 6
+      points: 6
+    - name: Soul
+      value: 6
+      points: 6
+  derived:
+    - name: ACV
+      value: 9
+    - name: DCV
+      value: 7
+    - name: HP
+      value: 70
+    - name: EP
+      value: 60
+    - name: SV
+      value: 14
+  attributes:
+    - name: Combat Mastery
+      level: 3
+      points: 6
+    - name: Extra Attacks
+      level: 1
+      points: 4
+      details: +1 Extra Attack
+    - name: Own a Big Mecha
+      subject: FV2021 Coleopteran
+      level: 2
+      points: 8
+  defects:
+    - name: Conditional Ownership
+      subject: Army ownership
+      level: 2
+      points: -2
+    - name: Unique Defect
+      subject: Obsessed by Military History
+      level: 1
+      points: -1
+  skills:
+    - name: Interrogation
+      level: 1
+      points: 3
+    - name: Law
+      level: 1
+      points: 1
+      specialisations:
+        - Military
+    - name: Military Sciences
+      level: 1
+      points: 5
+      specialisations:
+        - Leadership
+    - name: Persuasion
+      level: 1
+      points: 3
+    - name: Social Sciences
+      level: 1
+      points: 2
+      specialisations:
+        - Politics
+    - name: Stealth
+      level: 1
+      points: 4
+    - name: Visual Arts
+      level: 1
+      points: 1
+    - name: Writing
+      level: 1
+      points: 1
+      specialisations:
+        - Reports
+- name: FV2021 Coleopteran
+  bogus:
+  mecha: true
+  page: BRCS, p. 94=95
+  description: |
+    A three-metre talk British-built humanoid combat walker used by
+    the Canadians on Mars.  They use a new “mind-interface”
+    neuro-helmet that makes the mecha very agile.  However, if a
+    different pilot wants to use the mecha, the neuro-helmet must be
+    “retuned” to their brain waves — this takes a full day; until
+    then, halve the Defence Mastery and Combat Technique: Lightning
+    Reflexes Attribute bonuses.  The mecha are painted standard
+    colours: UN white, with sky-blue helmets.
+  attributes:
+    - name: Heavy Armour
+      level: 2
+      points: 7
+      details: Partial, thin
+    - name: Super-Strength
+      level: 1
+      points: 3
+    - name: Toughness
+      level: 2
+      points: 8
+      details: +40 Health Points
+    - name: Ground Speed
+      level: 1
+      points: 2
+      details: Up to 50 kph
+    - name: Manoeuvre Bonus
+      level: 4
+      points: 4
+      details: Ground only; +2 to Initiative and +2 to Defense Combat Value
+    - name: Accessories
+      level: 2
+      points: 2
+      details: Radio, Inertial Navigation
+    - name: Life Support
+      level: 2
+      points: 2
+    - name: Sensors
+      level: 1
+      points: 1
+      details: Range to 10 kilometres (1,000 km in space)
+    - name: Weapon
+      subject: Railgun
+      level: 3
+      points: 12
+      damage: 45
+      abilities: [{name: Long Range, detail: 5 km}]
+      disabilities: [Unreliable]
+    - name: Weapon
+      subject: Plasma Fist
+      level: 2
+      points: 1
+      damage: 75
+      disabilities: [Melee, {name: Limited Shots, detail: 6 shots}]
+    - name: Weapon
+      subject: Rocket Pod
+      level: 2
+      points: 1
+      damage: 15
+      abilities: [Auto-Fire, Area Effect]
+      disabilities:
+        - {name: Limited Shots, counts-as: 2, detail: 3 shots}
+        - Stoppable
+  defects:
+    - name: Awkward Size
+      level: 2
+      points: -2
+      details: |
+        Large: 1-10 tonnes
+    - name: "Hanger Queen"
+      level: 1
+      points: -1
+  derived:
+    - name: AR
+      value: 20
+    - name: HP
+      value: 80
+  notes:
+    - "Punch: Damage ACV+10, Muscle-Powered, Melee"

@@ -137,6 +137,17 @@ package BESM2_Fmt.Text_Layout is
    --  two spaces after each of its line feeds, so a note written on
    --  several lines stays one item.  Used for the "notes" list.
 
+   function Times_Glyph return String;
+   --  MULTIPLICATION SIGN (U+00D7) by default, or "x" under
+   --  -n/--no-unicode-minus: the "×2" of a Weapon Attack Ability or
+   --  Disability taken twice (PLAN.md, A4; the book writes "x 2",
+   --  p. 92).
+
+   Override_Mark : constant String := "\*";
+   --  What follows an overridden number (`overrides:`, PLAN.md, A4) in
+   --  the terse and grid formats: "*", escaped so that reST doesn't
+   --  read it as the start of emphasis, as ova_fmt writes it.
+
    function Minus_Glyph return String;
    --  Unicode MINUS SIGN (U+2212) by default, or "-" (ASCII
    --  hyphen-minus) under -n/--no-unicode-minus (Config.Unicode_Minus

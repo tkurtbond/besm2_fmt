@@ -101,11 +101,13 @@ pdf: rst $(TEST_LETTEROUTPUT)
 hmm: $(PROGRAM) $(TEST_HMMOUTPUT)
 
 # Unit tests, then golden-output tests (test/golden.sh, with the cases
-# in test/golden.cases), then command-line tests (test/cli.sh).
+# in test/golden.cases), then command-line tests (test/cli.sh), then
+# the upgraded fixtures against their originals (test/upgraded.sh).
 test: $(PROGRAM)
 	cd test && gprbuild -p -P test.gpr && ./test_text_layout
 	test/golden.sh check ./$(PROGRAM)
 	test/cli.sh ./$(PROGRAM)
+	test/upgraded.sh ./$(PROGRAM)
 
 # Write the golden files that are missing (for new cases in
 # test/golden.cases) from ./$(PROGRAM)'s output. Review them before

@@ -72,6 +72,10 @@ package body BESM2_Fmt.Format_Grid is
    --  already-summed *_Total fields instead of re-summing here).
    -----------------------------------------------------------------
 
+   --  TL.Override_Mark if Marked (an overridden number), else "".
+   function Mark (Marked : Boolean) return String is
+     (if Marked then TL.Override_Mark else "");
+
    function Points_Image (N : Integer) return String is
      (Ada.Strings.Fixed.Trim (Integer'Image (N), Ada.Strings.Left));
 
@@ -126,7 +130,8 @@ package body BESM2_Fmt.Format_Grid is
    end Format_Derived_Description;
 
    function Format_Attribute_Description (A : Entities.Attribute) return String is
-     (if Length (A.Details) > 0 then To_String (A.Name) & " (" & To_String (A.Details) & ")"
+     (if Length (A.Marked_Details) > 0
+      then To_String (A.Name) & " (" & To_String (A.Marked_Details) & ")"
       else To_String (A.Name));
 
    function Format_Defect_Description (D : Entities.Defect) return String is
@@ -183,7 +188,9 @@ package body BESM2_Fmt.Format_Grid is
          Row3 (TL.Hbolding ("VALUE"), TL.Hbolding ("POINTS"), TL.Hbolding ("STAT"));
          Headsep3;
          for S of E.Stats loop
-            Row3 (To_String (S.Value), Points_Image (S.Points), To_String (S.Name));
+            Row3
+              (To_String (S.Value), Points_Image (S.Points) & Mark (S.Points_Mark),
+               To_String (S.Name));
             Sep3;
          end loop;
          if Config.Show_Subtotals then
@@ -200,7 +207,7 @@ package body BESM2_Fmt.Format_Grid is
          Row2 (TL.Hbolding ("VALUE"), TL.Hbolding ("DERIVED VALUE"));
          Headsep2;
          for D of E.Derived loop
-            Row2 (To_String (D.Value), Format_Derived_Description (D));
+            Row2 (To_String (D.Value) & Mark (D.Value_Mark), Format_Derived_Description (D));
             Sep2;
          end loop;
          Empty_Or_Blank_Line;
@@ -212,7 +219,7 @@ package body BESM2_Fmt.Format_Grid is
          Headsep3;
          for A of E.Attributes loop
             Row3
-              (To_String (A.Level), Points_Image (A.Points),
+              (To_String (A.Level), Points_Image (A.Points) & Mark (A.Points_Mark),
                Format_Attribute_Description (A));
             Sep3;
          end loop;
@@ -230,7 +237,9 @@ package body BESM2_Fmt.Format_Grid is
          Row3 ("", TL.Hbolding ("POINTS"), TL.Hbolding ("DEFECT"));
          Headsep3;
          for D of E.Defects loop
-            Row3 ("", Defect_Points_Image (D.Points), Format_Defect_Description (D));
+            Row3
+              ("", Defect_Points_Image (D.Points) & Mark (D.Points_Mark),
+               Format_Defect_Description (D));
             Sep3;
          end loop;
          if Config.Show_Subtotals then
@@ -247,7 +256,9 @@ package body BESM2_Fmt.Format_Grid is
          Row3 (TL.Hbolding ("LEVEL"), TL.Hbolding ("POINTS"), TL.Hbolding ("SKILL"));
          Headsep3;
          for S of E.Skills loop
-            Row3 (To_String (S.Level), Points_Image (S.Points), Format_Skill_Description (S));
+            Row3
+              (To_String (S.Level), Points_Image (S.Points) & Mark (S.Points_Mark),
+               Format_Skill_Description (S));
             Sep3;
          end loop;
          if Config.Show_Subtotals then

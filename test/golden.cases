@@ -28,49 +28,49 @@
 # repository's PLAN.md.
 
 # ---- terse ----
--      t          *-2e   -t
--      s-t        *-2e   -s -t
--      t-bold     *-2e   -t -b -l -M
--      t-italic   *-2e   -t -i -n
--      t-bold-it  *-2e   -t -b -i
--      t-page     *-2e   -t -p
--      t-page-D   *-2e   -t -p -D
--      t-under    *-2e   -t -u = -U ~
--      t-last     *-2e   -H -m -t
+-      t          @(*-2e|*-ext)   -t
+-      s-t        @(*-2e|*-ext)   -s -t
+-      t-bold     @(*-2e|*-ext)   -t -b -l -M
+-      t-italic   @(*-2e|*-ext)   -t -i -n
+-      t-bold-it  @(*-2e|*-ext)   -t -b -i
+-      t-page     @(*-2e|*-ext)   -t -p
+-      t-page-D   @(*-2e|*-ext)   -t -p -D
+-      t-under    @(*-2e|*-ext)   -t -u = -U ~
+-      t-last     @(*-2e|*-ext)   -H -m -t
 
 # ---- grid, the default ----
--      grid       *-2e
--      s          *-2e   -s
--      one        *-2e   -1
--      one-s-B    *-2e   -1 -s -B
--      no-bold    *-2e   -B -D
--      ascii      *-2e   -s -n
--      w72        *-2e   -w 72
--      w25        *-2e   -w 25
--      under      *-2e   -u = -U ~
--      emph       *-2e   -b -i -l -M -p
+-      grid       @(*-2e|*-ext)
+-      s          @(*-2e|*-ext)   -s
+-      one        @(*-2e|*-ext)   -1
+-      one-s-B    @(*-2e|*-ext)   -1 -s -B
+-      no-bold    @(*-2e|*-ext)   -B -D
+-      ascii      @(*-2e|*-ext)   -s -n
+-      w72        @(*-2e|*-ext)   -w 72
+-      w25        @(*-2e|*-ext)   -w 25
+-      under      @(*-2e|*-ext)   -u = -U ~
+-      emph       @(*-2e|*-ext)   -b -i -l -M -p
 
 # ---- h-m-m ----
--      hmm        *-2e   -H
--      hmm-s      *-2e   -H -s
--      hmm-S      *-2e   -H -S
--      hmm-sS     *-2e   -H -s -S
--      hmm-bold   *-2e   -H -b
--      hmm-emph   *-2e   -H -i -l -M
--      hmm-L2     *-2e   -H -L 2
--      hmm-D-n    *-2e   -H -D -n
--      hmm-root   *-2e   -H -R Root -L 1
--      t-hmm      *-2e   -t -H
+-      hmm        @(*-2e|*-ext)   -H
+-      hmm-s      @(*-2e|*-ext)   -H -s
+-      hmm-S      @(*-2e|*-ext)   -H -S
+-      hmm-sS     @(*-2e|*-ext)   -H -s -S
+-      hmm-bold   @(*-2e|*-ext)   -H -b
+-      hmm-emph   @(*-2e|*-ext)   -H -i -l -M
+-      hmm-L2     @(*-2e|*-ext)   -H -L 2
+-      hmm-D-n    @(*-2e|*-ext)   -H -D -n
+-      hmm-root   @(*-2e|*-ext)   -H -R Root -L 1
+-      t-hmm      @(*-2e|*-ext)   -t -H
 
 # ---- raw ms ----
--      ms         *-2e   -m
--      ms-s       *-2e   -m -s
--      ms-s-n     *-2e   -m -s -n
--      ms-D       *-2e   -m -D
--      ms-emph    *-2e   -m -b -i -l -M -p
--      ms-under   *-2e   -m -u = -U ~
--      ms-one     *-2e   -m -1 -B -w 30
--      hmm-t-ms   *-2e   -H -t -m
+-      ms         @(*-2e|*-ext)   -m
+-      ms-s       @(*-2e|*-ext)   -m -s
+-      ms-s-n     @(*-2e|*-ext)   -m -s -n
+-      ms-D       @(*-2e|*-ext)   -m -D
+-      ms-emph    @(*-2e|*-ext)   -m -b -i -l -M -p
+-      ms-under   @(*-2e|*-ext)   -m -u = -U ~
+-      ms-one     @(*-2e|*-ext)   -m -1 -B -w 30
+-      hmm-t-ms   @(*-2e|*-ext)   -H -t -m
 
 # ---- input errors, several files, standard input, -o ----
 # Only standard output is compared for bad input; test/cli.sh checks

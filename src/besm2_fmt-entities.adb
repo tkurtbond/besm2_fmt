@@ -143,6 +143,115 @@ package body BESM2_Fmt.Entities is
    end Load_String_List;
 
    -----------------------------------------------------------------
+   --  The keys PLAN.md's A4 adds, all optional.
+   -----------------------------------------------------------------
+
+   --  Map's name, with its `subject` after ": " if it has one: the
+   --  packed name ("Own a Big Mecha: FV2021 Coleopteran") a file
+   --  without `subject` holds in `name`.
+   function Name_With_Subject (Map : Nod.Node) return Unbounded_String is
+      Name : constant String := Map.String_Value ("name");
+   begin
+      if Map.Has_Key ("subject") then
+         return To_Unbounded_String
+           (Name & ": " & Trim_Whitespace (Map.String_Value ("subject")));
+      end if;
+      return To_Unbounded_String (Name);
+   end Name_With_Subject;
+
+   --  Whether Map's `overrides:` lists Key.  The list must be a
+   --  sequence of scalars, each one of Allowed (key names separated
+   --  by ", "): a misspelled name would otherwise silently drop a
+   --  mark.
+   function Overridden (Map : Nod.Node; Key, Allowed : String) return Boolean is
+      List   : constant Nod.Node := Sequence_Field (Map, "overrides");
+      Result : Boolean := False;
+
+      procedure Check (Item : Nod.Node) is
+      begin
+         Require (Item, Item.Is_Scalar, "an override is not a key name");
+         Require
+           (Item,
+            Ada.Strings.Fixed.Index
+              (", " & Allowed & ", ", ", " & Item.Scalar_Value & ", ") > 0,
+            """" & Item.Scalar_Value & """ is not one of " & Allowed);
+         if Item.Scalar_Value = Key then
+            Result := True;
+         end if;
+      end Check;
+   begin
+      if List.Is_Valid then
+         List.Iterate (Check'Access);
+      end if;
+      return Result;
+   end Overridden;
+
+   function Image (N : Integer) return String is
+     (Ada.Strings.Fixed.Trim (N'Image, Ada.Strings.Both));
+
+   --  An item of a Weapon Attack's `abilities` or `disabilities`, or
+   --  of an Attribute's `choices`: a name, or a mapping of `name`,
+   --  `counts-as` (a positive count, printed as "×N" when 2 or more)
+   --  and, but for a choice, `detail` (printed in brackets).
+   function Format_Item (Item : Nod.Node; Detail_Allowed : Boolean) return String is
+   begin
+      if Item.Is_Scalar then
+         return Trim_Whitespace (Item.Scalar_Value);
+      end if;
+      Require (Item, Item.Is_Mapping, "not a name or a mapping");
+      declare
+         Name      : constant String := Trim_Whitespace (Item.String_Value ("name"));
+         Counts_As : constant Integer := Item.Integer_Value ("counts-as", Default => 1);
+         Result    : Unbounded_String := To_Unbounded_String (Name);
+      begin
+         if Counts_As < 1 then
+            Require (Item.Value ("counts-as"), False, "counts-as must be positive");
+         end if;
+         if Counts_As >= 2 then
+            Append (Result, " " & TL.Times_Glyph & Image (Counts_As));
+         end if;
+         if Detail_Allowed and then Item.Has_Key ("detail") then
+            Append (Result, " [" & Trim_Whitespace (Item.String_Value ("detail")) & "]");
+         end if;
+         return To_String (Result);
+      end;
+   end Format_Item;
+
+   function Format_Items (List : Nod.Node; Detail_Allowed : Boolean)
+     return String_Vectors.Vector
+   is
+      Result : String_Vectors.Vector;
+
+      procedure Add (Item : Nod.Node) is
+      begin
+         Result.Append (To_Unbounded_String (Format_Item (Item, Detail_Allowed)));
+      end Add;
+   begin
+      if List.Is_Valid then
+         List.Iterate (Add'Access);
+      end if;
+      return Result;
+   end Format_Items;
+
+   --  A Weapon Attack's structured keys, as the book records an attack
+   --  (p. 92): its Abilities, its Disabilities, "Different Gunner",
+   --  then "N Damage" (with Mark after N); "" if it has none of them.
+   function Weapon_Part (N : Nod.Node; Mark : String) return String is
+      Parts : String_Vectors.Vector :=
+        Format_Items (Sequence_Field (N, "abilities"), True);
+   begin
+      Parts.Append_Vector (Format_Items (Sequence_Field (N, "disabilities"), True));
+      if N.Boolean_Value ("different-gunner", Default => False) then
+         Parts.Append (To_Unbounded_String ("Different Gunner"));
+      end if;
+      if N.Has_Key ("damage") then
+         Parts.Append
+           (To_Unbounded_String (Image (N.Integer_Value ("damage")) & Mark & " Damage"));
+      end if;
+      return Join (Parts, ", ");
+   end Weapon_Part;
+
+   -----------------------------------------------------------------
    --  format-customizers: an enhancement/limiter list item is
    --  either a plain string, or a sequence of
    --  [name, counts-as, applies-to...] (0 or more applies-to
@@ -216,11 +325,16 @@ package body BESM2_Fmt.Entities is
    end Format_Customizers;
 
    function Make_Attribute_Details
-     (Details_Text               : Unbounded_String;
-      Enhancements, Limiters, Elements : Nod.Node) return Unbounded_String
+     (Weapon                     : String;
+      Details_Text               : Unbounded_String;
+      Enhancements, Limiters, Elements, Choices : Nod.Node) return Unbounded_String
    is
       Parts : String_Vectors.Vector;
    begin
+      if Weapon'Length > 0 then
+         Parts.Append (To_Unbounded_String (Weapon));
+      end if;
+
       if Elements.Is_Valid then
          declare
             Sorted : String_Vectors.Vector := Load_String_List (Elements);
@@ -231,6 +345,16 @@ package body BESM2_Fmt.Entities is
             end if;
          end;
       end if;
+
+      --  The choices are printed as the elements are, sorted.
+      declare
+         Sorted : String_Vectors.Vector := Format_Items (Choices, False);
+      begin
+         String_Sort (Sorted);
+         if not Sorted.Is_Empty then
+            Parts.Append (To_Unbounded_String (Join (Sorted, ", ")));
+         end if;
+      end;
 
       declare
          Custom : String_Vectors.Vector;
@@ -263,9 +387,10 @@ package body BESM2_Fmt.Entities is
    -----------------------------------------------------------------
 
    function Load_Stat (N : Nod.Node) return Stat is
-     (Name   => To_Unbounded_String (N.String_Value ("name")),
-      Value  => To_Unbounded_String (N.String_Value ("value")),
-      Points => N.Integer_Value ("points"));
+     (Name        => To_Unbounded_String (N.String_Value ("name")),
+      Value       => To_Unbounded_String (N.String_Value ("value")),
+      Points      => N.Integer_Value ("points"),
+      Points_Mark => Overridden (N, "points", "points"));
 
    function Load_Derived (N : Nod.Node) return Derived_Value is
       Alt_Node : constant Nod.Node := Sequence_Field (N, "alternatives");
@@ -275,18 +400,23 @@ package body BESM2_Fmt.Entities is
          Value => To_Unbounded_String (N.String_Value ("value")),
          Alternatives =>
            (if Alt_Node.Is_Valid then Load_String_List (Alt_Node)
-            else String_Vectors.Empty_Vector));
+            else String_Vectors.Empty_Vector),
+         Value_Mark => Overridden (N, "value", "value"));
    end Load_Derived;
 
    function Load_Attribute (N : Nod.Node) return Attribute is
-      Name         : constant String := N.String_Value ("name");
+      Name         : constant Unbounded_String := Name_With_Subject (N);
       Points       : constant Integer := N.Integer_Value ("points");
+      Allowed      : constant String := "points, damage";
       Level_Text   : Unbounded_String := To_Unbounded_String (N.String_Value ("level"));
       Details_Text : Unbounded_String := Optional_String (N, "details");
       Effective    : constant Unbounded_String := Optional_String (N, "effective");
       Enhancements : constant Nod.Node := Sequence_Field (N, "enhancements");
       Limiters     : constant Nod.Node := Sequence_Field (N, "limiters");
       Elements     : constant Nod.Node := Sequence_Field (N, "elements");
+      Choices      : constant Nod.Node := Sequence_Field (N, "choices");
+      Damage_Mark  : constant String :=
+        (if Overridden (N, "damage", Allowed) then TL.Override_Mark else "");
    begin
       if Length (Details_Text) > 0 then
          Details_Text :=
@@ -296,15 +426,22 @@ package body BESM2_Fmt.Entities is
          Level_Text := Level_Text & " (" & Effective & ")";
       end if;
       return
-        (Name    => To_Unbounded_String (Name),
+        (Name    => Name,
          Level   => Level_Text,
          Points  => Points,
          Details =>
-           Make_Attribute_Details (Details_Text, Enhancements, Limiters, Elements));
+           Make_Attribute_Details
+             (Weapon_Part (N, ""), Details_Text, Enhancements, Limiters, Elements,
+              Choices),
+         Marked_Details =>
+           Make_Attribute_Details
+             (Weapon_Part (N, Damage_Mark), Details_Text, Enhancements, Limiters,
+              Elements, Choices),
+         Points_Mark => Overridden (N, "points", Allowed));
    end Load_Attribute;
 
    function Load_Defect (N : Nod.Node) return Defect is
-      Name         : constant String := N.String_Value ("name");
+      Name         : constant Unbounded_String := Name_With_Subject (N);
       Points       : constant Integer := N.Integer_Value ("points");
       Details_Text : Unbounded_String := Optional_String (N, "details");
    begin
@@ -313,7 +450,8 @@ package body BESM2_Fmt.Entities is
            To_Unbounded_String (Trim_Whitespace (To_String (Details_Text)));
       end if;
       return
-        (Name => To_Unbounded_String (Name), Points => Points, Details => Details_Text);
+        (Name => Name, Points => Points, Details => Details_Text,
+         Points_Mark => Overridden (N, "points", "points"));
    end Load_Defect;
 
    function Load_Skill (N : Nod.Node) return Skill is
@@ -327,7 +465,8 @@ package body BESM2_Fmt.Entities is
          Specialisations =>
            (if Specialisations_Node.Is_Valid
             then Load_String_List (Specialisations_Node)
-            else String_Vectors.Empty_Vector));
+            else String_Vectors.Empty_Vector),
+         Points_Mark => Overridden (N, "points", "points"));
    end Load_Skill;
 
    -----------------------------------------------------------------

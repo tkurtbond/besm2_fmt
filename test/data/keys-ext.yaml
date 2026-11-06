@@ -1,0 +1,86 @@
+# Made up: every key PLAN.md's A4 adds to the YAML (besm2_cg_po), each
+# optional.  `subject` is printed after the name and ": ", as the old
+# packed names were; a Weapon Attack's `abilities`, `disabilities`,
+# `different-gunner` and `damage` are printed as the book records an
+# attack (BESM2ER p. 92), before its `details`; `choices` as `elements`
+# are, sorted, after them; an overridden number gets "\*" after it in
+# the terse and grid formats only.  A defect's `level`, a Weapon
+# Attack's `primary` and the character's `creation` are for the
+# generator and print nothing.
+- name: Keys Sample
+  creation:
+    character-points: 40
+    background-points: 2
+    genre: Modern Military
+    skill-points: 30
+    options:
+      staged-stat-cost: false
+      auto-fire-slots: 3
+    house-skills:
+      - name: Persuasion
+        costs: {Modern Military: 3}
+  stats:
+    - {name: Body, value: 6, points: 6}
+    - {name: Mind, value: 5, points: 5}
+    - {name: Soul, value: 4, points: 7, overrides: [points]}
+  derived:
+    - {name: ACV, value: 5}
+    - {name: DCV, value: 4, overrides: [value]}
+    - {name: HP, value: 50}
+  attributes:
+    - name: Own a Big Mecha
+      subject: Keys Mecha
+      level: 1
+      points: 4
+    - name: Heavy Armour
+      level: 2
+      points: 7
+      choices: [hidden, "partial, thin area"]
+    - name: Weapon Attack
+      subject: Spark Lance
+      level: 3
+      points: 12
+      primary: true
+      damage: 60
+      abilities: [Area Effect, Homing, Long Range]
+      disabilities:
+        - name: Limited Shots
+          counts-as: 2
+          detail: 3 shots
+        - Slow
+        - Stoppable
+    - name: Weapon Attack
+      subject: Sidearm
+      level: 1
+      points: 3
+      damage: 20
+      disabilities: [{name: Short Range, counts-as: 1}]
+      details: Personal Gear
+      overrides: [points, damage]
+  defects:
+    - name: Unique Character Defect
+      subject: Afraid of the Dark
+      level: 2
+      points: -2
+      details: in the field
+    - {name: Easily Distracted, level: 1, points: -1, overrides: [points]}
+  skills:
+    - {name: Driving, level: 2, points: 4}
+    - {name: Persuasion, level: 1, points: 3, overrides: [points]}
+  notes:
+    - "Persuasion is a house Skill: 3 SP a Level"
+- name: Keys Mecha
+  mecha: true
+  attributes:
+    - name: Weapon Attack
+      subject: Twin Cannon
+      level: 2
+      points: 7
+      damage: 30
+      abilities: [Auto-Fire]
+      disabilities: [Fixed, {name: Unreliable, detail: jams}]
+      different-gunner: true
+    - name: Features or Accessories
+      level: 1
+      points: 1
+      choices: [{name: radio, counts-as: 2}]

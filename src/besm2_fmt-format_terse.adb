@@ -23,22 +23,28 @@ package body BESM2_Fmt.Format_Terse is
       elsif Config.Italicizing then Italic (S)
       else S);
 
-   function Label_Points (Points : Integer; Mecha : Boolean) return String is
+   --  TL.Override_Mark if Marked (an overridden number), else "".
+   function Mark (Marked : Boolean) return String is
+     (if Marked then TL.Override_Mark else "");
+
+   function Label_Points
+     (Points : Integer; Mecha : Boolean; Marked : Boolean := False) return String
+   is
       Suffix : constant String :=
         (if Mecha then (if Points < 0 then "MBP" else "MP")
          else (if Points < 0 then "BP" else "CP"));
    begin
       return
         Ada.Strings.Fixed.Trim (Integer'Image (abs Points), Ada.Strings.Left) &
-        " " & Suffix;
+        Mark (Marked) & " " & Suffix;
    end Label_Points;
 
    function Format_Stat (S : Entities.Stat; Mecha : Boolean) return String is
      (To_String (S.Name) & " " & To_String (S.Value) & " (" &
-      Label_Points (S.Points, Mecha) & ")");
+      Label_Points (S.Points, Mecha, S.Points_Mark) & ")");
 
    function Format_Derived (D : Entities.Derived_Value) return String is
-     (To_String (D.Name) & " " & To_String (D.Value) &
+     (To_String (D.Name) & " " & To_String (D.Value) & Mark (D.Value_Mark) &
       (if D.Alternatives.Is_Empty then ""
        else " (" & Entities.Join (D.Alternatives, ", ") & ")"));
 
@@ -50,9 +56,12 @@ package body BESM2_Fmt.Format_Terse is
         Emphasize
           (To_String (A.Name) & Sep & Level_Prefix & To_String (A.Level));
       Details_Part : constant String :=
-        (if Length (A.Details) > 0 then To_String (A.Details) & ". " else "");
+        (if Length (A.Marked_Details) > 0 then To_String (A.Marked_Details) & ". "
+         else "");
    begin
-      return Emphasized & " (" & Details_Part & Label_Points (A.Points, Mecha) & ")";
+      return
+        Emphasized & " (" & Details_Part &
+        Label_Points (A.Points, Mecha, A.Points_Mark) & ")";
    end Format_Attribute;
 
    function Format_Defect (D : Entities.Defect; Mecha : Boolean) return String is
@@ -61,7 +70,7 @@ package body BESM2_Fmt.Format_Terse is
    begin
       return
         Emphasize (To_String (D.Name)) & " (" & Details_Part &
-        Label_Points (D.Points, Mecha) & ")";
+        Label_Points (D.Points, Mecha, D.Points_Mark) & ")";
    end Format_Defect;
 
    function Format_Skill (S : Entities.Skill) return String is
@@ -77,7 +86,8 @@ package body BESM2_Fmt.Format_Terse is
    begin
       return
         Emphasized & " (" & Spec_Part &
-        Ada.Strings.Fixed.Trim (Integer'Image (S.Points), Ada.Strings.Left) & " SP)";
+        Ada.Strings.Fixed.Trim (Integer'Image (S.Points), Ada.Strings.Left) &
+        Mark (S.Points_Mark) & " SP)";
    end Format_Skill;
 
    procedure Process_Entity (E : Entities.Entity; Entity_No : Positive) is

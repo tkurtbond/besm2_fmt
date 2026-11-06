@@ -1,0 +1,20 @@
+# Made up: a Weapon Attack's Ability or Disability must be a name or a
+# mapping with a name, and its counts-as a positive number (PLAN.md,
+# A4); the entity is skipped and the others are printed.
+- name: Before
+  stats: [{name: Body, value: 4, points: 4}]
+- name: List Item
+  attributes:
+    - {name: Weapon Attack, subject: Gun, level: 1, points: 4, abilities: [[Accurate]]}
+- name: No Name
+  attributes:
+    - {name: Weapon Attack, subject: Gun, level: 1, points: 4, disabilities: [{detail: 3 shots}]}
+- name: Zero Counts-As
+  attributes:
+    - {name: Weapon Attack, subject: Gun, level: 2, points: 8,
+       disabilities: [{name: Limited Shots, counts-as: 0}]}
+- name: Abilities Not A List
+  attributes:
+    - {name: Weapon Attack, subject: Gun, level: 1, points: 4, abilities: Accurate}
+- name: After
+  stats: [{name: Mind, value: 4, points: 4}]

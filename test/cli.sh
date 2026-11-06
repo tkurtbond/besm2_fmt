@@ -116,7 +116,7 @@ printf -- '- name: Good\n- name: Bad\n  stats: [{name: B}]\n- name: After\n' >"$
 status=$?
 if [ $status -eq 1 ] && grep -q 'Good' "$tmp/out" && ! grep -q 'Bad' "$tmp/out" \
    && grep -q '^After$' "$tmp/out" \
-   && grep -q 'error processing .*bad.yaml: missing required key "value"$' "$tmp/out" \
+   && grep -q 'error processing .*bad.yaml: /1/stats/0: missing required key "value"$' "$tmp/out" \
    && grep -q 'Coleopteran' "$tmp/out"; then
   echo "ok   - a bad entity is skipped, not its file or the run, with status 1"
 else
@@ -157,9 +157,9 @@ check "YAML that doesn't parse is reported gcc style" 1 \
   '^besm2_fmt: error processing .*bad-yaml\.yaml: .*bad-yaml\.yaml:6:1: error: missing comma in flow mapping$' \
   "$data/bad-yaml.yaml"
 check "a bad integer is reported" 1 \
-  '^besm2_fmt: error processing .*bad-int\.yaml: not a valid integer: "lots"$' "$data/bad-int.yaml"
+  '^besm2_fmt: error processing .*bad-int\.yaml:5:42: /1/stats/0/points: not a valid integer: "lots"$' "$data/bad-int.yaml"
 check "a missing key is reported" 1 \
-  '^besm2_fmt: error processing .*bad-missing-key\.yaml: missing required key "points"$' "$data/bad-missing-key.yaml"
+  '^besm2_fmt: error processing .*bad-missing-key\.yaml: /1/stats/0: missing required key "points"$' "$data/bad-missing-key.yaml"
 check "a bad customizer is reported with its path" 1 \
   'error processing .*bad-customizer-map\.yaml: /1/attributes/0/limiters/0: do not understand customizer$' \
   "$data/bad-customizer-map.yaml"
@@ -168,6 +168,25 @@ check "a counts-as that isn't positive is reported with its path" 1 \
   "$data/bad-counts-as.yaml"
 check "a note that isn't a string is reported with its path" 1 \
   'error processing .*bad-notes\.yaml: /1/notes/0: not a scalar$' "$data/bad-notes.yaml"
+check "an override that isn't one of the mapping's numbers is reported with its path" 1 \
+  'error processing .*bad-overrides\.yaml: /1/attributes/0/overrides/0: "pionts" is not one of points, damage$' \
+  "$data/bad-overrides.yaml"
+check "an override that isn't a name is reported with its path" 1 \
+  'error processing .*bad-overrides\.yaml: /2/skills/0/overrides/0: an override is not a key name$' \
+  "$data/bad-overrides.yaml"
+check "a stat's value can't be overridden" 1 \
+  'error processing .*bad-overrides\.yaml: /3/stats/0/overrides/0: "value" is not one of points$' \
+  "$data/bad-overrides.yaml"
+check "a weapon Ability that isn't a name or a mapping is reported with its path" 1 \
+  'error processing .*bad-weapon\.yaml: /1/attributes/0/abilities/0: not a name or a mapping$' \
+  "$data/bad-weapon.yaml"
+check "a weapon Disability with no name is reported" 1 \
+  'error processing .*bad-weapon\.yaml: /2/attributes/0/disabilities/0: missing required key "name"$' "$data/bad-weapon.yaml"
+check "a weapon counts-as that isn't positive is reported with its path" 1 \
+  'error processing .*bad-weapon\.yaml: /3/attributes/0/disabilities/0/counts-as: counts-as must be positive$' \
+  "$data/bad-weapon.yaml"
+check "weapon Abilities that aren't a list are reported with their path" 1 \
+  'error processing .*bad-weapon\.yaml: /4/attributes/0/abilities: not a sequence$' "$data/bad-weapon.yaml"
 check_err "a file with no documents is not an error, and writes nothing" 0 '' "$data/edge-empty.yaml"
 check "an empty document is an error" 1 \
   'expected a top-level YAML sequence of entities in .*bad-empty-doc\.yaml$' "$data/bad-empty-doc.yaml"

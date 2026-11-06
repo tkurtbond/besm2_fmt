@@ -36,12 +36,16 @@ procedure BESM2_Fmt_Main is
    --  exits 1.
    Errors_Reported : Boolean := False;
 
+   --  "besm2_fmt: error processing SOURCE: MESSAGE", or, when
+   --  Message starts with a line and column (alibfyaml's Missing_Key
+   --  and Data_Error messages, when the value has them),
+   --  "... SOURCE:LINE:COLUMN: PATH: TEXT", gcc-style.
    procedure Report (Source : String; Message : String) is
    begin
       Errors_Reported := True;
       Ada.Text_IO.Put_Line
         (Ada.Text_IO.Standard_Error,
-         "besm2_fmt: error processing " & Source & ": " & Message);
+         "besm2_fmt: error processing " & Libfyaml.In_File (Source, Message));
    end Report;
 
    function Read_All_Standard_Input return String is

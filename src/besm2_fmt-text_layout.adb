@@ -183,6 +183,9 @@ package body BESM2_Fmt.Text_Layout is
       return To_String (Result);
    end Bullet_Item;
 
+   function Times_Glyph return String is
+     (if Config.Unicode_Minus then "×" else "x");
+
    function Minus_Glyph return String is
      (if Config.Unicode_Minus then "−" else "-");
 

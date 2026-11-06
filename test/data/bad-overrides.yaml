@@ -1,0 +1,15 @@
+# Made up: an `overrides:` entry that isn't one of its mapping's
+# computed numbers is bad input (PLAN.md, A4), as is one that isn't a
+# name; the entity is skipped and the others are printed.
+- name: Before
+  stats: [{name: Body, value: 4, points: 4}]
+- name: Misspelt Override
+  attributes:
+    - {name: Toughness, level: 1, points: 4, overrides: [pionts]}
+- name: Not A Name
+  skills:
+    - {name: Driving, level: 1, points: 1, overrides: [[points]]}
+- name: Value On A Stat
+  stats: [{name: Body, value: 4, points: 4, overrides: [value]}]
+- name: After
+  stats: [{name: Mind, value: 4, points: 4}]

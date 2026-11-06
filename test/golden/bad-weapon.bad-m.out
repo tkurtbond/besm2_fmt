@@ -1,0 +1,35 @@
+Before
+------
+
+.. raw:: ms
+
+   .LP
+   .TS
+   tab(#) ;
+   c c lx .
+   =
+   \fBVALUE\fP#\fBPOINTS\fP#\fBSTAT\fP
+   4#4#Body
+
+   #\fB4\fP#\fBTOTAL\fP
+   =
+   .TE
+
+After
+-----
+
+.. raw:: ms
+
+   .LP
+   .TS
+   tab(#) ;
+   c c lx .
+   =
+   \fBVALUE\fP#\fBPOINTS\fP#\fBSTAT\fP
+   4#4#Mind
+
+   #\fB4\fP#\fBTOTAL\fP
+   =
+   .TE
+
+==== exit 1 ====

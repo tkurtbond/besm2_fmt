@@ -1,0 +1,8 @@
+# Made up: a note that isn't a string.  The bad entity is reported and
+# skipped, and the good ones around it are written.
+- name: Good
+  notes: [Fine]
+- name: Mapping Note
+  notes: [{text: Not a string}]
+- name: Also Good
+  stats: [{name: Body, value: 4, points: 8}]

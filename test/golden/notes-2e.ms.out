@@ -1,0 +1,66 @@
+Notes Only
+----------
+
+.. raw:: ms
+
+   .LP
+   .TS
+   tab(#) ;
+   c c lx .
+   =
+   #\fB0\fP#\fBTOTAL\fP
+   =
+   .TE
+
+**Notes:**
+
+- Second note first; order is kept
+- A block note,
+  on two lines
+- Padded
+
+With Skills
+-----------
+
+.. raw:: ms
+
+   .LP
+   .TS
+   tab(#) ;
+   c c lx .
+   =
+   \fBVALUE\fP#\fBPOINTS\fP#\fBSTAT\fP
+   4#8#Body
+
+   .T&
+   c c lx .
+   \fBLEVEL\fP#\fBPOINTS\fP#\fBSKILL\fP
+   1#1#T{
+   Driving
+   T}
+
+   #\fB8\fP#\fBTOTAL\fP
+   =
+   .TE
+
+**Notes:**
+
+- Drives a truck
+
+Empty Notes
+-----------
+
+.. raw:: ms
+
+   .LP
+   .TS
+   tab(#) ;
+   c c lx .
+   =
+   \fBVALUE\fP#\fBPOINTS\fP#\fBSTAT\fP
+   3#6#Mind
+
+   #\fB6\fP#\fBTOTAL\fP
+   =
+   .TE
+

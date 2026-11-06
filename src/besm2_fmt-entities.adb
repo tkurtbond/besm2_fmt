@@ -458,6 +458,17 @@ package body BESM2_Fmt.Entities is
       Load_Defects_Field;
       Load_Skills_Field;
 
+      declare
+         Notes_Node : constant Nod.Node := Sequence_Field (N, "notes");
+      begin
+         if Notes_Node.Is_Valid then
+            for Note of Load_String_List (Notes_Node) loop
+               Result.Notes.Append
+                 (To_Unbounded_String (Trim_Whitespace (To_String (Note))));
+            end loop;
+         end if;
+      end;
+
       Result.Entity_Total :=
         Result.Stats_Total + Result.Attributes_Total + Result.Defects_Total;
 

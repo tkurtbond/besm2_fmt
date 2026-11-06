@@ -296,6 +296,17 @@ package body BESM2_Fmt.Format_Raw_Ms is
       --  The blank line ends the raw block before the next entity's
       --  name.
       IO.New_Line;
+
+      --  Notes: a bullet list after the table, one note per item
+      --  (the terse format prints the same list).
+      if not E.Notes.Is_Empty then
+         IO.Put_Line (TL.Bold ("Notes:"));
+         IO.New_Line;
+         for Note of E.Notes loop
+            IO.Put_Line (TL.Bullet_Item (To_String (Note)));
+         end loop;
+         IO.New_Line;
+      end if;
    end Process_Entity;
 
 end BESM2_Fmt.Format_Raw_Ms;

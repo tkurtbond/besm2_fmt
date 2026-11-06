@@ -13,15 +13,17 @@
     Reflexes Attribute bonuses.  The mecha are painted standard
     colours: UN white, with sky-blue helmets.
   attributes:
-    - name: Armour
+    - name: Heavy Armour
       level: 2
-      points: 8
+      points: 7
+      details: Partial, thin
     - name: Super-Strength
       level: 1
       points: 3
     - name: Toughness
       level: 2
       points: 8
+      details: +40 Health Points
     - name: Ground Speed
       level: 1
       points: 2
@@ -29,43 +31,44 @@
     - name: Manoeuvre Bonus
       level: 4
       points: 4
-      details: Ground
+      details: Ground only; +2 to Initiative and +2 to Defense Combat Value
     - name: Accessories
       level: 2
       points: 2
-      details: Radio, Inertial Naviagion
+      details: Radio, Inertial Navigation
     - name: Life Support
       level: 2
       points: 2
     - name: Sensors
       level: 1
       points: 1
+      details: Range to 10 kilometres (1,000 km in space)
     - name: "Weapon: Railgun"
       level: 3
       points: 12
       details: |
-        Damage 45, Long-Range, Unreliable
+        Damage ACV+45, Long-Range: 5 km, Unreliable
     - name: "Weapon: Plasma Fist"
       level: 2
       points: 1
-      details: Damage 60, Melee, Limited Shots [6 shots]
+      details: "Damage ACV+60, Melee, Limited Shots: 6 shots"
     - name: "Weapon: Rocket Pod"
       level: 2
       points: 1
       details: |
-        Damage 45, Auto-fire, Area Effect, Limited Shots ×2 [3 shots],
+        Damage ACV+45, Auto-fire, Area Effect, Limited Shots ×2: 3 shots,
         Stoppable
   defects:
     - name: Awkward Size
       points: -2
       details: |
-        Huge (1-10 tonnes)
+        Large: 1-10 tonnes
     - name: "Hanger Queen"
-      points: -1
-    - name: "Partial Armour"
       points: -1
   derived:
     - name: AR
       value: 20
     - name: HP
       value: 80
+  notes:
+    - "Punch: Damage ACV+10, Muscle-Powered, Melee"

@@ -102,6 +102,10 @@ package BESM2_Fmt.Entities is
       Attributes : Attribute_Vectors.Vector;
       Defects    : Defect_Vectors.Vector;
       Skills     : Skill_Vectors.Vector;
+      --  The optional "notes" list: short lines about the entity
+      --  that aren't priced (PLAN.md, A4), each trimmed like a
+      --  detail, kept in document order and printed after Skills.
+      Notes      : String_Vectors.Vector;
 
       Stats_Total      : Integer := 0;
       Attributes_Total : Integer := 0;

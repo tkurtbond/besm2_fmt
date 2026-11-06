@@ -1,0 +1,18 @@
+# Made up: the optional "notes" list (PLAN.md, A4), short lines about an
+# entity that aren't priced.  They keep their order, are trimmed like
+# details, and come after the Skills; an entity may have nothing else,
+# and an empty list prints nothing.
+- name: Notes Only
+  notes:
+    - Second note first; order is kept
+    - |
+      A block note,
+      on two lines
+    - "  Padded  "
+- name: With Skills
+  stats: [{name: Body, value: 4, points: 8}]
+  skills: [{name: Driving, level: 1, points: 1}]
+  notes: [Drives a truck]
+- name: Empty Notes
+  stats: [{name: Mind, value: 3, points: 6}]
+  notes: []

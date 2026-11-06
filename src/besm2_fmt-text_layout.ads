@@ -132,6 +132,11 @@ package BESM2_Fmt.Text_Layout is
    --  -B/--no-bold-head), else return S unchanged -- besm2-rst.scm's
    --  `hbolding`, used only for grid-table header cells.
 
+   function Bullet_Item (S : String) return String;
+   --  S as a reStructuredText bullet list item: "- " before it, and
+   --  two spaces after each of its line feeds, so a note written on
+   --  several lines stays one item.  Used for the "notes" list.
+
    function Minus_Glyph return String;
    --  Unicode MINUS SIGN (U+2212) by default, or "-" (ASCII
    --  hyphen-minus) under -n/--no-unicode-minus (Config.Unicode_Minus

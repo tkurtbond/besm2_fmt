@@ -3,11 +3,13 @@ with Ada.Strings.Fixed;
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with Ada.Text_IO;
 with BESM2_Fmt.Config;
+with BESM2_Fmt.Text_Layout;
 
 package body BESM2_Fmt.Format_Terse is
 
    package Config renames BESM2_Fmt.Config;
    package IO renames Ada.Text_IO;
+   package TL renames BESM2_Fmt.Text_Layout;
 
    function Bold (S : String) return String is ("**" & S & "**");
    function Italic (S : String) return String is ("*" & S & "*");
@@ -204,6 +206,17 @@ package body BESM2_Fmt.Format_Terse is
             IO.Put (Format_Skill (E.Skills (I)));
          end loop;
          IO.New_Line;
+         IO.New_Line;
+      end if;
+
+      --  Notes: a bullet list, as in the grid and raw ms formats,
+      --  since a note may hold commas and semicolons of its own.
+      if not E.Notes.Is_Empty then
+         IO.Put_Line (Bold ("Notes:"));
+         IO.New_Line;
+         for Note of E.Notes loop
+            IO.Put_Line (TL.Bullet_Item (To_String (Note)));
+         end loop;
          IO.New_Line;
       end if;
    end Process_Entity;

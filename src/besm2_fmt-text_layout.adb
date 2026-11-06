@@ -171,6 +171,18 @@ package body BESM2_Fmt.Text_Layout is
    function Hbolding (S : String) return String is
      (if Config.Bold_Head then Bold (S) else S);
 
+   function Bullet_Item (S : String) return String is
+      Result : Unbounded_String := To_Unbounded_String ("- ");
+   begin
+      for C of S loop
+         Append (Result, C);
+         if C = ASCII.LF then
+            Append (Result, "  ");
+         end if;
+      end loop;
+      return To_String (Result);
+   end Bullet_Item;
+
    function Minus_Glyph return String is
      (if Config.Unicode_Minus then "−" else "-");
 

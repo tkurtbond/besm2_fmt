@@ -255,6 +255,27 @@ package body BESM2_Fmt.Format_Hmm is
          end;
          IO.New_Line;
       end if;
+
+      if not E.Notes.Is_Empty then
+         IO.Put_Line (Indent (D2) & TL.Bold ("Notes"));
+         IO.Put (Indent (D3));
+         declare
+            First : Boolean := True;
+         begin
+            for Note of E.Notes loop
+               if First then
+                  First := False;
+               elsif Config.Hmm_Separate then
+                  IO.New_Line;
+                  IO.Put (Indent (D3));
+               else
+                  IO.Put ("; ");
+               end if;
+               IO.Put (All_One_Line (To_String (Note)));
+            end loop;
+         end;
+         IO.New_Line;
+      end if;
    end Process_Entity;
 
 end BESM2_Fmt.Format_Hmm;

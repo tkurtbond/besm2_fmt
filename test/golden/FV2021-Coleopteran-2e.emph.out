@@ -46,13 +46,13 @@ colours: UN white, with sky-blue helmets.
 +----------+----------+------------------------------------+
 |2         |8         |Toughness (+40 Health Points)       |
 +----------+----------+------------------------------------+
-|2         |1         |Weapon: Plasma Fist (Damage ACV+60, |
+|2         |1         |Weapon: Plasma Fist (Damage ACV+75, |
 |          |          |Melee, Limited Shots: 6 shots)      |
 +----------+----------+------------------------------------+
 |3         |12        |Weapon: Railgun (Damage ACV+45,     |
 |          |          |Long-Range: 5 km, Unreliable)       |
 +----------+----------+------------------------------------+
-|2         |1         |Weapon: Rocket Pod (Damage ACV+45,  |
+|2         |1         |Weapon: Rocket Pod (Damage ACV+15,  |
 |          |          |Auto-fire, Area Effect, Limited     |
 |          |          |Shots ×2: 3 shots, Stoppable)       |
 +----------+----------+------------------------------------+

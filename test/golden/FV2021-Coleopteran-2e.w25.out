@@ -80,7 +80,7 @@ colours: UN white, with sky-blue helmets.
 |          |          |Plasma|
 |          |          |Fist|
 |          |          |(Damage|
-|          |          |ACV+60,|
+|          |          |ACV+75,|
 |          |          |Melee,|
 |          |          |Limited|
 |          |          |Shots:|
@@ -100,7 +100,7 @@ colours: UN white, with sky-blue helmets.
 |          |          |Rocket|
 |          |          |Pod|
 |          |          |(Damage|
-|          |          |ACV+45,|
+|          |          |ACV+15,|
 |          |          |Auto-fire,|
 |          |          |Area|
 |          |          |Effect,|

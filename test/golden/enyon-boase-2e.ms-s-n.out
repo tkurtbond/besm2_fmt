@@ -40,7 +40,7 @@ Lieutenant Enyon Boase
    Combat Mastery
    T}
    1#4#T{
-   Extra Actions (+1 Extra Action)
+   Extra Attacks (+1 Extra Attack)
    T}
    2#8#T{
    Own a Big Mecha: FV2021 Coleopteran
@@ -61,23 +61,20 @@ Lieutenant Enyon Boase
    .T&
    c c lx .
    \fBLEVEL\fP#\fBPOINTS\fP#\fBSKILL\fP
-   1#2#T{
+   1#3#T{
    Interrogation
    T}
-   1#2#T{
+   1#1#T{
    Law (Military)
    T}
-   1#3#T{
-   Leadership
-   T}
-   2#6#T{
-   Military Sciences
+   1#5#T{
+   Military Sciences (Leadership)
    T}
    1#3#T{
    Persuasion
    T}
-   1#3#T{
-   Political Sciences
+   1#2#T{
+   Social Sciences (Politics)
    T}
    1#4#T{
    Stealth
@@ -88,7 +85,7 @@ Lieutenant Enyon Boase
    1#1#T{
    Writing (Reports)
    T}
-   #\fB25\fP#\fBSKILL POINTS TOTAL\fP
+   #\fB20\fP#\fBSKILL POINTS TOTAL\fP
 
    #\fB35\fP#\fBTOTAL\fP
    =

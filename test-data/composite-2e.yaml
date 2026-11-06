@@ -25,10 +25,10 @@
     - name: Combat Mastery
       level: 3
       points: 6
-    - name: Extra Actions
+    - name: Extra Attacks
       level: 1
       points: 4
-      details: +1 Extra Action
+      details: +1 Extra Attack
     - name: "Own a Big Mecha: FV2021 Coleopteran"
       level: 2
       points: 8
@@ -40,24 +40,25 @@
   skills:
     - name: Interrogation
       level: 1
-      points: 2
+      points: 3
     - name: Law
       level: 1
-      points: 2
+      points: 1
       specialisations:
         - Military
-    - name: Leadership
-      level: 1
-      points: 3
     - name: Military Sciences
-      level: 2
-      points: 6
+      level: 1
+      points: 5
+      specialisations:
+        - Leadership
     - name: Persuasion
       level: 1
       points: 3
-    - name: Political Sciences
+    - name: Social Sciences
       level: 1
-      points: 3
+      points: 2
+      specialisations:
+        - Politics
     - name: Stealth
       level: 1
       points: 4

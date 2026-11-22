@@ -1,5 +1,7 @@
 SHELL=bash
 
+PANDOC ?= pandoc
+
 PROGRAM=besm2_fmt
 
 # The -2e fixtures of the golden tests, the same files the Oberon-2
@@ -186,19 +188,19 @@ build/%-separate.gen.hmm : test/data/%.yaml $(PROGRAM)
 
 #MS_COLUMNS=-V twocolumns
 build/%.ms.pdf : build/%.gen.rst
-	pandoc -r rst -w ms --template=tkb $(MS_COLUMNS) -o $@ $<
+	$(PANDOC) -r rst -w ms --template=tkb $(MS_COLUMNS) -o $@ $<
 
 build/PERFORMANCE-COMPARISON.ms.pdf : PERFORMANCE-COMPARISON.md
-	pandoc -r markdown -w ms --template=tkb -o $@ $<
+	$(PANDOC) -r markdown -w ms --template=tkb -o $@ $<
 
 build/SOURCE-COMPARISON.ms.pdf : SOURCE-COMPARISON.md
-	pandoc -r markdown -w ms --template=tkb -o $@ $<
+	$(PANDOC) -r markdown -w ms --template=tkb -o $@ $<
 
 build/PERFORMANCE-COMPARISON.html : PERFORMANCE-COMPARISON.md
-	pandoc -s -r markdown -w html -o $@ $<
+	$(PANDOC) -s -r markdown -w html -o $@ $<
 
 build/SOURCE-COMPARISON.html : SOURCE-COMPARISON.md
-	pandoc -s -r markdown -w html -o $@ $<
+	$(PANDOC) -s -r markdown -w html -o $@ $<
 
 clean: testclean
 	-rm -f $(PROGRAM)
